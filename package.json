@@ -8,10 +8,7 @@
     "url": "git@github.com:BuildBots/BuildBots-Mother.git"
   },
   "scripts": {
-    "build-bot": "tsc",
-    "start-api": "npm run build-bot && cd dist/ && pm2 start index.js --name BuildBots-API",
-    "restart-api": "npm run build-bot && pm2 restart BuildBots-API",
-    "stop-api": "pm2 stop BuildBots-API"
+    "start": "tsc && node dist/index.js"
   },
   "keywords": [
     "buildbots",
