@@ -1,1 +1,1 @@
-node: tsc && cd dist && node index.js
+node: node dist/index.js

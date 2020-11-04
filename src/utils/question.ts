@@ -1,6 +1,5 @@
 import { Message } from "discord.js";
 import embeds from "./embeds";
-import { GuildModel } from "../models/guild";
 
 export default async function question(
   question: string,
@@ -8,11 +7,7 @@ export default async function question(
   message: Message,
   required?: string[]
 ) {
-  const guildData =
-    (await GuildModel.findOne({ guildId: message.guild.id })) ||
-    (await GuildModel.create({ guildId: message.guild.id }));
-
-  const msg = await message.channel.send(embeds.question(guildData, question));
+  const msg = await message.channel.send(embeds.question(question));
   const answer = await message.channel.awaitMessages(
     (x) =>
       x.author.id === questionForId && required && required.length
