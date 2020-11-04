@@ -1,6 +1,4 @@
-import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import Guild from "../models/guild";
 import embeds from "./embeds";
 import react from "./react";
 

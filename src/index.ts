@@ -1,7 +1,6 @@
 import fs from "fs";
 import _ from "lodash";
 import path from "path";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 
 import Event from "./events";
@@ -9,12 +8,9 @@ import Command from "./commands";
 import logger from "./utils/logger";
 import Client from "./structures/client";
 
-dotenv.config({ path: path.join(__dirname, "..", "..", ".env") });
 
 export default class Main {
   constructor(client: Client) {
-    console.log(path.join(__dirname, "..", "..", ".env"));
-
     client.login(process.env.TOKEN);
     logger.info("BOT", `Logging into bot with ID "${client.user.id}".`);
 
@@ -35,10 +31,6 @@ export default class Main {
         connectTimeoutMS: 60000,
         socketTimeoutMS: 60000,
         serverSelectionTimeoutMS: 60000,
-        auth: {
-          user: process.env.DB_USER,
-          password: process.env.DB_PASSWORD,
-        },
       },
       (err) => {
         if (err) logger.error("DATABASE", err);
