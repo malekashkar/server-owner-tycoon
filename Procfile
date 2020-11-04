@@ -1,0 +1,1 @@
+node: npm install && tsc && cd dist && node index.js
