@@ -18,6 +18,7 @@ export default class Main extends Client {
     logger.info("BOT", `Logging into server owner tycoon bot.`);
 
     this.loadDatabase(process.env.MONGO_URL);
+    console.log(process.env.MONGO_URL);
     logger.info("DATABASE", `The database is connecting.`);
 
     this.loadCommands();
