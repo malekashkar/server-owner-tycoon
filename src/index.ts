@@ -15,7 +15,7 @@ export default class Main extends Client {
     });
 
     this.login(process.env.TOKEN);
-    logger.info("BOT", `Logging into bot with ID "${this.user.id}".`);
+    logger.info("BOT", `Logging into server owner tycoon bot.`);
 
     this.loadDatabase(process.env.MONGO_URL);
     logger.info("DATABASE", `The database is connecting.`);
