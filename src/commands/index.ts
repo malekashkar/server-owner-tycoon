@@ -7,7 +7,7 @@ export default abstract class Command {
   isSubCommand = false;
   permission: string;
   disabled = false;
-  module: string;
+  group: string;
 
   abstract cmdName: string;
   abstract description: string;

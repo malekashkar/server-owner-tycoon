@@ -7,7 +7,6 @@ import Guild from "../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
 import { groupEmojis } from "../utils/storage";
 import react from "../utils/react";
-import checkPermission from "../utils/permission";
 
 export interface IGroup {
   commands: string[];
@@ -28,21 +27,15 @@ export default class HelpCommand extends Command {
     const help: Collection<string, IGroup> = new Collection();
 
     for (const commandObj of client.commands.array()) {
-      if (!commandObj.module) continue;
-
-      if (
-        commandObj.permission &&
-        !(await checkPermission(message, commandObj.permission, guildData))
-      )
-        continue;
+      if (!commandObj.group) continue;
 
       const command = commandObj.isSubCommand
-        ? commandObj.module + ` ${commandObj.cmdName}`
+        ? commandObj.group + ` ${commandObj.cmdName}`
         : commandObj.cmdName;
 
-      const group = help.get(toTitleCase(commandObj.module));
+      const group = help.get(toTitleCase(commandObj.group));
       if (!group) {
-        help.set(toTitleCase(commandObj.module), {
+        help.set(toTitleCase(commandObj.group), {
           commands: [command],
           descriptions: [commandObj.description],
         });
@@ -52,8 +45,8 @@ export default class HelpCommand extends Command {
       }
     }
 
-    const modules: string[] = Array.from(help).map(([name, value]) => name);
-    const fields = modules.map((name: string) => {
+    const groups: string[] = Array.from(help).map(([name, value]) => name);
+    const fields = groups.map((name: string) => {
       return {
         name: `**${name}** commands`,
         value: `*react with ${groupEmojis[name.toLowerCase()]} to view*`,
@@ -65,14 +58,14 @@ export default class HelpCommand extends Command {
       .normal(
         guildData,
         `Help Menu`,
-        `Below are all the help modules, click one of the emojis to see the commands.`
+        `Below are all the help groups, click one of the emojis to see the commands.`
       )
       .addFields(fields);
 
     const helpMessage = await message.channel.send(helpEmbed);
 
-    for (const module of modules) {
-      await react(helpMessage, [groupEmojis[module.toLowerCase()]]);
+    for (const group of groups) {
+      await react(helpMessage, [groupEmojis[group.toLowerCase()]]);
     }
 
     helpMessage

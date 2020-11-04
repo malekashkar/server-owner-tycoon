@@ -1,13 +1,9 @@
 import Client from "../../structures/client";
-import embeds from "../../utils/embeds";
 import logger from "../../utils/logger";
-
 import { Message } from "discord.js";
-import Guild, { GuildModel } from "../../models/guild";
+import { GuildModel } from "../../models/guild";
 import { UserModel } from "../../models/user";
 import Event from "..";
-import { DocumentType } from "@typegoose/typegoose";
-import checkPermission from "../../utils/permission";
 
 export default class commandHandler extends Event {
   name = "message";
@@ -30,9 +26,6 @@ export default class commandHandler extends Event {
           userId: message.author.id,
         }));
 
-      userData.totalMessages += 1;
-      await userData.save();
-
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;
 
@@ -48,27 +41,13 @@ export default class commandHandler extends Event {
         if (
           (args.length &&
             commandObj.isSubCommand &&
-            commandObj.module.toLowerCase() === command.toLowerCase() &&
+            commandObj.group.toLowerCase() === command.toLowerCase() &&
             commandObj.cmdName.toLowerCase() === args[0].toLowerCase()) ||
           (commandObj.cmdName.toLowerCase() === command &&
             !commandObj.isSubCommand)
         ) {
           if (commandObj.isSubCommand) {
-            command = `${commandObj.module} ${args.shift()}`;
-          }
-
-          if (
-            commandObj.permission &&
-            !(await checkPermission(message, commandObj.permission, guildData))
-          ) {
-            message.channel.send(
-              embeds.error(
-                guildData,
-                `You don't have the **right permissions** to run the command \`${command}\`!`,
-                `No Permission`
-              )
-            );
-            return;
+            command = `${commandObj.group} ${args.shift()}`;
           }
 
           commandObj

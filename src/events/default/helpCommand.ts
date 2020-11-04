@@ -6,8 +6,6 @@ import { GuildModel } from "../../models/guild";
 import embeds from "../../utils/embeds";
 import react from "../../utils/react";
 import { IGroup } from "../../commands/help";
-import chalk from "chalk";
-import checkPermission from "../../utils/permission";
 
 export default class HelpCmdBack extends Event {
   name = "messageReactionAdd";
@@ -30,21 +28,15 @@ export default class HelpCmdBack extends Event {
     const help: Collection<string, IGroup> = new Collection();
 
     for (const commandObj of client.commands.array()) {
-      if (!commandObj.module) continue;
-
-      if (
-        commandObj.permission &&
-        !(await checkPermission(message, commandObj.permission, guildData))
-      )
-        continue;
+      if (!commandObj.group) continue;
 
       const command = commandObj.isSubCommand
-        ? commandObj.module + ` ${commandObj.cmdName}`
+        ? commandObj.group + ` ${commandObj.cmdName}`
         : commandObj.cmdName;
 
-      const group = help.get(toTitleCase(commandObj.module));
+      const group = help.get(toTitleCase(commandObj.group));
       if (!group) {
-        help.set(toTitleCase(commandObj.module), {
+        help.set(toTitleCase(commandObj.group), {
           commands: [command],
           descriptions: [commandObj.description],
         });
@@ -54,8 +46,8 @@ export default class HelpCmdBack extends Event {
       }
     }
 
-    const modules: string[] = Array.from(help).map(([name, value]) => name);
-    const fields = modules.map((name: string) => {
+    const groups: string[] = Array.from(help).map(([name, value]) => name);
+    const fields = groups.map((name: string) => {
       return {
         name: `**${name}** commands`,
         value: `*react with ${groupEmojis[name.toLowerCase()]} to view*`,
@@ -67,7 +59,7 @@ export default class HelpCmdBack extends Event {
       .normal(
         guildData,
         `Help Menu`,
-        `Below are all the help modules, click one of the emojis to see the commands.`
+        `Below are all the help groups, click one of the emojis to see the commands.`
       )
       .addFields(fields);
 
@@ -82,8 +74,8 @@ export default class HelpCmdBack extends Event {
         await message.reactions.removeAll();
 
         const mainHelp = await message.edit(helpEmbed);
-        for (const module of modules) {
-          await react(mainHelp, [groupEmojis[module.toLowerCase()]]);
+        for (const group of groups) {
+          await react(mainHelp, [groupEmojis[group.toLowerCase()]]);
         }
 
         mainHelp
