@@ -1,0 +1,59 @@
+{
+  "name": "buildbots-mother",
+  "description": "A discord bot that can create slave bots with a bunch of modules!",
+  "version": "1.0.0",
+  "main": "src\\index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:BuildBots/BuildBots-Mother.git"
+  },
+  "scripts": {
+    "build-bot": "tsc",
+    "start-api": "npm run build-bot && cd dist/ && pm2 start index.js --name BuildBots-API",
+    "restart-api": "npm run build-bot && pm2 restart BuildBots-API",
+    "stop-api": "pm2 stop BuildBots-API"
+  },
+  "keywords": [
+    "buildbots",
+    "buildabot",
+    "buildbots.net",
+    "discord",
+    "discordbot",
+    "createadiscordbot",
+    "minidiscordbot"
+  ],
+  "author": "Deposit#0001",
+  "license": "MIT",
+  "dependencies": {
+    "@typegoose/typegoose": "^7.4.1",
+    "@types/body-parser": "^1.19.0",
+    "@types/bson": "^4.0.3",
+    "@types/common-tags": "^1.8.0",
+    "@types/express": "^4.17.8",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/lodash": "^4.14.162",
+    "@types/mongoose": "^5.7.36",
+    "@types/ms": "^0.7.31",
+    "@types/node": "^14.11.8",
+    "@types/node-fetch": "^2.5.7",
+    "@types/table": "^6.0.0",
+    "@types/tunnel-ssh": "^4.1.0",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
+    "common-tags": "^1.8.0",
+    "copyfiles": "^2.4.0",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.1",
+    "mongoose": "^5.10.7",
+    "pm2": "^4.5.0",
+    "pretty-ms": "^7.0.1",
+    "table": "^6.0.3",
+    "ts-node": "^9.0.0",
+    "tunnel-ssh": "^4.1.4",
+    "typegoose": "^5.9.1",
+    "typescript": "^4.0.3"
+  }
+}
