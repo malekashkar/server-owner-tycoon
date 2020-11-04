@@ -5,7 +5,6 @@ import embeds from "./embeds";
 import react from "./react";
 
 export default async function confirmation(
-  guildData: DocumentType<Guild>,
   title: string,
   text: string,
   message: Message
@@ -17,7 +16,6 @@ export default async function confirmation(
 
   const msg = await message.channel.send(
     embeds.normal(
-      guildData,
       title,
       `${text}\nYou have 30 seconds to react with the ${emojis.yes} or ${emojis.no}.`
     )
