@@ -2,12 +2,14 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import mongoose from "mongoose";
-
+import express from "express";
 import Event from "./events";
 import Command from "./commands";
 import logger from "./utils/logger";
 import Client from "./structures/client";
 
+const app = express();
+app.listen(process.env.PORT || 5000);
 
 export default class Main {
   constructor(client: Client) {
@@ -94,10 +96,7 @@ export default class Main {
     }
   }
 
-  loadEvents(
-    client: Client,
-    directory = path.join(__dirname, "events")
-  ) {
+  loadEvents(client: Client, directory = path.join(__dirname, "events")) {
     const directoryStats = fs.statSync(directory);
     if (!directoryStats.isDirectory()) return;
 
