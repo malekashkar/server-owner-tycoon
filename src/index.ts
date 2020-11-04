@@ -2,11 +2,16 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import mongoose from "mongoose";
+import express from "express";
 import Event from "./events";
 import Command from "./commands";
 import logger from "./utils/logger";
 import Client from "./structures/client";
 import { ClientOptions } from "discord.js";
+
+const app = express();
+app.listen(process.env.PORT || 5000);
+app.get("/");
 
 export default class Main extends Client {
   constructor(options?: ClientOptions) {
