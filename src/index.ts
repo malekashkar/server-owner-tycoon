@@ -2,25 +2,26 @@ import fs from "fs";
 import _ from "lodash";
 import path from "path";
 import mongoose from "mongoose";
-import express from "express";
 import Event from "./events";
 import Command from "./commands";
 import logger from "./utils/logger";
 import Client from "./structures/client";
+import { ClientOptions } from "discord.js";
 
-const app = express();
-app.listen(process.env.PORT || 5000);
+export default class Main extends Client {
+  constructor(options?: ClientOptions) {
+    super({
+      ...options,
+    });
 
-export default class Main {
-  constructor(client: Client) {
-    client.login(process.env.TOKEN);
-    logger.info("BOT", `Logging into bot with ID "${client.user.id}".`);
+    this.login(process.env.TOKEN);
+    logger.info("BOT", `Logging into bot with ID "${this.user.id}".`);
 
     this.loadDatabase(process.env.MONGO_URL);
     logger.info("DATABASE", `The database is connecting.`);
 
-    this.loadCommands(client);
-    this.loadEvents(client);
+    this.loadCommands();
+    this.loadEvents();
   }
 
   loadDatabase(url: string) {
@@ -45,10 +46,7 @@ export default class Main {
     );
   }
 
-  loadCommands(
-    client: Client,
-    directory: string = path.join(__dirname, "commands")
-  ) {
+  loadCommands(directory: string = path.join(__dirname, "commands")) {
     const directoryStats = fs.statSync(directory);
     if (!directoryStats.isDirectory()) return;
 
@@ -57,7 +55,7 @@ export default class Main {
       const commandPath = path.join(directory, commandFile);
       const commandFileStats = fs.statSync(commandPath);
       if (!commandFileStats.isFile()) {
-        this.loadCommands(client, commandPath);
+        this.loadCommands(commandPath);
         continue;
       }
       if (
@@ -79,13 +77,13 @@ export default class Main {
       try {
         const commandObj: Command = new command(this);
         if (commandObj && commandObj.cmdName) {
-          if (client.commands.has(commandObj.cmdName)) {
+          if (this.commands.has(commandObj.cmdName)) {
             logger.error(
               `DUPLICATE_COMMAND`,
               `Duplicate command ${commandObj.cmdName}.`
             );
           } else
-            client.commands.set(
+            this.commands.set(
               commandObj.isSubCommand
                 ? commandObj.group + `_${commandObj.cmdName}`
                 : commandObj.cmdName,
@@ -96,7 +94,7 @@ export default class Main {
     }
   }
 
-  loadEvents(client: Client, directory = path.join(__dirname, "events")) {
+  loadEvents(directory = path.join(__dirname, "events")) {
     const directoryStats = fs.statSync(directory);
     if (!directoryStats.isDirectory()) return;
 
@@ -105,7 +103,7 @@ export default class Main {
       const eventPath = path.join(directory, eventFile);
       const eventFileStats = fs.statSync(eventPath);
       if (!eventFileStats.isFile()) {
-        this.loadEvents(client, eventPath);
+        this.loadEvents(eventPath);
         continue;
       }
       if (
@@ -123,11 +121,13 @@ export default class Main {
       try {
         const eventObj: Event = new event(this);
         if (eventObj && eventObj.name) {
-          client.addListener(eventObj.name, (...args) =>
-            eventObj.handle.bind(eventObj)(client, ...args)
+          this.addListener(eventObj.name, (...args) =>
+            eventObj.handle.bind(eventObj)(this, ...args)
           );
         }
       } catch (ignored) {}
     }
   }
 }
+
+new Main();
