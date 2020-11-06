@@ -11,15 +11,59 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GuildModel = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
+class GuessTheNumber {
+}
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Date)
+], GuessTheNumber.prototype, "lastTime", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Number)
+], GuessTheNumber.prototype, "number", void 0);
+class ReactionMessage {
+}
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Date)
+], ReactionMessage.prototype, "lastTime", void 0);
+class WordUnscrambler {
+}
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Date)
+], WordUnscrambler.prototype, "lastTime", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", String)
+], WordUnscrambler.prototype, "word", void 0);
+class Games {
+}
+__decorate([
+    typegoose_1.prop({ default: {} }),
+    __metadata("design:type", GuessTheNumber)
+], Games.prototype, "guessTheNumber", void 0);
+__decorate([
+    typegoose_1.prop({ default: {} }),
+    __metadata("design:type", ReactionMessage)
+], Games.prototype, "reactionMessage", void 0);
+__decorate([
+    typegoose_1.prop({ default: {} }),
+    __metadata("design:type", WordUnscrambler)
+], Games.prototype, "wordUnscrambler", void 0);
 class Guild {
 }
 __decorate([
-    typegoose_1.prop({ required: true, unique: true }),
+    typegoose_1.prop({ unique: true }),
     __metadata("design:type", String)
 ], Guild.prototype, "guildId", void 0);
 __decorate([
-    typegoose_1.prop({ required: false, default: "!" }),
+    typegoose_1.prop({ default: "!" }),
     __metadata("design:type", String)
 ], Guild.prototype, "prefix", void 0);
+__decorate([
+    typegoose_1.prop({ default: {} }),
+    __metadata("design:type", Games)
+], Guild.prototype, "games", void 0);
 exports.default = Guild;
 exports.GuildModel = typegoose_1.getModelForClass(Guild);

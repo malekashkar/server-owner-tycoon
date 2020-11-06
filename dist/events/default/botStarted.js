@@ -12,6 +12,10 @@ class botStarted extends __1.default {
     }
     async handle(client) {
         logger_1.default.info(`BOT`, `The bot "${client.user.username}" has started successfully.`);
+        for (let i = 0; i < client.guilds.cache.size; i++) {
+            const guild = client.guilds.cache.array()[i];
+            client.invites.set(guild.id, await guild.fetchInvites());
+        }
     }
 }
 exports.default = botStarted;

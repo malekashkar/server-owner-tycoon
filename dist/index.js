@@ -9,18 +9,33 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const express_1 = __importDefault(require("express"));
 const logger_1 = __importDefault(require("./utils/logger"));
 const client_1 = __importDefault(require("./structures/client"));
+// Comment this before pushing.
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config({ path: path_1.default.join(__dirname, "..", ".env") });
+// This is only needed for heroku.
 const app = express_1.default();
 app.listen(process.env.PORT || 5000);
 app.get("/");
 class Main extends client_1.default {
     constructor(options) {
         super({
+            partials: ["USER", "GUILD_MEMBER", "MESSAGE", "REACTION"],
+            ws: {
+                intents: [
+                    "GUILDS",
+                    "GUILD_MEMBERS",
+                    "GUILD_VOICE_STATES",
+                    "GUILD_INVITES",
+                    "GUILD_VOICE_STATES",
+                    "GUILD_MESSAGES",
+                    "GUILD_MESSAGE_REACTIONS",
+                ],
+            },
             ...options,
         });
         this.login(process.env.TOKEN);
         logger_1.default.info("BOT", `Logging into server owner tycoon bot.`);
         this.loadDatabase(process.env.MONGO_URL);
-        console.log(process.env.MONGO_URL);
         logger_1.default.info("DATABASE", `The database is connecting.`);
         this.loadCommands();
         this.loadEvents();

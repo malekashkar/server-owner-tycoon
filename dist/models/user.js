@@ -11,11 +11,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
 const typegoose_1 = require("@typegoose/typegoose");
+class GameCooldowns {
+}
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Date)
+], GameCooldowns.prototype, "randomMessageReaction", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Date)
+], GameCooldowns.prototype, "joinVoiceChannel", void 0);
+class Milestones {
+}
+__decorate([
+    typegoose_1.prop({ default: false }),
+    __metadata("design:type", Boolean)
+], Milestones.prototype, "week", void 0);
+__decorate([
+    typegoose_1.prop({ default: false }),
+    __metadata("design:type", Boolean)
+], Milestones.prototype, "month", void 0);
+__decorate([
+    typegoose_1.prop({ default: false }),
+    __metadata("design:type", Boolean)
+], Milestones.prototype, "year", void 0);
 class User {
 }
 __decorate([
-    typegoose_1.prop({ required: true, unique: true }),
+    typegoose_1.prop({ unique: true }),
     __metadata("design:type", String)
 ], User.prototype, "userId", void 0);
+__decorate([
+    typegoose_1.prop({ default: 0 }),
+    __metadata("design:type", Number)
+], User.prototype, "points", void 0);
+__decorate([
+    typegoose_1.prop({ default: {} }),
+    __metadata("design:type", GameCooldowns)
+], User.prototype, "gameCooldowns", void 0);
+__decorate([
+    typegoose_1.prop({ default: {} }),
+    __metadata("design:type", Milestones)
+], User.prototype, "milestones", void 0);
 exports.default = User;
 exports.UserModel = typegoose_1.getModelForClass(User);

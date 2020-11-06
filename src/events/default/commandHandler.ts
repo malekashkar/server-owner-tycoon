@@ -4,6 +4,10 @@ import { Message } from "discord.js";
 import { GuildModel } from "../../models/guild";
 import { UserModel } from "../../models/user";
 import Event from "..";
+import GuessTheNumber from "../../utils/games/guessTheNumber";
+import Milestone from "../../utils/games/milestones";
+import reactionMessage from "../../utils/games/reactionMessage";
+import wordUnscramble from "../../utils/games/wordUnscramble";
 
 export default class commandHandler extends Event {
   name = "message";
@@ -25,6 +29,12 @@ export default class commandHandler extends Event {
         (await UserModel.create({
           userId: message.author.id,
         }));
+
+      // Games
+      await GuessTheNumber(message, userData, guildData);
+      await Milestone(message, userData);
+      await reactionMessage(message, guildData);
+      await wordUnscramble(message, userData, guildData);
 
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;

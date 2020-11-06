@@ -7,8 +7,13 @@ import Event from "./events";
 import Command from "./commands";
 import logger from "./utils/logger";
 import Client from "./structures/client";
-import { ClientOptions } from "discord.js";
 
+// Comment this before pushing.
+import dotenv from "dotenv";
+import { ClientOptions } from "discord.js";
+dotenv.config({ path: path.join(__dirname, "..", ".env") });
+
+// This is only needed for heroku.
 const app = express();
 app.listen(process.env.PORT || 5000);
 app.get("/");
@@ -16,6 +21,18 @@ app.get("/");
 export default class Main extends Client {
   constructor(options?: ClientOptions) {
     super({
+      partials: ["USER", "GUILD_MEMBER", "MESSAGE", "REACTION"],
+      ws: {
+        intents: [
+          "GUILDS",
+          "GUILD_MEMBERS",
+          "GUILD_VOICE_STATES",
+          "GUILD_INVITES",
+          "GUILD_VOICE_STATES",
+          "GUILD_MESSAGES",
+          "GUILD_MESSAGE_REACTIONS",
+        ],
+      },
       ...options,
     });
 
@@ -23,7 +40,6 @@ export default class Main extends Client {
     logger.info("BOT", `Logging into server owner tycoon bot.`);
 
     this.loadDatabase(process.env.MONGO_URL);
-    console.log(process.env.MONGO_URL);
     logger.info("DATABASE", `The database is connecting.`);
 
     this.loadCommands();

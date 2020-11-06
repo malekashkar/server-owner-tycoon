@@ -7,6 +7,10 @@ const logger_1 = __importDefault(require("../../utils/logger"));
 const guild_1 = require("../../models/guild");
 const user_1 = require("../../models/user");
 const __1 = __importDefault(require(".."));
+const guessTheNumber_1 = __importDefault(require("../../utils/games/guessTheNumber"));
+const milestones_1 = __importDefault(require("../../utils/games/milestones"));
+const reactionMessage_1 = __importDefault(require("../../utils/games/reactionMessage"));
+const wordUnscramble_1 = __importDefault(require("../../utils/games/wordUnscramble"));
 class commandHandler extends __1.default {
     constructor() {
         super(...arguments);
@@ -26,6 +30,11 @@ class commandHandler extends __1.default {
                 (await user_1.UserModel.create({
                     userId: message.author.id,
                 }));
+            // Games
+            await guessTheNumber_1.default(message, userData, guildData);
+            await milestones_1.default(message, userData);
+            await reactionMessage_1.default(message, guildData);
+            await wordUnscramble_1.default(message, userData, guildData);
             const prefix = guildData.prefix;
             if (!prefix || message.content.indexOf(prefix) !== 0)
                 return;
