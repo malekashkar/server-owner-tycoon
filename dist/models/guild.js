@@ -17,10 +17,6 @@ __decorate([
     typegoose_1.prop(),
     __metadata("design:type", Date)
 ], GuessTheNumber.prototype, "lastTime", void 0);
-__decorate([
-    typegoose_1.prop(),
-    __metadata("design:type", Number)
-], GuessTheNumber.prototype, "number", void 0);
 class ReactionMessage {
 }
 __decorate([
@@ -33,10 +29,6 @@ __decorate([
     typegoose_1.prop(),
     __metadata("design:type", Date)
 ], WordUnscrambler.prototype, "lastTime", void 0);
-__decorate([
-    typegoose_1.prop(),
-    __metadata("design:type", String)
-], WordUnscrambler.prototype, "word", void 0);
 class Games {
 }
 __decorate([
@@ -51,19 +43,35 @@ __decorate([
     typegoose_1.prop({ default: {} }),
     __metadata("design:type", WordUnscrambler)
 ], Games.prototype, "wordUnscrambler", void 0);
-class Guild {
+class Messages {
+}
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", String)
+], Messages.prototype, "reactionRoles", void 0);
+class DbGuild {
 }
 __decorate([
     typegoose_1.prop({ unique: true }),
     __metadata("design:type", String)
-], Guild.prototype, "guildId", void 0);
+], DbGuild.prototype, "guildId", void 0);
 __decorate([
     typegoose_1.prop({ default: "!" }),
     __metadata("design:type", String)
-], Guild.prototype, "prefix", void 0);
+], DbGuild.prototype, "prefix", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", String)
+], DbGuild.prototype, "joinCategory", void 0);
 __decorate([
     typegoose_1.prop({ default: {} }),
     __metadata("design:type", Games)
-], Guild.prototype, "games", void 0);
-exports.default = Guild;
-exports.GuildModel = typegoose_1.getModelForClass(Guild);
+], DbGuild.prototype, "games", void 0);
+__decorate([
+    typegoose_1.prop({ default: {} }),
+    __metadata("design:type", Messages)
+], DbGuild.prototype, "messages", void 0);
+exports.default = DbGuild;
+exports.GuildModel = typegoose_1.getModelForClass(DbGuild, {
+    schemaOptions: { collection: "Guild" },
+});

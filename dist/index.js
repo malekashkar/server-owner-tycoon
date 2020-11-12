@@ -8,17 +8,16 @@ const path_1 = __importDefault(require("path"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_1 = __importDefault(require("express"));
 const logger_1 = __importDefault(require("./utils/logger"));
-const client_1 = __importDefault(require("./structures/client"));
-// Comment this before pushing.
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: path_1.default.join(__dirname, "..", ".env") });
-// This is only needed for heroku.
+const discord_js_1 = require("discord.js");
+dotenv_1.default.config();
 const app = express_1.default();
 app.listen(process.env.PORT || 5000);
-app.get("/");
-class Main extends client_1.default {
+app.get("*", (req, res) => res.send("<h1>Hey there server owners!</h1>"));
+class Client extends discord_js_1.Client {
     constructor(options) {
         super({
+            ...options,
             partials: ["USER", "GUILD_MEMBER", "MESSAGE", "REACTION"],
             ws: {
                 intents: [
@@ -31,17 +30,18 @@ class Main extends client_1.default {
                     "GUILD_MESSAGE_REACTIONS",
                 ],
             },
-            ...options,
         });
-        this.login(process.env.TOKEN);
-        logger_1.default.info("BOT", `Logging into server owner tycoon bot.`);
-        this.loadDatabase(process.env.MONGO_URL);
-        logger_1.default.info("DATABASE", `The database is connecting.`);
+        this.commands = new discord_js_1.Collection();
+        this.invites = new discord_js_1.Collection();
+        this.commandsChannel = "630102514519506985";
+        this.pointChannel = "774513961017802762";
+        this.mainGuild = "565005586060804136";
+        this.loadDatabase();
         this.loadCommands();
         this.loadEvents();
     }
-    loadDatabase(url) {
-        mongoose_1.default.connect(url, {
+    loadDatabase() {
+        mongoose_1.default.connect(process.env.MONGO_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
@@ -85,9 +85,7 @@ class Main extends client_1.default {
                         logger_1.default.error(`DUPLICATE_COMMAND`, `Duplicate command ${commandObj.cmdName}.`);
                     }
                     else
-                        this.commands.set(commandObj.isSubCommand
-                            ? commandObj.group + `_${commandObj.cmdName}`
-                            : commandObj.cmdName, commandObj);
+                        this.commands.set(commandObj.cmdName, commandObj);
                 }
             }
             catch (e) { }
@@ -116,12 +114,12 @@ class Main extends client_1.default {
             try {
                 const eventObj = new event(this);
                 if (eventObj && eventObj.name) {
-                    this.addListener(eventObj.name, (...args) => eventObj.handle.bind(eventObj)(this, ...args));
+                    this.addListener(eventObj.name, (...args) => eventObj.handle.bind(eventObj)(...args));
                 }
             }
             catch (ignored) { }
         }
     }
 }
-exports.default = Main;
-new Main();
+exports.default = Client;
+new Client().login(process.env.TOKEN);

@@ -1,5 +1,5 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import Guild from "../../models/guild";
 import User from "../../models/user";
 import embeds from "../embeds";
@@ -7,7 +7,8 @@ import { gameCooldowns, gamePoints } from "../storage";
 
 export default async function Milestone(
   message: Message,
-  userData: DocumentType<User>
+  userData: DocumentType<User>,
+  pointChannel: TextChannel
 ) {
   const timeInDiscord = Date.now() - message.member.joinedTimestamp;
 
@@ -17,7 +18,7 @@ export default async function Milestone(
   ) {
     const points = Math.floor(Math.random() * gamePoints.weekMilestone);
 
-    message.channel.send(
+    pointChannel.send(
       embeds.normal(
         `Week Milestone`,
         `${message.author} has received **${points}** for their one week milestone in this server!`
@@ -35,7 +36,7 @@ export default async function Milestone(
   ) {
     const points = Math.floor(Math.random() * gamePoints.monthMilestone);
 
-    message.channel.send(
+    pointChannel.send(
       embeds.normal(
         `Month Milestone`,
         `${message.author} has received **${points}** for their one month milestone in this server!`
@@ -53,7 +54,7 @@ export default async function Milestone(
   ) {
     const points = Math.floor(Math.random() * gamePoints.yearMilestone);
 
-    message.channel.send(
+    pointChannel.send(
       embeds.normal(
         `Year Milestone`,
         `${message.author} has received **${points}** for their one year milestone in this server!`

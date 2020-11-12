@@ -6,21 +6,31 @@ import express from "express";
 import Event from "./events";
 import Command from "./commands";
 import logger from "./utils/logger";
-import Client from "./structures/client";
-
-// Comment this before pushing.
 import dotenv from "dotenv";
-import { ClientOptions } from "discord.js";
-dotenv.config({ path: path.join(__dirname, "..", ".env") });
+import {
+  Client as BaseManager,
+  Collection,
+  Invite,
+  ClientOptions,
+} from "discord.js";
 
-// This is only needed for heroku.
+dotenv.config();
+
 const app = express();
 app.listen(process.env.PORT || 5000);
-app.get("/");
+app.get("*", (req, res) => res.send("<h1>Hey there server owners!</h1>"));
 
-export default class Main extends Client {
+export default class Client extends BaseManager {
+  commands: Collection<string, Command> = new Collection();
+  invites: Collection<string, Collection<string, Invite>> = new Collection();
+
+  commandsChannel: string = "630102514519506985";
+  pointChannel: string = "774513961017802762";
+  mainGuild: string = "565005586060804136";
+
   constructor(options?: ClientOptions) {
     super({
+      ...options,
       partials: ["USER", "GUILD_MEMBER", "MESSAGE", "REACTION"],
       ws: {
         intents: [
@@ -33,22 +43,16 @@ export default class Main extends Client {
           "GUILD_MESSAGE_REACTIONS",
         ],
       },
-      ...options,
     });
 
-    this.login(process.env.TOKEN);
-    logger.info("BOT", `Logging into server owner tycoon bot.`);
-
-    this.loadDatabase(process.env.MONGO_URL);
-    logger.info("DATABASE", `The database is connecting.`);
-
+    this.loadDatabase();
     this.loadCommands();
     this.loadEvents();
   }
 
-  loadDatabase(url: string) {
+  loadDatabase() {
     mongoose.connect(
-      url,
+      process.env.MONGO_URL,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -104,13 +108,7 @@ export default class Main extends Client {
               `DUPLICATE_COMMAND`,
               `Duplicate command ${commandObj.cmdName}.`
             );
-          } else
-            this.commands.set(
-              commandObj.isSubCommand
-                ? commandObj.group + `_${commandObj.cmdName}`
-                : commandObj.cmdName,
-              commandObj
-            );
+          } else this.commands.set(commandObj.cmdName, commandObj);
         }
       } catch (e) {}
     }
@@ -144,7 +142,7 @@ export default class Main extends Client {
         const eventObj: Event = new event(this);
         if (eventObj && eventObj.name) {
           this.addListener(eventObj.name, (...args) =>
-            eventObj.handle.bind(eventObj)(this, ...args)
+            eventObj.handle.bind(eventObj)(...args)
           );
         }
       } catch (ignored) {}
@@ -152,4 +150,4 @@ export default class Main extends Client {
   }
 }
 
-new Main();
+new Client().login(process.env.TOKEN);

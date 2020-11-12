@@ -1,58 +1,65 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import randomWords from "random-words";
 import Guild from "../../models/guild";
-import User from "../../models/user";
+import User, { UserModel } from "../../models/user";
 import embeds from "../embeds";
 import { gameCooldowns, gamePoints } from "../storage";
 
 export default async function wordUnscramble(
   message: Message,
   userData: DocumentType<User>,
-  guildData: DocumentType<Guild>
+  guildData: DocumentType<Guild>,
+  pointChannel: TextChannel
 ) {
   const unscrambleData = guildData.games.wordUnscrambler;
 
   if (
-    unscrambleData &&
     unscrambleData.lastTime &&
-    unscrambleData.lastTime.getTime() + gameCooldowns.wordUnscramble >
-      Date.now() &&
-    unscrambleData.word &&
-    message.content === unscrambleData.word
-  ) {
-    const points = Math.floor(Math.random() * gamePoints.wordUnscramble);
-
-    message.channel.send(
-      embeds.normal(
-        `Word Unscrambled`,
-        `${message.author}, you received **${points}** points for unscrambling the word \`${unscrambleData.word}\`.`
-      )
-    );
-
-    userData.points += points;
-    await userData.save();
-
-    unscrambleData.word = null;
-    unscrambleData.lastTime = new Date();
-    await guildData.save();
-  }
-
-  if (
-    (unscrambleData && !unscrambleData.lastTime) ||
-    (unscrambleData &&
-      unscrambleData.lastTime.getTime() + gameCooldowns.wordUnscramble <
-        Date.now() &&
-      !unscrambleData.word)
+    unscrambleData.lastTime.getTime() + gameCooldowns.wordUnscramble <
+      Date.now()
   ) {
     const word = randomWords();
     const shuffled = shuffle(word);
-    message.channel.send(
+    const unscrambleWordMessage = await message.channel.send(
       embeds.normal(`Unscrambler`, `Unscramble the word \`${shuffled}\``)
     );
 
+    const collector = await message.channel.awaitMessages(
+      (m) => m.content === word,
+      { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
+    );
+
+    if (collector && collector.first()) {
+      const points = Math.floor(Math.random() * gamePoints.wordUnscramble);
+      const correctUser = collector.first().author;
+      const userData =
+        (await UserModel.findOne({
+          userId: correctUser.id,
+        })) ||
+        (await UserModel.create({
+          userId: correctUser.id,
+        }));
+
+      userData.points += points;
+      await userData.save();
+
+      await unscrambleWordMessage.delete();
+      await message.channel.send(
+        embeds.normal(
+          `You Guessed It!`,
+          `${correctUser} unscrambled the word **${shuffled}** to \`${word}\`!`
+        )
+      );
+      await pointChannel.send(
+        embeds.normal(
+          `Word Unscrambled`,
+          `${correctUser}, has received **${points}** points for unscrambling the word \`${word}\`.`
+        )
+      );
+    }
+
     unscrambleData.lastTime = new Date();
-    unscrambleData.word = word;
     await guildData.save();
   }
 }

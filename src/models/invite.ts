@@ -5,7 +5,7 @@ export interface IInvite {
   inviteUserId: string;
 }
 
-export default class Invite {
+export default class DbInvite {
   @prop()
   userId: string;
 
@@ -13,4 +13,6 @@ export default class Invite {
   invitedUserId: string;
 }
 
-export const InviteModel = getModelForClass(Invite);
+export const InviteModel = getModelForClass(DbInvite, {
+  schemaOptions: { collection: "Invite" },
+});

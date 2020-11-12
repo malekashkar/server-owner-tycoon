@@ -1,22 +1,20 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import Command from ".";
-import Guild from "../models/guild";
-import Invite, { IInvite, InviteModel } from "../models/invite";
-import User, { UserModel } from "../models/user";
-import Client from "../structures/client";
-import embeds from "../utils/embeds";
+import UtilityCommand from ".";
+import DbGuild from "../../models/guild";
+import DbInvite, { IInvite, InviteModel } from "../../models/invite";
+import DbUser, { UserModel } from "../../models/user";
+import embeds from "../../utils/embeds";
 
-export default class InvitesCommand extends Command {
+export default class InvitesCommand extends UtilityCommand {
   cmdName = "invites";
   description = "Check how much invites you have.";
 
   async run(
-    client: Client,
     message: Message,
     args: string[],
-    userData: DocumentType<User>,
-    guildData: DocumentType<Guild>
+    userData: DocumentType<DbUser>,
+    guildData: DocumentType<DbGuild>
   ) {
     const user = message.mentions.users.first() || message.author;
 
@@ -41,9 +39,9 @@ export default class InvitesCommand extends Command {
   }
 }
 
-function inviteProcessor(invites: DocumentType<Invite>[]) {
+function inviteProcessor(invites: DocumentType<DbInvite>[]) {
   let realInvites: IInvite[] = [];
-  let fakeInvites: number = 0;
+  let fakeInvites = 0;
   for (let i = 0; i < invites.length; i++) {
     if (
       !realInvites.some(
@@ -58,8 +56,6 @@ function inviteProcessor(invites: DocumentType<Invite>[]) {
       });
     else fakeInvites++;
   }
-
-  console.log(realInvites, fakeInvites);
 
   return fakeInvites;
 }

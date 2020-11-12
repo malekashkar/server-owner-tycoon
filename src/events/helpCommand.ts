@@ -1,16 +1,15 @@
 import { Collection, MessageReaction, User } from "discord.js";
-import Event from "..";
-import Client from "../../structures/client";
-import { GuildModel } from "../../models/guild";
-import embeds from "../../utils/embeds";
-import react from "../../utils/react";
-import { IGroup } from "../../commands/help";
-import { emojis } from "../../utils/storage";
+import Event from ".";
+import { GuildModel } from "../models/guild";
+import embeds from "../utils/embeds";
+import react from "../utils/react";
+import { IGroup } from "../commands/utility/help";
+import { emojis } from "../utils/storage";
 
 export default class HelpCmdBack extends Event {
   name = "messageReactionAdd";
 
-  async handle(client: Client, reaction: MessageReaction, user: User) {
+  async handle(reaction: MessageReaction, user: User) {
     if (user.bot) return;
     if (reaction.message.partial) reaction.message.fetch();
 
@@ -27,7 +26,7 @@ export default class HelpCmdBack extends Event {
 
     const help: Collection<string, IGroup> = new Collection();
 
-    for (const commandObj of client.commands.array()) {
+    for (const commandObj of this.client.commands.array()) {
       if (!commandObj.group) continue;
 
       const command = commandObj.isSubCommand

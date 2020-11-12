@@ -1,10 +1,15 @@
 import { ClientEvents } from "discord.js";
+import Client from "..";
 export type EventNameType = keyof ClientEvents;
 
 export default abstract class Event {
-  group: string;
+  client: Client;
   disabled = false;
-  abstract name: string;
 
+  constructor(client: Client) {
+    this.client = client;
+  }
+
+  abstract name: string;
   abstract async handle(...args: unknown[]): Promise<void>;
 }

@@ -1,33 +1,36 @@
-import embeds from "../utils/embeds";
-import Command from ".";
+import embeds from "../../utils/embeds";
+import UtilityCommand from ".";
 import { Message, Collection } from "discord.js";
-import Client from "../structures/client";
-import User from "../models/user";
-import Guild from "../models/guild";
+import DbUser from "../../models/user";
+import DbGuild from "../../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
-import { emojis } from "../utils/storage";
-import react from "../utils/react";
+import { emojis } from "../../utils/storage";
+import react from "../../utils/react";
 
 export interface IGroup {
   commands: string[];
   descriptions: string[];
 }
 
-export default class HelpCommand extends Command {
+export default class HelpCommand extends UtilityCommand {
   cmdName = "help";
   description = "Receive the help message with all the information of the bot.";
 
   async run(
-    client: Client,
     message: Message,
     args: string[],
-    userData: DocumentType<User>,
-    guildData: DocumentType<Guild>
+    userData: DocumentType<DbUser>,
+    guildData: DocumentType<DbGuild>
   ) {
     const help: Collection<string, IGroup> = new Collection();
 
-    for (const commandObj of client.commands.array()) {
+    for (const commandObj of this.client.commands.array()) {
       if (!commandObj.group) continue;
+      if (
+        commandObj.permission &&
+        !resolvePermissions(message, commandObj.permission)
+      )
+        continue;
 
       const command = commandObj.isSubCommand
         ? commandObj.group + ` ${commandObj.cmdName}`
@@ -96,4 +99,13 @@ export default class HelpCommand extends Command {
 
 function toTitleCase(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function resolvePermissions(message: Message, permission: string) {
+  if (
+    permission.toLowerCase().includes("admin") &&
+    !message.member.hasPermission("ADMINISTRATOR")
+  )
+    return false;
+  return true;
 }

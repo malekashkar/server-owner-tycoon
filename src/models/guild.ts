@@ -3,9 +3,6 @@ import { getModelForClass, prop } from "@typegoose/typegoose";
 class GuessTheNumber {
   @prop()
   lastTime: Date;
-
-  @prop()
-  number: number;
 }
 
 class ReactionMessage {
@@ -16,9 +13,6 @@ class ReactionMessage {
 class WordUnscrambler {
   @prop()
   lastTime: Date;
-
-  @prop()
-  word: string;
 }
 
 class Games {
@@ -32,15 +26,28 @@ class Games {
   wordUnscrambler?: WordUnscrambler;
 }
 
-export default class Guild {
+class Messages {
+  @prop()
+  reactionRoles?: string;
+}
+
+export default class DbGuild {
   @prop({ unique: true })
   guildId!: string;
 
   @prop({ default: "!" })
   prefix?: string;
 
+  @prop()
+  joinCategory?: string;
+
   @prop({ default: {} })
   games?: Games;
+
+  @prop({ default: {} })
+  messages?: Messages;
 }
 
-export const GuildModel = getModelForClass(Guild);
+export const GuildModel = getModelForClass(DbGuild, {
+  schemaOptions: { collection: "Guild" },
+});

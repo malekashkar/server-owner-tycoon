@@ -1,18 +1,19 @@
 import Event from "..";
-import { MessageReaction, User } from "discord.js";
+import { MessageReaction, TextChannel, User } from "discord.js";
 import embeds from "../../utils/embeds";
 import { UserModel } from "../../models/user";
 import { gameCooldowns, gamePoints } from "../../utils/storage";
-import Client from "../../structures/client";
 
 export default class randomMessageReaction extends Event {
   name = "messageReactionAdd";
 
-  async handle(client: Client, reaction: MessageReaction, user: User) {
+  async handle(reaction: MessageReaction, user: User) {
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
 
-    const message = reaction.message;
+    const pointChannel = this.client.guilds
+      .resolve(this.client.mainGuild)
+      .channels.resolve(this.client.pointChannel) as TextChannel;
 
     const userData =
       (await UserModel.findOne({ userId: user.id })) ||
@@ -30,10 +31,10 @@ export default class randomMessageReaction extends Event {
       userData.gameCooldowns = { randomMessageReaction: new Date() };
       await userData.save();
 
-      message.channel.send(
+      pointChannel.send(
         embeds.normal(
           `Reaction Points`,
-          `You received **${points}** for reacting to a message!`
+          `${user} has received **${points}** for reacting to a message!`
         )
       );
     } else if (
@@ -49,10 +50,10 @@ export default class randomMessageReaction extends Event {
       userData.gameCooldowns.randomMessageReaction = new Date();
       await userData.save();
 
-      message.channel.send(
+      pointChannel.send(
         embeds.normal(
           `Reaction Points`,
-          `You received **${points}** for reacting to a message!`
+          `${user} has received **${points}** for reacting to a message!`
         )
       );
     }

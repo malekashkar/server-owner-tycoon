@@ -1,11 +1,28 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
+class ReactionRolesUsed {
+  @prop({ default: false })
+  announcements?: boolean;
+
+  @prop({ default: false })
+  updates?: boolean;
+
+  @prop({ default: false })
+  polls?: boolean;
+
+  @prop({ default: false })
+  giveaways?: boolean;
+}
+
 class GameCooldowns {
   @prop()
   randomMessageReaction?: Date;
 
   @prop()
   joinVoiceChannel?: Date;
+
+  @prop({ default: {} })
+  reactionRoles?: ReactionRolesUsed;
 }
 
 class Milestones {
@@ -19,7 +36,7 @@ class Milestones {
   year?: boolean;
 }
 
-export default class User {
+export default class DbUser {
   @prop({ unique: true })
   userId!: string;
 
@@ -33,4 +50,6 @@ export default class User {
   milestones?: Milestones;
 }
 
-export const UserModel = getModelForClass(User);
+export const UserModel = getModelForClass(DbUser, {
+  schemaOptions: { collection: "User" },
+});

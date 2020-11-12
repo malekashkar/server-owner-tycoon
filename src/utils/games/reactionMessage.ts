@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import embeds from "../../utils/embeds";
 import User, { UserModel } from "../../models/user";
 import Guild from "../../models/guild";
@@ -8,7 +8,8 @@ import react from "../react";
 
 export default async function reactionMessage(
   message: Message,
-  guildData: DocumentType<Guild>
+  guildData: DocumentType<Guild>,
+  pointChannel: TextChannel
 ) {
   const reactionData = guildData.games.reactionMessage;
 
@@ -43,8 +44,8 @@ export default async function reactionMessage(
       userData.points += points;
       await userData.save();
 
-      await message.reactions.removeAll();
-      await reactionMessage.edit(
+      await reactionMessage.delete();
+      await pointChannel.send(
         embeds.normal(
           `Reaction Received`,
           `${message.author} received **${points}** for clicking the emoji first.`
@@ -56,6 +57,3 @@ export default async function reactionMessage(
     await guildData.save();
   }
 }
-
-const randomNumber = (min: number, max: number) =>
-  Math.floor(Math.random() * Math.floor(max)) - max + min;
