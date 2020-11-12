@@ -18,11 +18,11 @@ export default class PrizesCommand extends PointsCommand {
       $100 PayPal - 100k points
       
       **Discord Server**
-      Color Discord Role - 2.5k points
-      VIP Rank - 5k points
-      Top of List 24 Hours -3k points
       Mention in Announcement - 1k points
       Add Server Emoji - 2k points
+      Color Discord Role - 2.5k points
+      Top of List 24 Hours - 3k points
+      VIP Rank - 5k points
       
       **Gift cards**
       Visa ($25, $50) - 30k points, 60k points
