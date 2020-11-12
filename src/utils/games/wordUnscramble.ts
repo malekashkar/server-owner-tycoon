@@ -25,6 +25,9 @@ export default async function wordUnscramble(
       embeds.normal(`Unscrambler`, `Unscramble the word \`${shuffled}\``)
     );
 
+    unscrambleData.lastTime = new Date();
+    await guildData.save();
+
     const collector = await message.channel.awaitMessages(
       (m) => m.content === word,
       { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
@@ -58,9 +61,6 @@ export default async function wordUnscramble(
         )
       );
     }
-
-    unscrambleData.lastTime = new Date();
-    await guildData.save();
   }
 }
 

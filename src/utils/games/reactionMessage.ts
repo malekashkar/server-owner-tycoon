@@ -25,6 +25,9 @@ export default async function reactionMessage(
     );
     react(reactionMessage, ["✅"]);
 
+    reactionData.lastTime = new Date();
+    await guildData.save();
+
     const collector = await reactionMessage.awaitReactions(
       (r, u) => r.emoji.name === "✅",
       { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
@@ -52,8 +55,5 @@ export default async function reactionMessage(
         )
       );
     }
-
-    reactionData.lastTime = new Date();
-    await guildData.save();
   }
 }

@@ -28,6 +28,9 @@ export default async function GuessTheNumber(
       )
     );
 
+    numberData.lastTime = new Date();
+    await guildData.save();
+
     const collector = await message.channel.awaitMessages(
       (m) => m.content === correctNumber.toString(),
       { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
@@ -61,9 +64,6 @@ export default async function GuessTheNumber(
         )
       );
     }
-
-    numberData.lastTime = new Date();
-    await guildData.save();
   }
 }
 
