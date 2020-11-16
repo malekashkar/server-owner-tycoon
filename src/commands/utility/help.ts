@@ -6,6 +6,7 @@ import DbGuild from "../../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
 import { emojis } from "../../utils/storage";
 import react from "../../utils/react";
+import { stripIndents } from "common-tags";
 
 export interface IGroup {
   commands: string[];
@@ -88,7 +89,7 @@ export default class HelpCommand extends UtilityCommand {
 
         helpMessage.reactions.removeAll();
         helpMessage.edit(
-          embeds.normal(categoryName + ` | Commands Info`, description)
+          embeds.normal(categoryName + ` | Commands Info`, stripIndents`${description}`)
         );
 
         await react(helpMessage, ["◀️"]);

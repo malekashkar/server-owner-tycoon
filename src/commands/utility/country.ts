@@ -1,4 +1,5 @@
 import { DocumentType } from "@typegoose/typegoose";
+import { stripIndents } from "common-tags";
 import { Message } from "discord.js";
 import UtilityCommand from ".";
 import { CountryModel } from "../../models/country";
@@ -55,7 +56,7 @@ export default class CountryCommand extends UtilityCommand {
       const continentEmojis = emojis.slice(0, continents.length);
       const continentEmbed = embeds.normal(
         null,
-        `**HELLO** there, ${message.author.username}!
+        stripIndents`**HELLO** there, ${message.author.username}!
           What continent are you from? Click one of the reactions below!
           ${continents.map((x, i) => `${continentEmojis[i]} ${x}`).join("\n")}`
       );

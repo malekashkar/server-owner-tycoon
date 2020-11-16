@@ -4,6 +4,7 @@ import { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
 import Paginator from "../../utils/pagecord";
 import _ from "lodash";
+import { stripIndents } from "common-tags";
 
 export default class LeaderboardCommand extends PointsCommand {
   cmdName = "leaderboard";
@@ -45,7 +46,7 @@ export default class LeaderboardCommand extends PointsCommand {
           .filter((x) => !!x)
           .join("\n");
 
-        return embeds.normal(`Points Leaderboard`, description);
+        return embeds.normal(`Points Leaderboard`, stripIndents`${description}`);
       }
     );
 

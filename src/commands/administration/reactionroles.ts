@@ -1,4 +1,5 @@
 import { DocumentType } from "@typegoose/typegoose";
+import { stripIndents } from "common-tags";
 import { Message } from "discord.js";
 import AdminCommand from ".";
 import DbGuild from "../../models/guild";
@@ -10,7 +11,7 @@ import { reactionRoles } from "../../utils/storage";
 export default class ReactionRolesCommand extends AdminCommand {
   cmdName = "reactionroles";
   description = "Send the reaction roles message";
-  permission = "administrator"
+  permission = "administrator";
 
   async run(
     message: Message,
@@ -21,9 +22,9 @@ export default class ReactionRolesCommand extends AdminCommand {
     const reactionMessage = await message.channel.send(
       embeds.normal(
         `Reaction Roles`,
-        reactionRoles
+        stripIndents`${reactionRoles
           .map((x) => `${x.reaction} <@&${x.roleId}> ~ ${x.description}`)
-          .join("\n")
+          .join("\n")}`
       )
     );
     await react(

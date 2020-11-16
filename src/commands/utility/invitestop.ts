@@ -4,6 +4,7 @@ import { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
 import Paginator from "../../utils/pagecord";
 import _ from "lodash";
+import { stripIndents } from "common-tags";
 
 export default class InvitesTopCommand extends PointsCommand {
   cmdName = "invitestop";
@@ -48,7 +49,7 @@ export default class InvitesTopCommand extends PointsCommand {
           .filter((x) => !!x)
           .join("\n");
 
-        return embeds.normal(`Invites Leaderboard`, description);
+        return embeds.normal(`Invites Leaderboard`, stripIndents`${description}`);
       }
     );
 

@@ -1,3 +1,4 @@
+import { stripIndents } from "common-tags";
 import { MessageReaction, TextChannel, User } from "discord.js";
 import Event from "..";
 import { CountryModel } from "../../models/country";
@@ -65,7 +66,7 @@ export default class CountrySelectorReactions extends Event {
       const selectCountryMessage = await channel.send(
         embeds.normal(
           `Please select a country from the list below.`,
-          `${countriesOfLetter.map((x) => `${x[2]} ${x[0]}`).join("\n")}`
+          stripIndents`${countriesOfLetter.map((x) => `${x[2]} ${x[0]}`).join("\n")}`
         )
       );
       await react(selectCountryMessage, countriesEmojis);

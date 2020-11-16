@@ -1,3 +1,4 @@
+import { stripIndents } from "common-tags";
 import { GuildMember } from "discord.js";
 import Event from "..";
 import { CountryModel } from "../../models/country";
@@ -39,7 +40,7 @@ export default class CountrySelectorEvent extends Event {
       const continentEmojis = emojis.slice(0, continents.length);
       const continentEmbed = embeds.normal(
         null,
-        `**HELLO** there, ${member.user.username}!
+        stripIndents`**HELLO** there, ${member.user.username}!
         What continent are you from? Click one of the reactions below!
         ${continents.map((x, i) => `${continentEmojis[i]} ${x}`).join("\n")}`
       );
