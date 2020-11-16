@@ -82,24 +82,32 @@ export default class CountrySelectorReactions extends Event {
       const countriesEmojis = countriesSelected.map((x) => x[2]);
       if (!countriesEmojis.includes(reaction.emoji.name)) return;
 
-      await channel.send(
-        embeds.normal(
-          `Country Process Complete`,
-          `Welcome to the **${channel.guild.name}** discord server **${member.user.username}**!`
-        )
-      );
+      try {
+        member.setNickname(
+          `${member.user.username.slice(0, 15)} ${reaction.emoji.name}`
+        );
 
-      member.setNickname(
-        `${member.user.username.slice(0, 15)} ${reaction.emoji.name}`
-      );
+        if (!member.roles.cache.has(roles.supporter))
+          member.roles.add(roles.supporter);
 
-      if (!member.roles.cache.has(roles.supporter))
-        member.roles.add(roles.supporter);
+        await channel.send(
+          embeds.normal(
+            `Country Process Complete`,
+            `Welcome to the **${channel.guild.name}** discord server **${member.user.username}**!`
+          )
+        );
 
-      setTimeout(async () => {
-        await countryData.deleteOne();
-        channel.delete();
-      }, 10 * 1000);
+        setTimeout(async () => {
+          await countryData.deleteOne();
+          channel.delete();
+        }, 10 * 1000);
+      } catch (err) {
+        await channel.send(
+          embeds.error(
+            `I do not have permission to edit your roles or nickname ${user}!`
+          )
+        );
+      }
     } else
       setTimeout(async () => {
         channel.delete();
