@@ -19,23 +19,20 @@ export default class CountrySelectorEvent extends Event {
         member.user.username.length > 15
           ? member.user.username.slice(0, 15)
           : member.user.username;
-      const channel = await member.guild.channels.create(
-        `${formattedUsername}-entrance`,
-        {
-          type: "text",
-          parent: guildData.joinCategory,
-          permissionOverwrites: [
-            {
-              id: member.id,
-              allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "SEND_MESSAGES"],
-            },
-            {
-              id: member.guild.id,
-              deny: "VIEW_CHANNEL",
-            },
-          ],
-        }
-      );
+      const channel = await member.guild.channels.create(formattedUsername, {
+        type: "text",
+        parent: guildData.joinCategory,
+        permissionOverwrites: [
+          {
+            id: member.id,
+            allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "SEND_MESSAGES"],
+          },
+          {
+            id: member.guild.id,
+            deny: "VIEW_CHANNEL",
+          },
+        ],
+      });
       const continents = Object.keys(countries);
       const continentEmojis = emojis.slice(0, continents.length);
       const continentEmbed = embeds.normal(
