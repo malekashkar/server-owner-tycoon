@@ -45,6 +45,7 @@ export default class CommandHandler extends Event {
 
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;
+      if (message.deletable) await message.delete();
 
       const args = message.content
         .slice(prefix.length)
