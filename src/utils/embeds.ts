@@ -10,11 +10,10 @@ export default class embeds {
   };
 
   static normal = function (title: string, desc: string) {
-    return new MessageEmbed()
-      .setTitle(title)
-      .setDescription(desc)
-      .setColor("RANDOM")
-      .setTimestamp();
+    const embed = new MessageEmbed().setColor("RANDOM").setTimestamp();
+    if (title) embed.setTitle(title);
+    if (desc) embed.setDescription(desc);
+    return embed;
   };
 
   static question = function (question: string) {

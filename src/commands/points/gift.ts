@@ -20,6 +20,10 @@ export default class GiftCommand extends PointsCommand {
       return message.channel.send(
         embeds.error(`Please tag the user you would like to gift points to.`)
       );
+    
+      if(message.author === giftTo) return message.channel.send(
+        embeds.error(`You are not `)
+      )
 
     const amount = parseInt(args[1]);
     if (!amount || isNaN(amount))

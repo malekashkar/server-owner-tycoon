@@ -77,5 +77,5 @@ __decorate([
 ], DbUser.prototype, "milestones", void 0);
 exports.default = DbUser;
 exports.UserModel = typegoose_1.getModelForClass(DbUser, {
-    schemaOptions: { collection: "User" },
+    schemaOptions: { collection: "users" },
 });

@@ -51,5 +51,5 @@ export default class DbUser {
 }
 
 export const UserModel = getModelForClass(DbUser, {
-  schemaOptions: { collection: "User" },
+  schemaOptions: { collection: "users" },
 });

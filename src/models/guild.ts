@@ -49,5 +49,5 @@ export default class DbGuild {
 }
 
 export const GuildModel = getModelForClass(DbGuild, {
-  schemaOptions: { collection: "Guild" },
+  schemaOptions: { collection: "guilds" },
 });

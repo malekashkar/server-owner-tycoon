@@ -73,5 +73,5 @@ __decorate([
 ], DbGuild.prototype, "messages", void 0);
 exports.default = DbGuild;
 exports.GuildModel = typegoose_1.getModelForClass(DbGuild, {
-    schemaOptions: { collection: "Guild" },
+    schemaOptions: { collection: "guilds" },
 });

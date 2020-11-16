@@ -14,5 +14,5 @@ export default class DbInvite {
 }
 
 export const InviteModel = getModelForClass(DbInvite, {
-  schemaOptions: { collection: "Invite" },
+  schemaOptions: { collection: "invites" },
 });

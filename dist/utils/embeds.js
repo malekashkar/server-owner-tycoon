@@ -12,11 +12,12 @@ embeds.error = function (err, title = "Error Caught") {
         .setTimestamp();
 };
 embeds.normal = function (title, desc) {
-    return new discord_js_1.MessageEmbed()
-        .setTitle(title)
-        .setDescription(desc)
-        .setColor("RANDOM")
-        .setTimestamp();
+    const embed = new discord_js_1.MessageEmbed().setColor("RANDOM").setTimestamp();
+    if (title)
+        embed.setTitle(title);
+    if (desc)
+        embed.setDescription(desc);
+    return embed;
 };
 embeds.question = function (question) {
     return new discord_js_1.MessageEmbed()
