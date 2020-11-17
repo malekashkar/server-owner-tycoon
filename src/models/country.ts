@@ -13,11 +13,20 @@ export default class Country {
   @prop()
   continent?: string;
 
+  @prop({ default: false })
+  continentComplete?: boolean;
+
   @prop()
   countryLetter?: string;
 
+  @prop({ default: false })
+  countryLetterComplete?: boolean;
+
   @prop()
   country?: string;
+
+  @prop({ default: false })
+  countryComplete?: boolean;
 }
 
 export const CountryModel = getModelForClass(Country);

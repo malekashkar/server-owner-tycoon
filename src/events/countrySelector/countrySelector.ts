@@ -42,13 +42,14 @@ export default class CountrySelectorEvent extends Event {
         ${continents.map((x, i) => `${continentEmojis[i]} ${x}`).join("\n")}`
       );
       const continentMessage = await channel.send(continentEmbed);
-      await react(continentMessage, continentEmojis);
 
       await CountryModel.create({
         startedAt: new Date(),
         userId: member.id,
         channelId: channel.id,
       });
+
+      await react(continentMessage, continentEmojis);
     }
   }
 }

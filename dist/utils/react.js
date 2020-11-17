@@ -1,12 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 async function react(msg, reactions) {
-    for (const r of reactions) {
+    var _a;
+    for (let i = 0; i < reactions.length; i++) {
         try {
-            if (!msg.deleted)
-                await msg.react(r).catch();
+            if ((_a = (await msg.fetch())) === null || _a === void 0 ? void 0 : _a.deleted)
+                break;
+            await msg.react(reactions[i]);
         }
-        catch (i) { }
+        catch (ignore) { }
     }
 }
 exports.default = react;

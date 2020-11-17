@@ -35,23 +35,20 @@ export default class CountryCommand extends UtilityCommand {
         message.author.username.length > 15
           ? message.author.username.slice(0, 15)
           : message.author.username;
-      const channel = await message.guild.channels.create(
-        `${formattedUsername}-entrance`,
-        {
-          type: "text",
-          parent: guildData.joinCategory,
-          permissionOverwrites: [
-            {
-              id: message.author.id,
-              allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "SEND_MESSAGES"],
-            },
-            {
-              id: message.guild.id,
-              deny: "VIEW_CHANNEL",
-            },
-          ],
-        }
-      );
+      const channel = await message.guild.channels.create(formattedUsername, {
+        type: "text",
+        parent: guildData.joinCategory,
+        permissionOverwrites: [
+          {
+            id: message.author.id,
+            allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "SEND_MESSAGES"],
+          },
+          {
+            id: message.guild.id,
+            deny: "VIEW_CHANNEL",
+          },
+        ],
+      });
       const continents = Object.keys(countries);
       const continentEmojis = emojis.slice(0, continents.length);
       const continentEmbed = embeds.normal(

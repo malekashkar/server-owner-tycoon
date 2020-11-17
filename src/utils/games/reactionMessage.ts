@@ -23,7 +23,7 @@ export default async function reactionMessage(
         `The first person to react to this message will receive points!\nYou have 15 minutes before this message is gone.`
       )
     );
-    react(reactionMessage, ["✅"]);
+    await react(reactionMessage, ["✅"]);
 
     reactionData.lastTime = new Date();
     await guildData.save();
