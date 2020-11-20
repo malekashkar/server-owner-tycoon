@@ -4,7 +4,8 @@ import { GuildModel } from "../../models/guild";
 import { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
 import {
-  gamePoints,
+  givePoints,
+  gameInfo,
   ReactionRoleNames,
   reactionRoles,
 } from "../../utils/storage";
@@ -41,21 +42,7 @@ export default class ReactionRoles extends Event {
           roleInfo.name as ReactionRoleNames
         ]
       ) {
-        const points = Math.floor(Math.random() * gamePoints.reactionRoles);
-        userData.points += points;
-        await userData.save();
-
-        const pointChannel = this.client.guilds
-          .resolve(this.client.mainGuild)
-          .channels.resolve(this.client.pointChannel) as TextChannel;
-
-        pointChannel.send(
-          embeds.normal(
-            `Reaction Role Redeemed`,
-            `${user} has received **${points}** points for redeeming the **${roleInfo.name}** reaction role.`
-          )
-        );
-
+        await givePoints(user, "reactionRoles");
         userData.gameCooldowns.reactionRoles[
           roleInfo.name as ReactionRoleNames
         ] = true;

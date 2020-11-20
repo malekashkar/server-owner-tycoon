@@ -2,7 +2,7 @@ import { TextChannel, VoiceState } from "discord.js";
 import Event from "..";
 import { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
-import { gameCooldowns, gamePoints } from "../../utils/storage";
+import { gameInfo, givePoints } from "../../utils/storage";
 
 export default class JoinVoiceChannel extends Event {
   name = "voiceStateUpdate";
@@ -21,25 +21,14 @@ export default class JoinVoiceChannel extends Event {
     if (
       !userData.gameCooldowns.joinVoiceChannel ||
       userData.gameCooldowns.joinVoiceChannel.getTime() +
-        gameCooldowns.joinVoiceChannel <
+        gameInfo.joinVoiceChannel.cooldown <
         Date.now()
     ) {
-      const points = Math.floor(Math.random() * gamePoints.joinVoiceChannel);
+      const user = this.client.users.resolve(newState.member.id);
+      await givePoints(user, "joinVoiceChannel");
 
-      userData.points += points;
       userData.gameCooldowns.joinVoiceChannel = new Date();
       await userData.save();
-
-      const pointChannel = this.client.guilds
-        .resolve(this.client.mainGuild)
-        .channels.resolve(this.client.pointChannel) as TextChannel;
-
-      pointChannel.send(
-        embeds.normal(
-          `Points Received`,
-          `${newState.member.user} has received **${points}** for joining **${newState.channel.name}**.`
-        )
-      );
     }
   }
 }

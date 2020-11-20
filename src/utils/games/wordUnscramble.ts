@@ -1,22 +1,21 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { Message, TextChannel } from "discord.js";
+import { Message } from "discord.js";
 import randomWords from "random-words";
 import Guild from "../../models/guild";
 import User, { UserModel } from "../../models/user";
 import embeds from "../embeds";
-import { gameCooldowns, gamePoints } from "../storage";
+import { gameInfo, givePoints } from "../storage";
 
 export default async function wordUnscramble(
   message: Message,
   userData: DocumentType<User>,
-  guildData: DocumentType<Guild>,
-  pointChannel: TextChannel
+  guildData: DocumentType<Guild>
 ) {
   const unscrambleData = guildData.games.wordUnscrambler;
 
   if (
     unscrambleData.lastTime &&
-    unscrambleData.lastTime.getTime() + gameCooldowns.wordUnscramble <
+    unscrambleData.lastTime.getTime() + gameInfo.wordUnscramble.cooldown <
       Date.now()
   ) {
     const word = randomWords();
@@ -34,30 +33,14 @@ export default async function wordUnscramble(
     );
 
     if (collector && collector.first()) {
-      const points = Math.floor(Math.random() * gamePoints.wordUnscramble);
-      const correctUser = collector.first().author;
-      const userData =
-        (await UserModel.findOne({
-          userId: correctUser.id,
-        })) ||
-        (await UserModel.create({
-          userId: correctUser.id,
-        }));
-
-      userData.points += points;
-      await userData.save();
-
+      const user = collector.first().author;
+      
+      await givePoints(user, "wordUnscramble");
       await unscrambleWordMessage.delete();
       await message.channel.send(
         embeds.normal(
           `You Guessed It!`,
-          `${correctUser} unscrambled the word **${shuffled}** to \`${word}\`!`
-        )
-      );
-      await pointChannel.send(
-        embeds.normal(
-          `Word Unscrambled`,
-          `${correctUser}, has received **${points}** points for unscrambling the word \`${word}\`.`
+          `${user} unscrambled the word **${shuffled}** to \`${word}\`!`
         )
       );
     }

@@ -1,67 +1,37 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { Message, TextChannel } from "discord.js";
-import Guild from "../../models/guild";
+import { Message } from "discord.js";
 import User from "../../models/user";
-import embeds from "../embeds";
-import { gameCooldowns, gamePoints } from "../storage";
+import { gameInfo, givePoints } from "../storage";
 
 export default async function Milestone(
   message: Message,
-  userData: DocumentType<User>,
-  pointChannel: TextChannel
+  userData: DocumentType<User>
 ) {
   const timeInDiscord = Date.now() - message.member.joinedTimestamp;
 
   if (
-    timeInDiscord >= gameCooldowns.weekMilestone &&
+    timeInDiscord >= gameInfo.weekMilestone.cooldown &&
     !userData.milestones.week
   ) {
-    const points = Math.floor(Math.random() * gamePoints.weekMilestone);
-
-    pointChannel.send(
-      embeds.normal(
-        `Week Milestone`,
-        `${message.author} has received **${points}** for their one week milestone in this server!`
-      )
-    );
-
-    userData.points += points;
+    await givePoints(message.author, "weekMilestone");
     userData.milestones.week = true;
     await userData.save();
   }
 
   if (
-    timeInDiscord >= gameCooldowns.monthMilestone &&
+    timeInDiscord >= gameInfo.monthMilestone.cooldown &&
     !userData.milestones.month
   ) {
-    const points = Math.floor(Math.random() * gamePoints.monthMilestone);
-
-    pointChannel.send(
-      embeds.normal(
-        `Month Milestone`,
-        `${message.author} has received **${points}** for their one month milestone in this server!`
-      )
-    );
-
-    userData.points += points;
+    await givePoints(message.author, "monthMilestone");
     userData.milestones.month = true;
     await userData.save();
   }
 
   if (
-    timeInDiscord >= gameCooldowns.yearMilestone &&
+    timeInDiscord >= gameInfo.yearMilestone.cooldown &&
     !userData.milestones.year
   ) {
-    const points = Math.floor(Math.random() * gamePoints.yearMilestone);
-
-    pointChannel.send(
-      embeds.normal(
-        `Year Milestone`,
-        `${message.author} has received **${points}** for their one year milestone in this server!`
-      )
-    );
-
-    userData.points += points;
+    await givePoints(message.author, "yearMilestone");
     userData.milestones.year = true;
     await userData.save();
   }

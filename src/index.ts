@@ -23,9 +23,6 @@ app.get("*", (req, res) => res.send("<h1>Hey there server owners!</h1>"));
 export default class Client extends BaseManager {
   commands: Collection<string, Command> = new Collection();
   invites: Collection<string, Collection<string, Invite>> = new Collection();
-
-  commandsChannel: string = "630102514519506985";
-  pointChannel: string = "774513961017802762";
   mainGuild: string = "565005586060804136";
 
   constructor(options?: ClientOptions) {

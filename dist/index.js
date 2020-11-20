@@ -33,8 +33,6 @@ class Client extends discord_js_1.Client {
         });
         this.commands = new discord_js_1.Collection();
         this.invites = new discord_js_1.Collection();
-        this.commandsChannel = "630102514519506985";
-        this.pointChannel = "774513961017802762";
         this.mainGuild = "565005586060804136";
         this.loadDatabase();
         this.loadCommands();

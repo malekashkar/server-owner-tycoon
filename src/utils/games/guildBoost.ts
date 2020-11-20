@@ -1,7 +1,5 @@
-import { UserModel } from "../../models/user";
-import { Message, TextChannel } from "discord.js";
-import { gamePoints } from "../storage";
-import embeds from "../embeds";
+import { Message } from "discord.js";
+import { givePoints } from "../storage";
 
 function isServerBoostMessage(message: Message) {
   return (
@@ -12,24 +10,7 @@ function isServerBoostMessage(message: Message) {
   );
 }
 
-export default async function guildBoosts(
-  message: Message,
-  pointChannel: TextChannel
-) {
-  if (message.system && isServerBoostMessage(message)) {
-    const userData =
-      (await UserModel.findOne({ userId: message.author.id })) ||
-      (await UserModel.create({ userId: message.author.id }));
-
-    const points = Math.floor(Math.random() * gamePoints.guildBoost);
-    userData.points += points;
-    await userData.save();
-
-    pointChannel.send(
-      embeds.normal(
-        `Server Boost Points`,
-        `${message.author} has received **${points}** for boosting **${message.guild.name}**!`
-      )
-    );
-  }
+export default async function guildBoosts(message: Message) {
+  if (message.system && isServerBoostMessage(message))
+    await givePoints(message.author, "guildBoost");
 }

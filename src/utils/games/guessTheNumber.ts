@@ -2,24 +2,24 @@ import { Message, TextChannel } from "discord.js";
 import embeds from "../embeds";
 import User, { UserModel } from "../../models/user";
 import Guild from "../../models/guild";
-import { gameCooldowns, gamePoints } from "../storage";
 import { DocumentType } from "@typegoose/typegoose";
+import { gameInfo, givePoints, getRandomIntBetween } from "../storage";
 
 export default async function GuessTheNumber(
   message: Message,
   userData: DocumentType<User>,
   guildData: DocumentType<Guild>,
-  pointChannel: TextChannel
 ) {
   const numberData = guildData.games.guessTheNumber;
 
   if (
     numberData.lastTime &&
-    numberData.lastTime.getTime() + gameCooldowns.guessTheNumber < Date.now()
+    numberData.lastTime.getTime() + gameInfo.guessTheNumber.cooldown <
+      Date.now()
   ) {
-    const firstNumber = randomNumber(1, 10);
-    const secondNumber = randomNumber(10, 100);
-    const correctNumber = randomNumber(firstNumber, secondNumber);
+    const firstNumber = getRandomIntBetween(1, 10);
+    const secondNumber = getRandomIntBetween(10, 100);
+    const correctNumber = getRandomIntBetween(firstNumber, secondNumber);
 
     const randomNumberMessage = await message.channel.send(
       embeds.normal(
@@ -37,35 +37,16 @@ export default async function GuessTheNumber(
     );
 
     if (collector && collector.first()) {
-      const points = Math.floor(Math.random() * gamePoints.guessTheNumber);
-      const correctUser = collector.first().author;
-      const userData =
-        (await UserModel.findOne({
-          userId: correctUser.id,
-        })) ||
-        (await UserModel.create({
-          userId: correctUser.id,
-        }));
+      const user = collector.first().author;
 
-      userData.points += points;
-      await userData.save();
-
+      await givePoints(user, "guessTheNumber");
       await randomNumberMessage.delete();
       await message.channel.send(
         embeds.normal(
           `You Guessed It!`,
-          `${correctUser} guess the number \`${correctNumber}\`!`
-        )
-      );
-      await pointChannel.send(
-        embeds.normal(
-          `Reaction Received`,
-          `${correctUser} received **${points}** points for guessing the number \`${correctNumber}\`.`
+          `${user} guess the number \`${correctNumber}\`!`
         )
       );
     }
   }
 }
-
-const randomNumber = (min: number, max: number) =>
-  Math.floor(Math.random() * Math.floor(max));

@@ -8,6 +8,8 @@ import Milestone from "../utils/games/milestones";
 import reactionMessage from "../utils/games/reactionMessage";
 import wordUnscramble from "../utils/games/wordUnscramble";
 import embeds from "../utils/embeds";
+import { channels } from "../utils/storage";
+import guildBoosts from "../utils/games/guildBoost";
 
 export default class CommandHandler extends Event {
   name = "message";
@@ -30,14 +32,11 @@ export default class CommandHandler extends Event {
           userId: message.author.id,
         }));
 
-      const pointChannel = this.client.guilds
-        .resolve(this.client.mainGuild)
-        .channels.resolve(this.client.pointChannel) as TextChannel;
-
-      await GuessTheNumber(message, userData, guildData, pointChannel);
-      await Milestone(message, userData, pointChannel);
-      await reactionMessage(message, guildData, pointChannel);
-      await wordUnscramble(message, userData, guildData, pointChannel);
+      await GuessTheNumber(message, userData, guildData);
+      await guildBoosts(message);
+      await Milestone(message, userData);
+      await reactionMessage(message, guildData);
+      await wordUnscramble(message, userData, guildData);
 
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;
@@ -45,11 +44,11 @@ export default class CommandHandler extends Event {
 
       if (
         !message.member.hasPermission("ADMINISTRATOR") &&
-        message?.channel?.id !== this.client.commandsChannel
+        message?.channel?.id !== channels.commands
       ) {
         message.channel.send(
           embeds.error(
-            `Please only use commands in the <#${this.client.commandsChannel}> channel!`
+            `Please only use commands in the <#${channels.commands}> channel!`
           )
         );
         return;

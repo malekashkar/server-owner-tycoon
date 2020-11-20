@@ -1,21 +1,21 @@
 import { Message, TextChannel } from "discord.js";
 import embeds from "../../utils/embeds";
-import User, { UserModel } from "../../models/user";
+import { UserModel } from "../../models/user";
 import Guild from "../../models/guild";
-import { gameCooldowns, gamePoints } from "../../utils/storage";
 import { DocumentType } from "@typegoose/typegoose";
 import react from "../react";
+import { gameInfo, givePoints } from "../storage";
 
 export default async function reactionMessage(
   message: Message,
-  guildData: DocumentType<Guild>,
-  pointChannel: TextChannel
+  guildData: DocumentType<Guild>
 ) {
   const reactionData = guildData.games.reactionMessage;
 
   if (
     reactionData.lastTime &&
-    reactionData.lastTime.getTime() + gameCooldowns.reactionMessage < Date.now()
+    reactionData.lastTime.getTime() + gameInfo.reactionMessage.cooldown <
+      Date.now()
   ) {
     const reactionMessage = await message.channel.send(
       embeds.normal(
@@ -34,24 +34,17 @@ export default async function reactionMessage(
     );
 
     if (collector && collector.first()) {
-      const points = Math.floor(Math.random() * gamePoints.reactionMessage);
-      const reactedUser = collector.first().users.cache.array()[1];
-      const userData =
-        (await UserModel.findOne({
-          userId: reactedUser.id,
-        })) ||
-        (await UserModel.create({
-          userId: reactedUser.id,
-        }));
-
-      userData.points += points;
-      await userData.save();
+      const user = collector
+        .first()
+        .users.cache.filter((x) => !x.bot)
+        .first();
 
       await reactionMessage.delete();
-      await pointChannel.send(
+      await givePoints(user, "reactionMessage");
+      await message.channel.send(
         embeds.normal(
-          `Reaction Received`,
-          `${message.author} received **${points}** for clicking the emoji first.`
+          `You Reacted First!`,
+          `${user} reacted to the message the fastest!`
         )
       );
     }

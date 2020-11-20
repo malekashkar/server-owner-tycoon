@@ -1,13 +1,7 @@
-import { MessageReaction, TextChannel, User } from "discord.js";
+import { MessageReaction, User } from "discord.js";
 import Event from "..";
 import { GuildModel } from "../../models/guild";
-import { UserModel } from "../../models/user";
-import embeds from "../../utils/embeds";
-import {
-  gamePoints,
-  ReactionRoleNames,
-  reactionRoles,
-} from "../../utils/storage";
+import { reactionRoles } from "../../utils/storage";
 
 export default class ReactionRoles extends Event {
   name = "messageReactionRemove";

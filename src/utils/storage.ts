@@ -1,3 +1,7 @@
+import { Message, TextChannel, User } from "discord.js";
+import { UserModel } from "../models/user";
+import embeds from "./embeds";
+
 export const linkParts: string[] = ["https://", "http://", "discord.gg/"];
 
 export const emojis: string[] = [
@@ -66,6 +70,13 @@ export const roles: IRoles = {
   supporter: "565007854483013632",
 };
 
+export type channels = "commands" | "points";
+
+export const channels: { [key in channels]: string } = {
+  commands: "630102514519506985",
+  points: "774513961017802762",
+};
+
 export const badWords: string[] = [
   "fuck",
   "cunt",
@@ -119,31 +130,122 @@ export const reactionRoles: ReactionRoles[] = [
   },
 ];
 
-export const gameCooldowns = {
-  guessTheNumber: 4 * 60 * 60 * 1000,
-  randomMessageReaction: 6 * 60 * 60 * 1000,
-  reactionMessage: 2 * 60 * 60 * 1000,
-  joinVoiceChannel: 4 * 60 * 60 * 1000,
-  weekMilestone: 7 * 24 * 60 * 60 * 1000,
-  monthMilestone: 30 * 24 * 60 * 60 * 1000,
-  yearMilestone: 12 * 30 * 24 * 60 * 60 * 1000,
-  wordUnscramble: 3 * 60 * 60 * 1000,
+type Games =
+  | "joinMilestone"
+  | "weekMilestone"
+  | "monthMilestone"
+  | "yearMilestone"
+  | "guessTheNumber"
+  | "randomMessageReaction"
+  | "reactionMessage"
+  | "joinVoiceChannel"
+  | "wordUnscramble"
+  | "invite"
+  | "reactionRoles"
+  | "guildBoost";
+
+export const gameInfo: {
+  [key in Games]: {
+    displayName: string;
+    minPoints: number;
+    maxPoints: number;
+    cooldown?: number;
+  };
+} = {
+  joinMilestone: {
+    displayName: "Join Milestone",
+    minPoints: 10,
+    maxPoints: 100,
+  },
+  weekMilestone: {
+    displayName: "Week Milestone",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 7 * 24 * 60 * 60 * 1000,
+  },
+  monthMilestone: {
+    displayName: "Month Milestone",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 30 * 24 * 60 * 60 * 1000,
+  },
+  yearMilestone: {
+    displayName: "Year Milestone",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 12 * 30 * 24 * 60 * 60 * 1000,
+  },
+  guessTheNumber: {
+    displayName: "Guess The Number",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 4 * 60 * 60 * 1000,
+  },
+  randomMessageReaction: {
+    displayName: "Random Message Reaction",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 6 * 60 * 60 * 1000,
+  },
+  reactionMessage: {
+    displayName: "Reaction Game",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 2 * 60 * 60 * 1000,
+  },
+  joinVoiceChannel: {
+    displayName: "Voice Channel Join",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 4 * 60 * 60 * 1000,
+  },
+  wordUnscramble: {
+    displayName: "Word Unscramble",
+    minPoints: 10,
+    maxPoints: 100,
+    cooldown: 3 * 60 * 60 * 1000,
+  },
+  invite: {
+    displayName: "Invite",
+    minPoints: 10,
+    maxPoints: 100,
+  },
+  reactionRoles: {
+    displayName: "Reaction Role",
+    minPoints: 10,
+    maxPoints: 100,
+  },
+  guildBoost: {
+    displayName: "Guild Boost",
+    minPoints: 10,
+    maxPoints: 100,
+  },
 };
 
-export const gamePoints = {
-  joinMilestone: 20,
-  weekMilestone: 50,
-  monthMilestone: 200,
-  yearMilestone: 1000,
-  guessTheNumber: 10,
-  randomMessageReaction: 10,
-  reactionMessage: 10,
-  joinVoiceChannel: 15,
-  wordUnscramble: 10,
-  invite: 25,
-  reactionRoles: 25,
-  guildBoost: 500,
-};
+export async function givePoints(user: User, game: Games) {
+  const gameInformation = gameInfo[game];
+  const channel = user.client.channels.resolve(channels.points) as TextChannel;
+  const userData =
+    (await UserModel.findOne({ userId: user.id })) ||
+    (await UserModel.create({ userId: user.id }));
+  const points = getRandomIntBetween(
+    gameInformation.minPoints,
+    gameInformation.maxPoints
+  );
+
+  await userData.updateOne({ $inc: { points } });
+
+  return await channel.send(
+    embeds.normal(
+      `Points Given`,
+      `${user} has received **${points}** from a **${gameInformation.displayName.toLowerCase()}**.`
+    )
+  );
+}
+
+export function getRandomIntBetween(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 
 export const categories = {
   introduction: "632362434342158337",
