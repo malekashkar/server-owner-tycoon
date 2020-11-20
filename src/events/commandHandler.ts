@@ -7,17 +7,13 @@ import GuessTheNumber from "../utils/games/guessTheNumber";
 import Milestone from "../utils/games/milestones";
 import reactionMessage from "../utils/games/reactionMessage";
 import wordUnscramble from "../utils/games/wordUnscramble";
+import embeds from "../utils/embeds";
 
 export default class CommandHandler extends Event {
   name = "message";
 
   async handle(message: Message) {
     if (!message.guild || message.author?.bot) return;
-    if (
-      !message.member.hasPermission("ADMINISTRATOR") &&
-      message?.channel?.id !== this.client.commandsChannel
-    )
-      return;
 
     try {
       const guildData =
@@ -46,6 +42,18 @@ export default class CommandHandler extends Event {
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;
       if (message.deletable) await message.delete();
+
+      if (
+        !message.member.hasPermission("ADMINISTRATOR") &&
+        message?.channel?.id !== this.client.commandsChannel
+      ) {
+        message.channel.send(
+          embeds.error(
+            `Please only use commands in the <#${this.client.commandsChannel}> channel!`
+          )
+        );
+        return;
+      }
 
       const args = message.content
         .slice(prefix.length)
