@@ -238,7 +238,7 @@ export async function givePoints(user: User, game: Games) {
   return await channel.send(
     embeds.normal(
       `Points Given`,
-      `${user} has received **${points}** from a **${gameInformation.displayName.toLowerCase()}**.`
+      `${user} has received **${points}** points from a **${gameInformation.displayName.toLowerCase()}**.`
     )
   );
 }

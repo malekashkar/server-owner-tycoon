@@ -185,7 +185,7 @@ async function givePoints(user, game) {
         (await user_1.UserModel.create({ userId: user.id }));
     const points = getRandomIntBetween(gameInformation.minPoints, gameInformation.maxPoints);
     await userData.updateOne({ $inc: { points } });
-    return await channel.send(embeds_1.default.normal(`Points Given`, `${user} has received **${points}** from a **${gameInformation.displayName.toLowerCase()}**.`));
+    return await channel.send(embeds_1.default.normal(`Points Given`, `${user} has received **${points}** points from a **${gameInformation.displayName.toLowerCase()}**.`));
 }
 exports.givePoints = givePoints;
 function getRandomIntBetween(min, max) {

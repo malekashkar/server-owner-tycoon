@@ -18,7 +18,7 @@ export default async function GuessTheNumber(
       Date.now()
   ) {
     const firstNumber = getRandomIntBetween(1, 10);
-    const secondNumber = getRandomIntBetween(10, 100);
+    const secondNumber = getRandomIntBetween(11, 50);
     const correctNumber = getRandomIntBetween(firstNumber, secondNumber);
 
     const randomNumberMessage = await message.channel.send(
