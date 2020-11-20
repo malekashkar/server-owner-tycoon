@@ -1,18 +1,22 @@
-import { Message } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import embeds from "./embeds";
 import react from "./react";
 
 export default async function confirmation(
   title: string,
   text: string,
-  message: Message
+  message?: Message,
+  channel?: TextChannel,
+  userId?: string
 ) {
   const emojis = {
     yes: "✅",
     no: "❎",
   };
 
-  const msg = await message.channel.send(
+  channel = message ? (message.channel as TextChannel) : channel || null;
+  userId = message ? message.author.id : userId || null;
+  const msg = await channel.send(
     embeds.normal(
       title,
       `${text}\nYou have 30 seconds to react with the ${emojis.yes} or ${emojis.no}.`
@@ -23,8 +27,7 @@ export default async function confirmation(
 
   const reactions = await msg.awaitReactions(
     (reaction, user) =>
-      user.id === message.author.id &&
-      Object.values(emojis).includes(reaction.emoji.name),
+      user.id === userId && Object.values(emojis).includes(reaction.emoji.name),
     { max: 1, time: 30000 }
   );
 

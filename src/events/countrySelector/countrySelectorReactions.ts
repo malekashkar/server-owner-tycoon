@@ -6,6 +6,8 @@ import embeds from "../../utils/embeds";
 import react from "../../utils/react";
 import { countries, emojis, letterEmojis, roles } from "../../utils/storage";
 import _ from "lodash";
+import confirmation from "../../utils/confirmation";
+import reactionMessage from "../../utils/games/reactionMessage";
 
 export default class CountrySelectorReactions extends Event {
   name = "messageReactionAdd";
@@ -26,10 +28,9 @@ export default class CountrySelectorReactions extends Event {
 
     const continents = Object.keys(countries);
     const continentEmojis = emojis.slice(0, continents.length);
- 
+
     if (!countryData.continent && !countryData.continentComplete) {
       if (!continentEmojis.includes(reaction.emoji.name)) return;
-      if (message.deletable) message.delete();
 
       const selectedContinent =
         continents[continentEmojis.indexOf(reaction.emoji.name)];
@@ -38,6 +39,20 @@ export default class CountrySelectorReactions extends Event {
           (x) => letterEmojis[x[0].charAt(0).toUpperCase()]
         )
       );
+
+      const confirm = await confirmation(
+        `Continent Confirmation`,
+        `Are you sure you would like to chose **${selectedContinent}** as your continent?`,
+        null,
+        channel,
+        user.id
+      );
+
+      if (!confirm) {
+        reaction.users.remove(user);
+        return;
+      }
+      if (message.deletable) message.delete();
 
       const selectCountryLetter = await channel.send(
         embeds.normal(
@@ -63,7 +78,6 @@ export default class CountrySelectorReactions extends Event {
         (x) => letterEmojis[x]
       );
       if (!countryFirstLettersEmojis.includes(reaction.emoji.name)) return;
-      if (message.deletable) message.delete();
 
       const letterSelected =
         countryFirstLetters[
@@ -73,6 +87,20 @@ export default class CountrySelectorReactions extends Event {
         (x) => x[0].charAt(0).toUpperCase() === letterSelected.toUpperCase()
       );
       const countriesEmojis = countriesOfLetter.map((x) => x[2]);
+
+      const confirm = await confirmation(
+        `Country Letter Confirmation`,
+        `Are you sure the letter of your country is **${letterSelected}**?`,
+        null,
+        channel,
+        user.id
+      );
+
+      if (!confirm) {
+        reaction.users.remove(user);
+        return;
+      }
+      if (message.deletable) message.delete();
 
       const countryList = await channel.send(
         embeds.normal(
@@ -97,6 +125,23 @@ export default class CountrySelectorReactions extends Event {
       );
       const countriesEmojis = countriesSelected.map((x) => x[2]);
       if (!countriesEmojis.includes(reaction.emoji.name)) return;
+
+      const selectedCountry = countriesSelected.find(
+        (x) => reaction.emoji.name === x[2]
+      )[0];
+
+      const confirm = await confirmation(
+        `Country Confirmation`,
+        `Are you sure you are from **${selectedCountry}**?`,
+        null,
+        channel,
+        user.id
+      );
+
+      if (!confirm) {
+        reaction.users.remove(user);
+        return;
+      }
       if (message.deletable) await message.delete();
 
       await member.setNickname(
