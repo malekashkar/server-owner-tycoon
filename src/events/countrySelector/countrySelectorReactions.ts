@@ -90,7 +90,7 @@ export default class CountrySelectorReactions extends Event {
 
       const confirm = await confirmation(
         `Country Letter Confirmation`,
-        `Are you sure the letter of your country is **${letterSelected}**?`,
+        `Are you sure the first letter of your country is **${letterSelected}**?`,
         null,
         channel,
         user.id
