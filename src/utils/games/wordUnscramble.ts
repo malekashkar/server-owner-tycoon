@@ -29,7 +29,7 @@ export default async function wordUnscramble(
     await guildData.save();
 
     const collector = await message.channel.awaitMessages(
-      (m) => m.content === word,
+      (m) => m.content.toLowerCase() === word.toLowerCase(),
       { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
     );
 
