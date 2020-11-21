@@ -86,19 +86,19 @@ export const roles: { [key in Roles]: string } = {
   giveaways: "691833524117831710",
 };
 
-export type channels =
-  | "commands"
-  | "points"
-  | "giveaways"
-  | "transcripts"
-  | "bugreports";
-
-export const channels: { [key in channels]: string } = {
+export const channels = {
   commands: "630102514519506985",
   points: "774513961017802762",
   giveaways: "776245431570399264",
-  transcripts: "729393938267635772",
-  bugreports: "731183678461313044",
+  transcripts: "779798882682929203",
+  bugreports: "779798969583927347",
+};
+
+export const categories = {
+  introduction: "632362434342158337",
+  games: "774267515815723018",
+  tickets: "779797627377680464",
+  inProgressTickets: "779797701889228800",
 };
 
 export const badWords: string[] = [
@@ -270,13 +270,6 @@ export async function givePoints(user: User, game: Games) {
 export function getRandomIntBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
-export const categories = {
-  introduction: "632362434342158337",
-  games: "774267515815723018",
-  tickets: "729391531999363183",
-  inProgressTickets: "729391769401294879",
-};
 
 export const countries: { [x: string]: string[][] } = {
   Africa: [
