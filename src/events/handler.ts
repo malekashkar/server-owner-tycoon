@@ -39,7 +39,7 @@ export default class CommandHandler extends Event {
       await Milestone(message, userData);
       await reactionMessage(message, guildData);
       await wordUnscramble(message, userData, guildData);
-      await SaveTicketMessages(message, guildData);
+      await SaveTicketMessages(message);
 
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;
