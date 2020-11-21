@@ -12,12 +12,8 @@ export default class CountrySelectorLeave extends Event {
       }).cursor();
 
       dataCursor.on("data", async (selector: DocumentType<Country>) => {
-        const channel = this.client.guilds
-          .resolve(this.client.mainGuild)
-          .channels.resolve(selector.channelId);
-        const member = this.client.guilds
-          .resolve(this.client.mainGuild)
-          .members.resolve(selector.userId);
+        const channel = this.client.guild.channels.resolve(selector.channelId);
+        const member = this.client.guild.members.resolve(selector.userId);
 
         await channel.delete();
         await member.kick();

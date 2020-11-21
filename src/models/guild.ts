@@ -29,6 +29,9 @@ class Games {
 class Messages {
   @prop()
   reactionRoles?: string;
+
+  @prop()
+  ticketPanel?: string;
 }
 
 export default class DbGuild {
@@ -46,6 +49,12 @@ export default class DbGuild {
 
   @prop({ default: {} })
   messages?: Messages;
+
+  @prop({ default: true })
+  giveaways?: boolean;
+
+  @prop({ default: 1 })
+  giveawayPrize?: number;
 }
 
 export const GuildModel = getModelForClass(DbGuild, {

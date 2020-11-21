@@ -62,19 +62,43 @@ export const letterEmojis: { [x: string]: string } = {
   Z: "🇿",
 };
 
-interface IRoles {
-  supporter: string;
-}
+export type TicketTypes =
+  | "support"
+  | "billing"
+  | "bug"
+  | "suggestion"
+  | "involvement"
+  | "media";
 
-export const roles: IRoles = {
-  supporter: "565007854483013632",
+export const ticketEmojis: { [key in TicketTypes]: string } = {
+  support: "❓",
+  billing: "💰",
+  bug: "🤖",
+  suggestion: "💡",
+  involvement: "⭐",
+  media: "🎵",
 };
 
-export type channels = "commands" | "points";
+type Roles = "supporter" | "giveaways";
+
+export const roles: { [key in Roles]: string } = {
+  supporter: "565007854483013632",
+  giveaways: "691833524117831710",
+};
+
+export type channels =
+  | "commands"
+  | "points"
+  | "giveaways"
+  | "transcripts"
+  | "bugreports";
 
 export const channels: { [key in channels]: string } = {
   commands: "630102514519506985",
   points: "774513961017802762",
+  giveaways: "776245431570399264",
+  transcripts: "729393938267635772",
+  bugreports: "731183678461313044",
 };
 
 export const badWords: string[] = [
@@ -155,70 +179,70 @@ export const gameInfo: {
   joinMilestone: {
     displayName: "Join Milestone",
     minPoints: 10,
-    maxPoints: 100,
+    maxPoints: 25,
   },
   weekMilestone: {
     displayName: "Week Milestone",
-    minPoints: 10,
+    minPoints: 50,
     maxPoints: 100,
     cooldown: 7 * 24 * 60 * 60 * 1000,
   },
   monthMilestone: {
     displayName: "Month Milestone",
-    minPoints: 10,
-    maxPoints: 100,
+    minPoints: 200,
+    maxPoints: 500,
     cooldown: 30 * 24 * 60 * 60 * 1000,
   },
   yearMilestone: {
     displayName: "Year Milestone",
-    minPoints: 10,
-    maxPoints: 100,
+    minPoints: 1000,
+    maxPoints: 2500,
     cooldown: 12 * 30 * 24 * 60 * 60 * 1000,
   },
   guessTheNumber: {
     displayName: "Guess The Number",
     minPoints: 10,
-    maxPoints: 100,
+    maxPoints: 25,
     cooldown: 4 * 60 * 60 * 1000,
   },
   randomMessageReaction: {
     displayName: "Random Message Reaction",
     minPoints: 10,
-    maxPoints: 100,
+    maxPoints: 25,
     cooldown: 6 * 60 * 60 * 1000,
   },
   reactionMessage: {
     displayName: "Reaction Game",
     minPoints: 10,
-    maxPoints: 100,
+    maxPoints: 25,
     cooldown: 2 * 60 * 60 * 1000,
   },
   joinVoiceChannel: {
     displayName: "Voice Channel Join",
     minPoints: 10,
-    maxPoints: 100,
+    maxPoints: 25,
     cooldown: 4 * 60 * 60 * 1000,
   },
   wordUnscramble: {
     displayName: "Word Unscramble",
     minPoints: 10,
-    maxPoints: 100,
+    maxPoints: 25,
     cooldown: 3 * 60 * 60 * 1000,
   },
   invite: {
     displayName: "Invite",
-    minPoints: 10,
-    maxPoints: 100,
+    minPoints: 20,
+    maxPoints: 50,
   },
   reactionRoles: {
     displayName: "Reaction Role",
     minPoints: 10,
-    maxPoints: 100,
+    maxPoints: 25,
   },
   guildBoost: {
     displayName: "Guild Boost",
-    minPoints: 10,
-    maxPoints: 100,
+    minPoints: 500,
+    maxPoints: 1000,
   },
 };
 
@@ -250,6 +274,8 @@ export function getRandomIntBetween(min: number, max: number) {
 export const categories = {
   introduction: "632362434342158337",
   games: "774267515815723018",
+  tickets: "729391531999363183",
+  inProgressTickets: "729391769401294879",
 };
 
 export const countries: { [x: string]: string[][] } = {

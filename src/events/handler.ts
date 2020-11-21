@@ -10,12 +10,14 @@ import wordUnscramble from "../utils/games/wordUnscramble";
 import embeds from "../utils/embeds";
 import { channels } from "../utils/storage";
 import guildBoosts from "../utils/games/guildBoost";
+import SaveTicketMessages from "./tickets/saveTicketMessages";
 
 export default class CommandHandler extends Event {
   name = "message";
 
   async handle(message: Message) {
-    if (!message.guild || message.author?.bot) return;
+    if (!(message.channel instanceof TextChannel) || message.author?.bot)
+      return;
 
     try {
       const guildData =
@@ -37,6 +39,7 @@ export default class CommandHandler extends Event {
       await Milestone(message, userData);
       await reactionMessage(message, guildData);
       await wordUnscramble(message, userData, guildData);
+      await SaveTicketMessages(message, guildData);
 
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;

@@ -10,7 +10,9 @@ export default class botStarted extends Event {
       `The bot "${this.client.user.username}" has started successfully.`
     );
 
-    const guild = this.client.guilds.resolve(this.client.mainGuild);
-    if (guild) this.client.invites.set(guild.id, await guild.fetchInvites());
+    this.client.invites.set(
+      this.client.guild.id,
+      await this.client.guild.fetchInvites()
+    );
   }
 }

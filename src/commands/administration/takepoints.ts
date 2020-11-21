@@ -33,14 +33,9 @@ export default class TakePointsCommand extends AdminCommand {
         )
       );
 
-    await UserModel.updateOne(
-      {
-        _id: userData._id,
-      },
-      {
-        $inc: { points: -points },
-      }
-    );
+    await userData.updateOne({
+      $inc: { points: -points },
+    });
 
     return await message.channel.send(
       embeds.normal(

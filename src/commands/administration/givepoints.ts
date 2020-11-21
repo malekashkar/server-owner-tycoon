@@ -26,14 +26,9 @@ export default class GivePointsCommand extends AdminCommand {
       (await UserModel.findOne({ userId: user.id })) ||
       (await UserModel.create({ userId: user.id }));
 
-    await UserModel.updateOne(
-      {
-        _id: userData._id,
-      },
-      {
-        $inc: { points },
-      }
-    );
+    await userData.updateOne({
+      $inc: { points },
+    });
 
     return await message.channel.send(
       embeds.normal(
