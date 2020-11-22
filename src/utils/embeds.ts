@@ -23,4 +23,8 @@ export default class embeds {
       .setColor("RANDOM")
       .setTimestamp();
   };
+
+  static empty = function () {
+    return new MessageEmbed().setColor("RANDOM");
+  };
 }

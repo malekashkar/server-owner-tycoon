@@ -156,6 +156,38 @@ export const reactionRoles: ReactionRoles[] = [
   },
 ];
 
+export const prizes = {
+  PayPal: {
+    "$10 PayPal": 10000,
+    "$25 PayPal": 25000,
+    "$50 PayPal": 50000,
+    "$100 PayPal": 100000,
+  },
+  "Discord Server": {
+    "Mention in Announcement": 1000,
+    "Add Server Emoji": 2000,
+    "Colored Discord Role": 2500,
+    "Top of List 24 Hours": 3000,
+    "VIP Rank": 5000,
+  },
+  "Gift Cards": {
+    "$25 Visa": 30000,
+    "$25 Microsoft": 30000,
+    "$25 Apple": 30000,
+    "$25 Steam": 30000,
+    "$25 Amazon": 30000,
+    "$50 Visa": 60000,
+    "$50 Microsoft": 60000,
+    "$50 Apple": 60000,
+    "$50 Steam": 60000,
+    "$50 Amazon": 60000,
+  },
+  Nitro: {
+    "Nitro Classic (1M)": 5000,
+    "Discord Nitro (1M)": 10000,
+  },
+};
+
 type Games =
   | "joinMilestone"
   | "weekMilestone"

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.countries = exports.msToFormattedTime = exports.getRandomIntBetween = exports.givePoints = exports.gameInfo = exports.reactionRoles = exports.badWords = exports.categories = exports.channels = exports.roles = exports.ticketEmojis = exports.letterEmojis = exports.emojis = exports.linkParts = void 0;
+exports.countries = exports.msToFormattedTime = exports.getRandomIntBetween = exports.givePoints = exports.gameInfo = exports.prizes = exports.reactionRoles = exports.badWords = exports.categories = exports.channels = exports.roles = exports.ticketEmojis = exports.letterEmojis = exports.emojis = exports.linkParts = void 0;
 const user_1 = require("../models/user");
 const embeds_1 = __importDefault(require("./embeds"));
 exports.linkParts = ["https://", "http://", "discord.gg/"];
@@ -130,6 +130,37 @@ exports.reactionRoles = [
         reaction: "💸",
     },
 ];
+exports.prizes = {
+    PayPal: {
+        "$10 PayPal": 10000,
+        "$25 PayPal": 25000,
+        "$50 PayPal": 50000,
+        "$100 PayPal": 100000,
+    },
+    "Discord Server": {
+        "Mention in Announcement": 1000,
+        "Add Server Emoji": 2000,
+        "Colored Discord Role": 2500,
+        "Top of List 24 Hours": 3000,
+        "VIP Rank": 5000,
+    },
+    "Gift Cards": {
+        "$25 Visa": 30000,
+        "$25 Microsoft": 30000,
+        "$25 Apple": 30000,
+        "$25 Steam": 30000,
+        "$25 Amazon": 30000,
+        "$50 Visa": 60000,
+        "$50 Microsoft": 60000,
+        "$50 Apple": 60000,
+        "$50 Steam": 60000,
+        "$50 Amazon": 60000,
+    },
+    Nitro: {
+        "Nitro Classic (1M)": 5000,
+        "Discord Nitro (1M)": 10000,
+    },
+};
 exports.gameInfo = {
     joinMilestone: {
         displayName: "Join Milestone",

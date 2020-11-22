@@ -26,3 +26,6 @@ embeds.question = function (question) {
         .setColor("RANDOM")
         .setTimestamp();
 };
+embeds.empty = function () {
+    return new discord_js_1.MessageEmbed().setColor("RANDOM");
+};

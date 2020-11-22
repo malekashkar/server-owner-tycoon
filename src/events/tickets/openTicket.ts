@@ -27,7 +27,6 @@ export default class OpenTicket extends Event {
         `${ticketType[1]}${ticketType[0]}-${username}`,
         {
           type: "text",
-          topic: user.id,
           parent: categories.tickets,
           permissionOverwrites: [
             {
