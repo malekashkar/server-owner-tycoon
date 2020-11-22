@@ -13,7 +13,7 @@ export class Giveaway {
   @prop()
   endsAt: Date;
 
-  @prop({ default: [] })
+  @prop({ default: [], type: String })
   winners?: string[];
 
   @prop({ default: false })

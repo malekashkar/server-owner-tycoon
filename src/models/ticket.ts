@@ -27,7 +27,7 @@ export class Ticket {
   @prop()
   closedById?: string;
 
-  @prop()
+  @prop({ type: Message })
   messages?: Message[];
 }
 

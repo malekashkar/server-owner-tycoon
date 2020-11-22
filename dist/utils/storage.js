@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.countries = exports.categories = exports.getRandomIntBetween = exports.givePoints = exports.gameInfo = exports.reactionRoles = exports.badWords = exports.channels = exports.roles = exports.letterEmojis = exports.emojis = exports.linkParts = void 0;
+exports.countries = exports.msToFormattedTime = exports.getRandomIntBetween = exports.givePoints = exports.gameInfo = exports.reactionRoles = exports.badWords = exports.categories = exports.channels = exports.roles = exports.ticketEmojis = exports.letterEmojis = exports.emojis = exports.linkParts = void 0;
 const user_1 = require("../models/user");
 const embeds_1 = __importDefault(require("./embeds"));
 exports.linkParts = ["https://", "http://", "discord.gg/"];
@@ -63,12 +63,34 @@ exports.letterEmojis = {
     Y: "🇾",
     Z: "🇿",
 };
+exports.ticketEmojis = {
+    support: "❓",
+    billing: "💰",
+    bug: "🤖",
+    suggestion: "💡",
+    involvement: "⭐",
+    media: "🎵",
+};
 exports.roles = {
     supporter: "565007854483013632",
+    giveaways: "691833524117831710",
+    announcements: "691827164500197487",
+    updates: "691827439306801172",
+    polls: "691827338001907762",
+    events: "779852796437594152",
 };
 exports.channels = {
     commands: "630102514519506985",
     points: "774513961017802762",
+    giveaways: "776245431570399264",
+    transcripts: "779798882682929203",
+    bugreports: "779798969583927347",
+};
+exports.categories = {
+    introduction: "632362434342158337",
+    games: "774267515815723018",
+    tickets: "779797627377680464",
+    inProgressTickets: "779797701889228800",
 };
 exports.badWords = [
     "fuck",
@@ -112,70 +134,70 @@ exports.gameInfo = {
     joinMilestone: {
         displayName: "Join Milestone",
         minPoints: 10,
-        maxPoints: 100,
+        maxPoints: 25,
     },
     weekMilestone: {
         displayName: "Week Milestone",
-        minPoints: 10,
+        minPoints: 50,
         maxPoints: 100,
         cooldown: 7 * 24 * 60 * 60 * 1000,
     },
     monthMilestone: {
         displayName: "Month Milestone",
-        minPoints: 10,
-        maxPoints: 100,
+        minPoints: 200,
+        maxPoints: 500,
         cooldown: 30 * 24 * 60 * 60 * 1000,
     },
     yearMilestone: {
         displayName: "Year Milestone",
-        minPoints: 10,
-        maxPoints: 100,
+        minPoints: 1000,
+        maxPoints: 2500,
         cooldown: 12 * 30 * 24 * 60 * 60 * 1000,
     },
     guessTheNumber: {
         displayName: "Guess The Number",
         minPoints: 10,
-        maxPoints: 100,
+        maxPoints: 25,
         cooldown: 4 * 60 * 60 * 1000,
     },
     randomMessageReaction: {
         displayName: "Random Message Reaction",
         minPoints: 10,
-        maxPoints: 100,
+        maxPoints: 25,
         cooldown: 6 * 60 * 60 * 1000,
     },
     reactionMessage: {
         displayName: "Reaction Game",
         minPoints: 10,
-        maxPoints: 100,
+        maxPoints: 25,
         cooldown: 2 * 60 * 60 * 1000,
     },
     joinVoiceChannel: {
         displayName: "Voice Channel Join",
         minPoints: 10,
-        maxPoints: 100,
+        maxPoints: 25,
         cooldown: 4 * 60 * 60 * 1000,
     },
     wordUnscramble: {
         displayName: "Word Unscramble",
         minPoints: 10,
-        maxPoints: 100,
+        maxPoints: 25,
         cooldown: 3 * 60 * 60 * 1000,
     },
     invite: {
         displayName: "Invite",
-        minPoints: 10,
-        maxPoints: 100,
+        minPoints: 20,
+        maxPoints: 50,
     },
     reactionRoles: {
         displayName: "Reaction Role",
         minPoints: 10,
-        maxPoints: 100,
+        maxPoints: 25,
     },
     guildBoost: {
         displayName: "Guild Boost",
-        minPoints: 10,
-        maxPoints: 100,
+        minPoints: 500,
+        maxPoints: 1000,
     },
 };
 async function givePoints(user, game) {
@@ -192,10 +214,14 @@ function getRandomIntBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
 exports.getRandomIntBetween = getRandomIntBetween;
-exports.categories = {
-    introduction: "632362434342158337",
-    games: "774267515815723018",
-};
+function msToFormattedTime(num) {
+    const secs = num / 1000;
+    const hours = Math.floor(secs / 3600);
+    const minutes = Math.floor((secs - hours * 3600) / 60);
+    const seconds = secs - hours * 3600 - minutes * 60;
+    return hours + ":" + minutes + ":" + seconds;
+}
+exports.msToFormattedTime = msToFormattedTime;
 exports.countries = {
     Africa: [
         ["Algeria", "dz", "🇩🇿"],

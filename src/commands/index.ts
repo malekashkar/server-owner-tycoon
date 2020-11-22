@@ -16,7 +16,7 @@ export default abstract class Command {
   abstract group: string;
   abstract cmdName: string;
   abstract description: string;
-  abstract async run(
+  abstract run(
     _message: Message,
     _args: string[],
     _userData?: DocumentType<DbUser>,

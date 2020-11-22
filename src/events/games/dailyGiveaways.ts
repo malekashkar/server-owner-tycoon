@@ -1,5 +1,10 @@
 import Event, { EventNameType } from "..";
-import { channels, getRandomIntBetween, roles } from "../../utils/storage";
+import {
+  channels,
+  getRandomIntBetween,
+  msToFormattedTime,
+  roles,
+} from "../../utils/storage";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 import { GuildModel } from "../../models/guild";
 import { GiveawayModel } from "../../models/giveaway";
@@ -12,16 +17,18 @@ export default class Giveaways extends Event {
   name: EventNameType = "ready";
 
   async handle() {
+    const guild = this.client.guilds.cache.first();
+
     setInterval(async () => {
       try {
         const guildData =
           (await GuildModel.findOne({
-            guildId: this.client.guild.id,
+            guildId: guild.id,
           })) ||
           (await GuildModel.create({
-            guildId: this.client.guild.id,
+            guildId: guild.id,
           }));
-        const channel = this.client.guild.channels.resolve(
+        const channel = guild.channels.resolve(
           channels.giveaways
         ) as TextChannel;
         const ongoingGiveaway = await GiveawayModel.findOne({
@@ -124,9 +131,8 @@ export default class Giveaways extends Event {
   }
 
   async sendEmbed(prize: number) {
-    const channel = this.client.guild.channels.resolve(
-      channels.giveaways
-    ) as TextChannel;
+    const guild = this.client.guilds.cache.first();
+    const channel = guild.channels.resolve(channels.giveaways) as TextChannel;
     const days = await GiveawayModel.countDocuments();
     const embed = new MessageEmbed()
       .setTitle(`The Dollar Lottery - Day ${days}`)
@@ -135,10 +141,7 @@ export default class Giveaways extends Event {
         `📖 How to play`,
         `To join, please private message me (the bot) with a number between 1-100. You may only enter one response per day and may not edit your message. All other entries and edited messages will be ignored.\n\nIf any people guessed the correct number, it will be announced here in this channel. Multiple winners = prize pool split. Otherwise, if no one guesses the correct number, the prize pool will increase by $1 each day. This giveaway process will be from no until December 25, 2020.`
       )
-      .addField(
-        `⏱️ Time Left`,
-        `**${this.msToFormattedTime(hourInMilliseconds)}**`
-      )
+      .addField(`⏱️ Time Left`, `**${msToFormattedTime(hourInMilliseconds)}**`)
       .addField(`💵 Current Prize Pool`, `**$${prize}**`);
     return await channel.send(`<@&${roles.giveaways}>`, embed);
   }
@@ -151,18 +154,10 @@ export default class Giveaways extends Event {
 
       embed.fields[1] = {
         name: "⏱️ Time Left",
-        value: `**${this.msToFormattedTime(timeLeft)}**`,
+        value: `**${msToFormattedTime(timeLeft)}**`,
         inline: true,
       };
       return await message.edit(embed);
     }
-  }
-
-  msToFormattedTime(num: number) {
-    const secs = num / 1000;
-    const hours = Math.floor(secs / 3600);
-    const minutes = Math.floor((secs - hours * 3600) / 60);
-    const seconds = secs - hours * 3600 - minutes * 60;
-    return hours + ":" + minutes + ":" + seconds;
   }
 }

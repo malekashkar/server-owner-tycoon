@@ -49,6 +49,10 @@ __decorate([
     typegoose_1.prop(),
     __metadata("design:type", String)
 ], Messages.prototype, "reactionRoles", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", String)
+], Messages.prototype, "ticketPanel", void 0);
 class DbGuild {
 }
 __decorate([
@@ -71,6 +75,14 @@ __decorate([
     typegoose_1.prop({ default: {} }),
     __metadata("design:type", Messages)
 ], DbGuild.prototype, "messages", void 0);
+__decorate([
+    typegoose_1.prop({ default: true }),
+    __metadata("design:type", Boolean)
+], DbGuild.prototype, "giveaways", void 0);
+__decorate([
+    typegoose_1.prop({ default: 1 }),
+    __metadata("design:type", Number)
+], DbGuild.prototype, "giveawayPrize", void 0);
 exports.default = DbGuild;
 exports.GuildModel = typegoose_1.getModelForClass(DbGuild, {
     schemaOptions: { collection: "guilds" },

@@ -79,11 +79,13 @@ export const ticketEmojis: { [key in TicketTypes]: string } = {
   media: "🎵",
 };
 
-type Roles = "supporter" | "giveaways";
-
-export const roles: { [key in Roles]: string } = {
+export const roles = {
   supporter: "565007854483013632",
   giveaways: "691833524117831710",
+  announcements: "691827164500197487",
+  updates: "691827439306801172",
+  polls: "691827338001907762",
+  events: "779852796437594152",
 };
 
 export const channels = {
@@ -269,6 +271,14 @@ export async function givePoints(user: User, game: Games) {
 
 export function getRandomIntBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function msToFormattedTime(num: number) {
+  const secs = num / 1000;
+  const hours = Math.floor(secs / 3600);
+  const minutes = Math.floor((secs - hours * 3600) / 60);
+  const seconds = secs - hours * 3600 - minutes * 60;
+  return hours + ":" + minutes + ":" + seconds;
 }
 
 export const countries: { [x: string]: string[][] } = {

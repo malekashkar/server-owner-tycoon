@@ -19,11 +19,9 @@ dotenv.config();
 const app = express();
 app.listen(process.env.PORT || 5000);
 app.get("*", (req, res) => res.send("<h1>Hey there server owners!</h1>"));
-
 export default class Client extends BaseManager {
   commands: Collection<string, Command> = new Collection();
   invites: Collection<string, Collection<string, Invite>> = new Collection();
-  guild = this.guilds.resolve("565005586060804136");
 
   constructor(options?: ClientOptions) {
     super({

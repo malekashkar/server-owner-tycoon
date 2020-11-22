@@ -11,5 +11,5 @@ export default abstract class Event {
   }
 
   abstract name: string;
-  abstract async handle(...args: unknown[]): Promise<void>;
+  abstract handle(...args: unknown[]): Promise<void>;
 }
