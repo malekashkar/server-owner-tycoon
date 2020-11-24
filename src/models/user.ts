@@ -48,6 +48,9 @@ export default class DbUser {
 
   @prop({ default: {} })
   milestones?: Milestones;
+
+  @prop({ default: 0 })
+  messageSpamMatch?: number;
 }
 
 export const UserModel = getModelForClass(DbUser, {

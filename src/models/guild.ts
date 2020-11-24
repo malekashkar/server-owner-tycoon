@@ -1,4 +1,5 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { ModelMapReduceOption } from "mongoose";
 
 class GuessTheNumber {
   @prop()
@@ -34,6 +35,44 @@ class Messages {
   ticketPanel?: string;
 }
 
+class Moderation {
+  @prop()
+  enabled: boolean;
+
+  @prop()
+  invites: boolean;
+
+  @prop()
+  links: boolean;
+
+  @prop()
+  selfbot: boolean;
+
+  @prop({ default: 0 })
+  mentions: number;
+
+  @prop({ default: 20 })
+  mentionsBan: number;
+
+  @prop()
+  spamMessageAmount: number;
+
+  @prop()
+  spamTime: number;
+
+  @prop()
+  mute: boolean;
+
+  @prop({ type: String })
+  whitelistedChannelIds: string[];
+
+  @prop()
+  muteViolationAmount: number;
+
+  @prop()
+  muteViolationInterval: number;
+}
+
 export default class DbGuild {
   @prop({ unique: true })
   guildId!: string;
@@ -55,6 +94,9 @@ export default class DbGuild {
 
   @prop({ default: 1 })
   giveawayPrize?: number;
+
+  @prop()
+  moderation?: Moderation;
 }
 
 export const GuildModel = getModelForClass(DbGuild, {

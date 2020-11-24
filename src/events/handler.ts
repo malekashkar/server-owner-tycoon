@@ -12,6 +12,13 @@ import { channels } from "../utils/storage";
 import guildBoosts from "../utils/games/guildBoost";
 import SaveTicketMessages from "./tickets/saveTicketMessages";
 
+import invitesMod from "../utils/automod/invites";
+import linksMod from "../utils/automod/links";
+import mentionsMod from "../utils/automod/mentions";
+import mentionsBan from "../utils/automod/mentionsBan";
+import spamMod from "../utils/automod/spam";
+import muteCheck from "../utils/automod/mute";
+
 export default class CommandHandler extends Event {
   name = "message";
 
@@ -40,6 +47,28 @@ export default class CommandHandler extends Event {
       await reactionMessage(message, guildData);
       await wordUnscramble(message, userData, guildData);
       await SaveTicketMessages(message);
+
+      if (
+        !message.member.hasPermission("ADMINISTRATOR") &&
+        guildData.moderation.enabled
+      ) {
+        if (guildData.moderation.invites) await invitesMod(message, guildData);
+        if (guildData.moderation.links) await linksMod(message, guildData);
+        if (guildData.moderation.mentions)
+          await mentionsMod(message, guildData);
+        if (guildData.moderation.mentionsBan)
+          await mentionsBan(message, guildData);
+        if (
+          guildData.moderation.spamMessageAmount &&
+          guildData.moderation.spamTime
+        )
+          await spamMod(message, userData, guildData);
+        if (
+          guildData.moderation.muteViolationAmount &&
+          guildData.moderation.muteViolationInterval
+        )
+          await muteCheck(message, guildData);
+      }
 
       const prefix = guildData.prefix;
       if (!prefix || message.content.indexOf(prefix) !== 0) return;
