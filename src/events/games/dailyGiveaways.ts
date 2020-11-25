@@ -10,6 +10,7 @@ import { GuildModel } from "../../models/guild";
 import { GiveawayModel } from "../../models/giveaway";
 import embeds from "../../utils/embeds";
 import Logger from "../../utils/logger";
+import { UserModel } from "../../models/user";
 
 const hourInMilliseconds = 24 * 60 * 60 * 1000;
 
@@ -89,16 +90,28 @@ export default class Giveaways extends Event {
               )
             );
           else {
+            const eachPrize = Number((prizePool / winners.length).toString(2));
+
             await GiveawayModel.updateMany(
               {},
               { $set: { continueCount: false } }
             );
+
+            for (let i = 0; i < endedGiveaway.winners.length; i++) {
+              await UserModel.updateOne(
+                {
+                  userId: endedGiveaway.winners[i],
+                },
+                {
+                  $inc: { points: eachPrize },
+                }
+              );
+            }
+
             channel.send(
               embeds.normal(
                 `Ended Giveaway`,
-                `${winners} won the giveaway and are splitting **${prizePool}** equally. (${(
-                  prizePool / winners.length
-                ).toString(2)} each)`
+                `${winners} won the giveaway and are splitting **${prizePool}** equally. (${eachPrize} each)`
               )
             );
           }
