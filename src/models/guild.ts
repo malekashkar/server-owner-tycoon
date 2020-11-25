@@ -92,7 +92,7 @@ export default class DbGuild {
   @prop({ default: true })
   giveaways?: boolean;
 
-  @prop({ default: 1 })
+  @prop({ default: 1000 })
   giveawayPrize?: number;
 
   @prop()
