@@ -37,7 +37,7 @@ export default class LeaderboardCommand extends PointsCommand {
             userChunks[pageIndex].map(async (x, i) => {
               const user = await this.client.users.fetch(x.userId);
               if (user)
-                return `${i + 1}. **${user.username}** ~ \`${
+                return `${pageIndex * 10 + i + 1}. **${user.username}** ~ \`${
                   x.points
                 }\` Points`;
             })
@@ -46,7 +46,10 @@ export default class LeaderboardCommand extends PointsCommand {
           .filter((x) => !!x)
           .join("\n");
 
-        return embeds.normal(`Points Leaderboard`, stripIndents`${description}`);
+        return embeds.normal(
+          `Points Leaderboard`,
+          stripIndents`${description}`
+        );
       }
     );
 
