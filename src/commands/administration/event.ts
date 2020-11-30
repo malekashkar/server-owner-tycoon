@@ -2,9 +2,9 @@ import { Message } from "discord.js";
 import AdminCommand from ".";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
-import { msToFormattedTime, roles } from "../../utils/storage";
-import ms from "ms";
+import { roles } from "../../utils/storage";
 import { EventModel } from "../../models/event";
+import ms from "ms";
 
 export default class EventCommand extends AdminCommand {
   cmdName = "event";
@@ -46,7 +46,7 @@ export default class EventCommand extends AdminCommand {
       .normal(title, description)
       .addField(
         `⏱️ Starts In`,
-        `**${msToFormattedTime(startsAt.getTime() - Date.now())}**`
+        `**${ms(startsAt.getTime() - Date.now())}**`
       );
     const testEmbed = await message.channel.send(embed);
 

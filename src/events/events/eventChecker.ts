@@ -3,8 +3,9 @@ import { TextChannel } from "discord.js";
 import EEvent, { EventNameType } from "..";
 import { EventModel } from "../../models/event";
 import embeds from "../../utils/embeds";
-import { msToFormattedTime, roles } from "../../utils/storage";
+import { roles } from "../../utils/storage";
 import { Event } from "../../models/event";
+import ms from "ms";
 
 export default class EventChecker extends EEvent {
   name: EventNameType = "ready";
@@ -27,9 +28,7 @@ export default class EventChecker extends EEvent {
         const embed = message.embeds[0];
         embed.fields[0] = {
           name: `⏱️ Starts In`,
-          value: `**${msToFormattedTime(
-            event.startsAt.getTime() - Date.now()
-          )}**`,
+          value: `**${ms(event.startsAt.getTime() - Date.now())}**`,
           inline: false,
         };
       });

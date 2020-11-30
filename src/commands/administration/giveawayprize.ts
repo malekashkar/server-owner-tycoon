@@ -23,11 +23,8 @@ export default class GiveawayPrizeCommand extends AdminCommand {
         )
       );
 
-    await guildData.updateOne({
-      $set: {
-        giveawayPrize: prize,
-      },
-    });
+    guildData.giveawayPrize = prize;
+    await guildData.save();
 
     return await message.channel.send(
       embeds.normal(

@@ -334,14 +334,6 @@ export function getRandomIntBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-export function msToFormattedTime(num: number) {
-  const secs = num / 1000;
-  const hours = Math.floor(secs / 3600);
-  const minutes = Math.floor((secs - hours * 3600) / 60);
-  const seconds = secs - hours * 3600 - minutes * 60;
-  return hours + ":" + minutes + ":" + seconds;
-}
-
 export const countries: { [x: string]: string[][] } = {
   Africa: [
     ["Algeria", "dz", "🇩🇿"],

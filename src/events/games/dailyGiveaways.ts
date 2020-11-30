@@ -1,18 +1,12 @@
 import Event, { EventNameType } from "..";
-import {
-  channels,
-  getRandomIntBetween,
-  msToFormattedTime,
-  roles,
-} from "../../utils/storage";
+import { channels, getRandomIntBetween, roles } from "../../utils/storage";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 import { GuildModel } from "../../models/guild";
 import { GiveawayModel } from "../../models/giveaway";
 import embeds from "../../utils/embeds";
 import Logger from "../../utils/logger";
 import { UserModel } from "../../models/user";
-
-const hourInMilliseconds = 24 * 60 * 60 * 1000;
+import ms from "ms";
 
 export default class Giveaways extends Event {
   name: EventNameType = "ready";
@@ -55,7 +49,7 @@ export default class Giveaways extends Event {
             giveawayMessageId: newGiveawayMessage.id,
             prize: prizePool + guildData.giveawayPrize,
             randomNumber,
-            endsAt: new Date(Date.now() + hourInMilliseconds),
+            endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
           });
         }
         // Ongoing Giveaways
@@ -133,7 +127,7 @@ export default class Giveaways extends Event {
               giveawayMessageId: newGiveawayMessage.id,
               prize: currentPrizePool + guildData.giveawayPrize,
               randomNumber,
-              endsAt: new Date(Date.now() + hourInMilliseconds),
+              endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
             });
           }
         }
@@ -152,22 +146,22 @@ export default class Giveaways extends Event {
       .setDescription(`Welcome to the giveaway channel!`)
       .addField(
         `📖 How to play`,
-        `To join, please private message me (the bot) with a number between 1-100. You may only enter one response per day and may not edit your message. All other entries and edited messages will be ignored.\n\nIf any people guessed the correct number, it will be announced here in this channel. Multiple winners = prize pool split. Otherwise, if no one guesses the correct number, the prize pool will increase by $1 each day. This giveaway process will be from no until December 25, 2020.`
+        `To join, please private message me (the bot) with a number between 1-100. You may only enter one response per day and may not edit your message. All other entries and edited messages will be ignored.\n\nIf any people guessed the correct number, it will be announced here in this channel. Multiple winners = prize pool split. Otherwise, if no one guesses the correct number, the prize pool will increase by $1 each day.`
       )
-      .addField(`⏱️ Time Left`, `**${msToFormattedTime(hourInMilliseconds)}**`)
-      .addField(`💵 Current Prize Pool`, `**${prize}**`);
+      .addField(`⏱️ Time Left`, `**${ms(24 * 60 * 60 * 1000)}**`, true)
+      .addField(`💵 Current Prize Pool`, `**${prize}**`, true);
     return await channel.send(`<@&${roles.giveaways}>`, embed);
   }
 
   async updateEmbed(message: Message, endsAt: Date) {
     if (message.author === this.client.user) {
-      const timeLeft = Date.now() - endsAt.getTime();
+      const timeLeft = endsAt.getTime() - Date.now();
       const embed = message.embeds[0];
       if (!embed) return;
 
       embed.fields[1] = {
         name: "⏱️ Time Left",
-        value: `**${msToFormattedTime(timeLeft)}**`,
+        value: `**${ms(timeLeft)}**`,
         inline: true,
       };
       return await message.edit(embed);
