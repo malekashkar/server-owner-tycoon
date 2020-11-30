@@ -1,9 +1,10 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { TextChannel } from "discord.js";
+import { TextChannel, User } from "discord.js";
 import Event, { EventNameType } from ".";
 import { Poll, PollModel } from "../models/poll";
+import { UserModel } from "../models/user";
 import embeds from "../utils/embeds";
-import { emojis, roles } from "../utils/storage";
+import { emojis, givePoints, roles } from "../utils/storage";
 
 export default class PollChecker extends Event {
   name: EventNameType = "ready";
@@ -21,6 +22,17 @@ export default class PollChecker extends Event {
 
         const optionEmojis = emojis.slice(0, poll.options.length);
         const reactions = message.reactions.cache.filter((x) => x.count > 1);
+
+        let users: User[];
+        for (const reaction of reactions) {
+          for (const user of reaction[1].users.cache) {
+            if (!users.includes(user[1]) && !user[1].bot) {
+              users.push(user[1]);
+              await givePoints(user[1], "poll");
+            } else continue;
+          }
+        }
+
         if (!reactions.size)
           return channel.send(
             `<@&${roles.polls}>`,

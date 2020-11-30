@@ -201,7 +201,8 @@ type Games =
   | "wordUnscramble"
   | "invite"
   | "reactionRoles"
-  | "guildBoost";
+  | "guildBoost"
+  | "poll";
 
 export const gameInfo: {
   [key in Games]: {
@@ -279,20 +280,22 @@ export const gameInfo: {
     minPoints: 500,
     maxPoints: 1000,
   },
+  poll: {
+    displayName: "Poll Reaction",
+    minPoints: 10,
+    maxPoints: 100,
+  },
 };
 
 export async function givePoints(user: User, game: Games) {
   const gameInformation = gameInfo[game];
   const channel = user.client.channels.resolve(channels.points) as TextChannel;
-  const userData =
-    (await UserModel.findOne({ userId: user.id })) ||
-    (await UserModel.create({ userId: user.id }));
   const points = getRandomIntBetween(
     gameInformation.minPoints,
     gameInformation.maxPoints
   );
 
-  await userData.updateOne({ $inc: { points } });
+  await UserModel.updateOne({ userId: user.id }, { $inc: { points } });
 
   return await channel.send(
     embeds.normal(
