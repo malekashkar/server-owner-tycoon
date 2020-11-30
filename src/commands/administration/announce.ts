@@ -24,8 +24,9 @@ export default class AnnounceCommand extends AdminCommand {
     );
     if (!description) return;
 
+    const roles = await getRoles(message);
     const embed = embeds.normal(title, description);
-    const testEmbed = await message.channel.send(embed);
+    const testEmbed = await message.channel.send(`${roles.join(", ")}`, embed);
 
     const confirm = await confirmation(
       `Announcement Confirmation`,
@@ -35,7 +36,7 @@ export default class AnnounceCommand extends AdminCommand {
 
     if (confirm) {
       if (testEmbed.deletable) await testEmbed.delete();
-      channel.send(`<@&${roles.announcements}>`, embed);
+      channel.send(`${roles.join(", ")}`, embed);
     } else {
       if (testEmbed.deletable) await testEmbed.delete();
     }
@@ -63,6 +64,26 @@ async function getChannel(message: Message) {
   } else {
     return null;
   }
+}
+
+async function getRoles(message: Message) {
+  const question = await message.channel.send(
+    embeds.question(
+      `Please tag all the roles you would like to mention.\nTo exclude role tags, say **none**.`
+    )
+  );
+  const collector = await message.channel.awaitMessages(
+    (x: Message) => x.author.id === message.author.id,
+    {
+      max: 1,
+      time: 15 * 60 * 1000,
+      errors: ["time"],
+    }
+  );
+  if (collector.first()) {
+    if (question.deletable) await question.delete();
+    return collector.first().mentions.roles.array();
+  } else return [];
 }
 
 async function getText(message: Message, question: string) {
