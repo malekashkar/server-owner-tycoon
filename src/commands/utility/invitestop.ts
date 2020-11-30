@@ -29,7 +29,9 @@ export default class InvitesTopCommand extends PointsCommand {
     ]);
 
     if (!entries.length)
-      return message.channel.send(embeds.error(`No one has points currently!`));
+      return message.channel.send(
+        embeds.error(`No one has invites currently!`)
+      );
 
     const userChunks = _.chunk(entries, 10);
     const paginator = new Paginator(
