@@ -10,7 +10,10 @@ export default class embeds {
   };
 
   static normal = function (title: string, desc: string) {
-    const embed = new MessageEmbed().setColor("RANDOM").setTimestamp();
+    const embed = new MessageEmbed()
+      .setColor("RANDOM")
+      .setTimestamp()
+      .setFooter("Server Owner Tycoon");
     if (title) embed.setTitle(title);
     if (desc) embed.setDescription(desc);
     return embed;

@@ -25,9 +25,7 @@ export default class AnnounceCommand extends AdminCommand {
     if (!description) return;
 
     const roles = await getRoles(message);
-    const embed = embeds
-      .normal(title, description)
-      .setFooter(`Server Owner Tycoon`);
+    const embed = embeds.normal(title, description);
     const testEmbed = await message.channel.send(`${roles.join(", ")}`, embed);
 
     const confirm = await confirmation(
