@@ -1,14 +1,8 @@
-import { MessageReaction, TextChannel, User } from "discord.js";
+import { MessageReaction, User } from "discord.js";
 import Event from "..";
 import { GuildModel } from "../../models/guild";
-import { UserModel } from "../../models/user";
-import embeds from "../../utils/embeds";
-import {
-  givePoints,
-  gameInfo,
-  ReactionRoleNames,
-  reactionRoles,
-} from "../../utils/storage";
+import { UserModel, ReactionRolesUsed } from "../../models/user";
+import { givePoints, reactionRoles } from "../../utils/storage";
 
 export default class ReactionRoles extends Event {
   name = "messageReactionAdd";
@@ -39,12 +33,12 @@ export default class ReactionRoles extends Event {
 
       if (
         !userData.gameCooldowns.reactionRoles[
-          roleInfo.name as ReactionRoleNames
+          roleInfo.name as keyof ReactionRolesUsed
         ]
       ) {
         await givePoints(user, "reactionRoles");
         userData.gameCooldowns.reactionRoles[
-          roleInfo.name as ReactionRoleNames
+          roleInfo.name as keyof ReactionRolesUsed
         ] = true;
         await userData.save();
       }

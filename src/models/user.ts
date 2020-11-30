@@ -1,6 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
-class ReactionRolesUsed {
+export class ReactionRolesUsed {
   @prop({ default: false })
   announcements?: boolean;
 

@@ -120,7 +120,8 @@ export type ReactionRoleNames =
   | "announcements"
   | "updates"
   | "polls"
-  | "giveaways";
+  | "giveaways"
+  | "events";
 
 interface ReactionRoles {
   name: ReactionRoleNames;
@@ -153,6 +154,12 @@ export const reactionRoles: ReactionRoles[] = [
     roleId: "691833524117831710",
     description: "Get notified everytime we post a new giveaway.",
     reaction: "💸",
+  },
+  {
+    name: "events",
+    roleId: "779852796437594152",
+    description: "Get notified every time we host a new event.",
+    reaction: "🥳",
   },
 ];
 
