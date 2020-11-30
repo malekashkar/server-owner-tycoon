@@ -17,7 +17,7 @@ export class QOTD {
   options: string[];
 
   @prop()
-  correctAnswer: string;
+  correctAnswerIndex: number;
 
   @prop()
   endsAt: Date;

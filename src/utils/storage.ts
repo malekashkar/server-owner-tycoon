@@ -202,7 +202,8 @@ type Games =
   | "invite"
   | "reactionRoles"
   | "guildBoost"
-  | "poll";
+  | "poll"
+  | "qotd";
 
 export const gameInfo: {
   [key in Games]: {
@@ -284,6 +285,11 @@ export const gameInfo: {
     displayName: "Poll Reaction",
     minPoints: 10,
     maxPoints: 100,
+  },
+  qotd: {
+    displayName: "QOTD Correct Answer",
+    minPoints: 50,
+    maxPoints: 200,
   },
 };
 

@@ -2,7 +2,6 @@ import { DocumentType } from "@typegoose/typegoose";
 import { TextChannel, User } from "discord.js";
 import Event, { EventNameType } from ".";
 import { Poll, PollModel } from "../models/poll";
-import { UserModel } from "../models/user";
 import embeds from "../utils/embeds";
 import { emojis, givePoints, roles } from "../utils/storage";
 

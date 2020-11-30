@@ -58,7 +58,7 @@ export default class QOTDCommand extends AdminCommand {
       )
     );
     await react(correctAnswerQuestion, optionEmojis);
-    
+
     const correctAnswerCollector = await correctAnswerQuestion.awaitReactions(
       (r, u) =>
         u.id === message.author.id && optionEmojis.includes(r.emoji.name),
@@ -66,11 +66,6 @@ export default class QOTDCommand extends AdminCommand {
     );
     if (correctAnswerCollector?.first()) {
       if (correctAnswerQuestion.deletable) await correctAnswerQuestion.delete();
-
-      const correctAnswer =
-        options[
-          optionEmojis.indexOf(correctAnswerCollector.first().emoji.name)
-        ];
 
       const embed = embeds.normal(
         question,
@@ -88,14 +83,15 @@ export default class QOTDCommand extends AdminCommand {
       if (confirm) {
         if (testEmbed.deletable) await testEmbed.delete();
         const qotdMessage = await channel.send(embed);
-        const optionEmojis = emojis.slice(0, options.length);
 
         await react(qotdMessage, optionEmojis);
         await QOTDModel.create({
           starterId: message.author.id,
           channelId: channel.id,
           messageId: qotdMessage.id,
-          correctAnswer,
+          correctAnswerIndex: optionEmojis.indexOf(
+            correctAnswerCollector.first().emoji.name
+          ),
           question,
           options,
           endsAt,
