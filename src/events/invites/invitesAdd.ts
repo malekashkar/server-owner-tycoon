@@ -1,7 +1,6 @@
 import { GuildMember } from "discord.js";
 import { InviteModel } from "../../models/invite";
 import Event from "..";
-import { givePoints } from "../../utils/storage";
 
 export default class addInvites extends Event {
   name = "guildMemberAdd";
@@ -17,12 +16,13 @@ export default class addInvites extends Event {
     });
     if (!invite?.inviter || invite?.inviter === member.user) return;
 
-    const inviteData = await InviteModel.find({
+    const inviteData = await InviteModel.findOne({
       userId: invite.inviter.id,
       invitedUserId: member.id,
+      fake: false,
     });
-    if (!inviteData.length) {
-      await givePoints(invite.inviter, "invite");
+
+    if (!inviteData) {
       await InviteModel.create({
         userId: invite.inviter.id,
         invitedUserId: member.id,

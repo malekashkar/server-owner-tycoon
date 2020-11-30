@@ -68,7 +68,7 @@ export default class Giveaways extends Event {
         }
         // Ended Giveaways
         else if (endedGiveaway) {
-          const message = await channel.messages.fetch(
+          const message = channel.messages.resolve(
             endedGiveaway.giveawayMessageId
           );
           if (message?.deletable) await message.delete();
@@ -140,7 +140,7 @@ export default class Giveaways extends Event {
       } catch (err) {
         Logger.error("GIVEAWAYS", err);
       }
-    }, 5 * 60 * 1000);
+    }, 10 * 1000);
   }
 
   async sendEmbed(prize: number) {

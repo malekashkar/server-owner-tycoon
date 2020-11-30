@@ -4,10 +4,15 @@ import Event from "..";
 import { CountryModel } from "../../models/country";
 import embeds from "../../utils/embeds";
 import react from "../../utils/react";
-import { countries, emojis, letterEmojis, roles } from "../../utils/storage";
+import {
+  countries,
+  emojis,
+  givePoints,
+  letterEmojis,
+  roles,
+} from "../../utils/storage";
 import _ from "lodash";
 import confirmation from "../../utils/confirmation";
-import reactionMessage from "../../utils/games/reactionMessage";
 
 export default class CountrySelectorReactions extends Event {
   name = "messageReactionAdd";
@@ -144,6 +149,7 @@ export default class CountrySelectorReactions extends Event {
       }
       if (message.deletable) await message.delete();
 
+      await givePoints(user, "invite");
       await member.setNickname(
         `${member.user.username.slice(0, 15)} ${reaction.emoji.name}`
       );

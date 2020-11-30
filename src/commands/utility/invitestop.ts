@@ -1,6 +1,5 @@
 import { Message } from "discord.js";
 import PointsCommand from ".";
-import { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
 import Paginator from "../../utils/pagecord";
 import _ from "lodash";
