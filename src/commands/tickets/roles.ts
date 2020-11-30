@@ -18,7 +18,10 @@ export default class TicketRolesCommand extends TicketCommand {
     guildData: DocumentType<DbGuild>
   ) {
     const roles = message.mentions.roles;
-    if (!roles) return message.channel.send(embeds.error(``));
+    if (!roles.size)
+      return message.channel.send(
+        embeds.error(`Please tag the roles you would like tickets to allow.`)
+      );
 
     guildData.ticketRoles = roles.map((x) => x.id);
     await guildData.save();
