@@ -53,6 +53,56 @@ __decorate([
     typegoose_1.prop(),
     __metadata("design:type", String)
 ], Messages.prototype, "ticketPanel", void 0);
+class Moderation {
+}
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Boolean)
+], Moderation.prototype, "enabled", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Boolean)
+], Moderation.prototype, "invites", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Boolean)
+], Moderation.prototype, "links", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Boolean)
+], Moderation.prototype, "selfbot", void 0);
+__decorate([
+    typegoose_1.prop({ default: 0 }),
+    __metadata("design:type", Number)
+], Moderation.prototype, "mentions", void 0);
+__decorate([
+    typegoose_1.prop({ default: 20 }),
+    __metadata("design:type", Number)
+], Moderation.prototype, "mentionsBan", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Number)
+], Moderation.prototype, "spamMessageAmount", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Number)
+], Moderation.prototype, "spamTime", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Boolean)
+], Moderation.prototype, "mute", void 0);
+__decorate([
+    typegoose_1.prop({ type: String }),
+    __metadata("design:type", Array)
+], Moderation.prototype, "whitelistedChannelIds", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Number)
+], Moderation.prototype, "muteViolationAmount", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Number)
+], Moderation.prototype, "muteViolationInterval", void 0);
 class DbGuild {
 }
 __decorate([
@@ -80,9 +130,13 @@ __decorate([
     __metadata("design:type", Boolean)
 ], DbGuild.prototype, "giveaways", void 0);
 __decorate([
-    typegoose_1.prop({ default: 1 }),
+    typegoose_1.prop({ default: 1000 }),
     __metadata("design:type", Number)
 ], DbGuild.prototype, "giveawayPrize", void 0);
+__decorate([
+    typegoose_1.prop(),
+    __metadata("design:type", Moderation)
+], DbGuild.prototype, "moderation", void 0);
 exports.default = DbGuild;
 exports.GuildModel = typegoose_1.getModelForClass(DbGuild, {
     schemaOptions: { collection: "guilds" },

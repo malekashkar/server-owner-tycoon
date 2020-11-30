@@ -74,7 +74,7 @@ export default class PollCommand extends AdminCommand {
         channelId: channel.id,
         messageId: pollMessage.id,
         question,
-        options: [],
+        options,
         endsAt,
       });
     } else {

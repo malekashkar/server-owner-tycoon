@@ -132,33 +132,34 @@ exports.reactionRoles = [
 ];
 exports.prizes = {
     PayPal: {
-        "$10 PayPal": 10000,
-        "$25 PayPal": 25000,
-        "$50 PayPal": 50000,
-        "$100 PayPal": 100000,
+        "$10 PayPal": 50000,
+        "$25 PayPal": 125000,
+        "$50 PayPal": 250000,
+        "$100 PayPal": 500000,
     },
     "Discord Server": {
-        "Mention in Announcement": 1000,
-        "Add Server Emoji": 2000,
-        "Colored Discord Role": 2500,
-        "Top of List 24 Hours": 3000,
-        "VIP Rank": 5000,
+        "Mention in Announcement": 5000,
+        "Add Server Emoji": 10000,
+        "Colored Discord Role": 15000,
+        "Top of List 24 Hours": 20000,
     },
     "Gift Cards": {
-        "$25 Visa": 30000,
-        "$25 Microsoft": 30000,
-        "$25 Apple": 30000,
-        "$25 Steam": 30000,
-        "$25 Amazon": 30000,
-        "$50 Visa": 60000,
-        "$50 Microsoft": 60000,
-        "$50 Apple": 60000,
-        "$50 Steam": 60000,
-        "$50 Amazon": 60000,
+        "$25 Visa": 150000,
+        "$25 Microsoft": 150000,
+        "$25 Apple": 150000,
+        "$25 Steam": 150000,
+        "$25 Amazon": 150000,
+        "$50 Visa": 300000,
+        "$50 Microsoft": 300000,
+        "$50 Apple": 300000,
+        "$50 Steam": 300000,
+        "$50 Amazon": 300000,
     },
     Nitro: {
-        "Nitro Classic (1M)": 5000,
-        "Discord Nitro (1M)": 10000,
+        "Nitro Classic (1M)": 25000,
+        "Discord Nitro (1M)": 50000,
+        "Nitro Classic (1Y)": 250000,
+        "Discord Nitro (1Y)": 500000,
     },
 };
 exports.gameInfo = {
@@ -230,14 +231,17 @@ exports.gameInfo = {
         minPoints: 500,
         maxPoints: 1000,
     },
+    poll: {
+        displayName: "Poll Reaction",
+        minPoints: 10,
+        maxPoints: 100,
+    },
 };
 async function givePoints(user, game) {
     const gameInformation = exports.gameInfo[game];
     const channel = user.client.channels.resolve(exports.channels.points);
-    const userData = (await user_1.UserModel.findOne({ userId: user.id })) ||
-        (await user_1.UserModel.create({ userId: user.id }));
     const points = getRandomIntBetween(gameInformation.minPoints, gameInformation.maxPoints);
-    await userData.updateOne({ $inc: { points } });
+    await user_1.UserModel.updateOne({ userId: user.id }, { $inc: { points } });
     return await channel.send(embeds_1.default.normal(`Points Given`, `${user} has received **${points}** points from a **${gameInformation.displayName.toLowerCase()}**.`));
 }
 exports.givePoints = givePoints;
@@ -379,7 +383,7 @@ exports.countries = {
         ["Cyprus", "cy", "🇨🇾"],
         ["Czechia", "cz", "🇨🇿"],
         ["Denmark", "dk", "🇩🇰"],
-        ["Estonia", "ee", "🇫🇮"],
+        ["Estonia", "ee", "🇪🇪"],
         ["Faroe Islands", "fo", "🇫🇴"],
         ["Finland", "fi", "🇫🇮"],
         ["France", "fr", "🇫🇷"],

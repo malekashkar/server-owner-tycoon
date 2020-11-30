@@ -1,14 +1,13 @@
 import { Message } from "discord.js";
 import AdminCommand from ".";
-import { PollModel } from "../../models/poll";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
-import { reactionRoles, roles } from "../../utils/storage";
 import ms from "ms";
 import { emojis } from "../../utils/storage";
 import react from "../../utils/react";
+import { QOTDModel } from "../../models/QOTD";
 
-export default class PollCommand extends AdminCommand {
+export default class QOTDCommand extends AdminCommand {
   cmdName = "qotd";
   description = "Create a qotd for users to vote on.";
 
@@ -18,19 +17,19 @@ export default class PollCommand extends AdminCommand {
 
     const question = await getText(
       message,
-      `What is the poll question you are asking?`
+      `What is the qotd question you are asking?`
     );
     if (!question) return;
 
     const description = await getText(
       message,
-      `What is the description of this poll?`
+      `What is the description of this qotd?`
     );
     if (!description) return;
 
     const lastTime = await getText(
       message,
-      `How long would you like this giveaway to last for? (ex. 2h, 3d, 1w)`
+      `How long would you like this qotd to last for? (ex. 2h, 3d, 1w)`
     );
     if (!lastTime) return;
     const endsAt = new Date(Date.now() + ms(lastTime));
@@ -50,35 +49,62 @@ export default class PollCommand extends AdminCommand {
     }
     if (options.length !== optionAmount) return;
 
-    const embed = embeds.normal(
-      question,
-      description +
-        `\n\n${options.map((x, i) => `${emojis[i]} ${x}`).join("\n")}`
+    const optionEmojis = emojis.slice(0, options.length);
+    const correctAnswerQuestion = await message.channel.send(
+      embeds.question(
+        `Please select the correct answer.\n\n${options
+          .map((x, i) => `${optionEmojis[i]} ${x}`)
+          .join("/n")}`
+      )
     );
-    const testEmbed = await message.channel.send(embed);
-
-    const confirm = await confirmation(
-      `Poll Confirmation`,
-      `Are you sure you would like to post this poll?`,
-      message
+    await react(correctAnswerQuestion, optionEmojis);
+    
+    const correctAnswerCollector = await correctAnswerQuestion.awaitReactions(
+      (r, u) =>
+        u.id === message.author.id && optionEmojis.includes(r.emoji.name),
+      { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
     );
+    if (correctAnswerCollector?.first()) {
+      if (correctAnswerQuestion.deletable) await correctAnswerQuestion.delete();
 
-    if (confirm) {
-      if (testEmbed.deletable) await testEmbed.delete();
-      const pollMessage = await channel.send(`<@&${roles.polls}>`, embed);
-      const optionEmojis = emojis.slice(0, options.length);
+      const correctAnswer =
+        options[
+          optionEmojis.indexOf(correctAnswerCollector.first().emoji.name)
+        ];
 
-      await react(pollMessage, optionEmojis);
-      await PollModel.create({
-        starterId: message.author.id,
-        channelId: channel.id,
-        messageId: pollMessage.id,
+      const embed = embeds.normal(
         question,
-        options: [],
-        endsAt,
-      });
+        description +
+          `\n\n${options.map((x, i) => `${emojis[i]} ${x}`).join("\n")}`
+      );
+      const testEmbed = await message.channel.send(embed);
+
+      const confirm = await confirmation(
+        `Qotd Confirmation`,
+        `Are you sure you would like to post this qotd?`,
+        message
+      );
+
+      if (confirm) {
+        if (testEmbed.deletable) await testEmbed.delete();
+        const qotdMessage = await channel.send(embed);
+        const optionEmojis = emojis.slice(0, options.length);
+
+        await react(qotdMessage, optionEmojis);
+        await QOTDModel.create({
+          starterId: message.author.id,
+          channelId: channel.id,
+          messageId: qotdMessage.id,
+          correctAnswer,
+          question,
+          options,
+          endsAt,
+        });
+      } else {
+        if (testEmbed.deletable) await testEmbed.delete();
+      }
     } else {
-      if (testEmbed.deletable) await testEmbed.delete();
+      if (correctAnswerQuestion.deletable) await correctAnswerQuestion.delete();
     }
   }
 }
@@ -86,7 +112,7 @@ export default class PollCommand extends AdminCommand {
 async function getChannel(message: Message) {
   const question = await message.channel.send(
     embeds.question(
-      `Please tag the channel you would like to send the announcement in.`
+      `Please tag the channel you would like to send the qotd in.`
     )
   );
   const collector = await message.channel.awaitMessages(
@@ -126,7 +152,7 @@ async function getText(message: Message, question: string) {
 
 async function getNumber(message: Message) {
   const question = await message.channel.send(
-    embeds.question(`How many poll options would you like to have? (9 max)`)
+    embeds.question(`How many qotd options would you like to have? (9 max)`)
   );
   const collector = await message.channel.awaitMessages(
     (x: Message) =>

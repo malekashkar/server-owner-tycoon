@@ -75,6 +75,10 @@ __decorate([
     typegoose_1.prop({ default: {} }),
     __metadata("design:type", Milestones)
 ], DbUser.prototype, "milestones", void 0);
+__decorate([
+    typegoose_1.prop({ default: 0 }),
+    __metadata("design:type", Number)
+], DbUser.prototype, "messageSpamMatch", void 0);
 exports.default = DbUser;
 exports.UserModel = typegoose_1.getModelForClass(DbUser, {
     schemaOptions: { collection: "users" },

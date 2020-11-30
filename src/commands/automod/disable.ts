@@ -6,9 +6,9 @@ import DbUser from "../../models/user";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
 
-export default class AutomodToggleCommand extends AutoModCommand {
-  cmdName = "toggle";
-  description = "Toggle automod on and off.";
+export default class AutomodDisableCommand extends AutoModCommand {
+  cmdName = "disable";
+  description = "Disable automoderation.";
 
   async run(
     message: Message,
