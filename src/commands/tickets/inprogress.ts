@@ -25,7 +25,10 @@ export default class InProgressCommand extends TicketCommand {
       ticketData.inProgress = true;
       await ticketData.save();
 
-      channel.setParent(categories.inProgressTickets);
+      channel.setParent(categories.inProgressTickets, {
+        lockPermissions: false,
+      });
+
       return await message.channel.send(
         embeds.normal(
           `Moving Channel`,
