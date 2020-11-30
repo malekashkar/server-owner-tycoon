@@ -25,9 +25,9 @@ export default class QOTDChecker extends Event {
         if (reactions) {
           const correctReactionUsers = reactions.get(
             optionEmojis[qotd.correctAnswerIndex]
-          ).users.cache;
+          );
           if (correctReactionUsers) {
-            for (const user of correctReactionUsers) {
+            for (const user of correctReactionUsers.users.cache) {
               if (!user[1].bot) {
                 await givePoints(user[1], "qotd");
               } else continue;
