@@ -9,6 +9,7 @@ import embeds from "../../utils/embeds";
 export default class SpamCommand extends AutoModCommand {
   cmdName = "spam";
   description = "Configure the spam detector settings.";
+  usage = "<message amount> <time>";
 
   async run(
     message: Message,

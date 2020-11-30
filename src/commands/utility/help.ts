@@ -37,14 +37,18 @@ export default class HelpCommand extends UtilityCommand {
         ? commandObj.group + ` ${commandObj.cmdName}`
         : commandObj.cmdName;
 
+      const commandFin = `${command}${
+        commandObj.usage ? ` \`${commandObj.usage}\`` : ``
+      }`;
+
       const group = help.get(toTitleCase(commandObj.group));
       if (!group) {
         help.set(toTitleCase(commandObj.group), {
-          commands: [command],
+          commands: [commandFin],
           descriptions: [commandObj.description],
         });
       } else {
-        group.commands.push(command);
+        group.commands.push(commandFin);
         group.descriptions.push(commandObj.description);
       }
     }
@@ -89,7 +93,10 @@ export default class HelpCommand extends UtilityCommand {
 
         helpMessage.reactions.removeAll();
         helpMessage.edit(
-          embeds.normal(categoryName + ` | Commands Info`, stripIndents`${description}`)
+          embeds.normal(
+            categoryName + ` | Commands Info`,
+            stripIndents`${description}`
+          )
         );
 
         await react(helpMessage, ["◀️"]);

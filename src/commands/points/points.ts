@@ -8,6 +8,7 @@ import embeds from "../../utils/embeds";
 export default class PointCommand extends PointsCommand {
   cmdName = "points";
   description = "Check how many points you currently have.";
+  usage = "[@user]";
 
   async run(
     message: Message,

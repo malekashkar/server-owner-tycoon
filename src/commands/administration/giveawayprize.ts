@@ -8,6 +8,7 @@ import embeds from "../../utils/embeds";
 export default class GiveawayPrizeCommand extends AdminCommand {
   cmdName = "giveawayprize";
   description = "Change the increment of the giveaway prize.";
+  usage = "<points amount>"
 
   async run(
     message: Message,

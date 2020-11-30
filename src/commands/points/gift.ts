@@ -8,6 +8,7 @@ import embeds from "../../utils/embeds";
 export default class GiftCommand extends PointsCommand {
   cmdName = "gift";
   description = "Gift your credits to others.";
+  usage = "<@user> <points amount>"
 
   async run(
     message: Message,

@@ -9,6 +9,7 @@ export default class ResetUser extends AdminCommand {
   cmdName = "resetuser";
   description = "Reset a users entire profile";
   permission = "administrator";
+  usage = "<@user | user id>"
 
   async run(
     message: Message,

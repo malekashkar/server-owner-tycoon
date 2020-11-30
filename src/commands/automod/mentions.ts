@@ -8,6 +8,7 @@ import embeds from "../../utils/embeds";
 export default class AutomodMentionsCommand extends AutoModCommand {
   cmdName = "mentions";
   description = "Set the amount of mentions detected by auto moderation.";
+  usage = "<mention amount>";
 
   async run(
     message: Message,

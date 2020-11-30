@@ -3,7 +3,7 @@ import AdminCommand from ".";
 import { PollModel } from "../../models/poll";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
-import { reactionRoles, roles } from "../../utils/storage";
+import { roles } from "../../utils/storage";
 import ms from "ms";
 import { emojis } from "../../utils/storage";
 import react from "../../utils/react";

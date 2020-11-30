@@ -1,14 +1,14 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
-import UtilityCommand from ".";
+import AdminCommand from ".";
 import DbGuild from "../../models/guild";
 import DbUser from "../../models/user";
 import embeds from "../../utils/embeds";
 
-export default class PrefixCommand extends UtilityCommand {
+export default class PrefixCommand extends AdminCommand {
   cmdName = "prefix";
   description = "Change the prefix of the discord bot.";
-  permission = "administrator";
+  usage = "<prefix>";
 
   async run(
     message: Message,

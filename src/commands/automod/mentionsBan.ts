@@ -9,6 +9,7 @@ export default class AutomodMentionsBanCommand extends AutoModCommand {
   cmdName = "mentionsban";
   description =
     "Set the amount of mentions detected by auto moderation to ban a member.";
+  usage = "<mention amount>";
 
   async run(
     message: Message,

@@ -9,6 +9,7 @@ import embeds from "../../utils/embeds";
 export default class MuteCommand extends AutoModCommand {
   cmdName = "mute";
   description = "Configure what initiates a mute for a user.";
+  usage = "<violation amount> <time>"
 
   async run(
     message: Message,

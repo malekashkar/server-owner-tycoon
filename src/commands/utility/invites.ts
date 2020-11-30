@@ -9,6 +9,7 @@ import embeds from "../../utils/embeds";
 export default class InvitesCommand extends UtilityCommand {
   cmdName = "invites";
   description = "Check how much invites you have.";
+  usage = "[@user]";
 
   async run(
     message: Message,

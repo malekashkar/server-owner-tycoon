@@ -8,6 +8,7 @@ import embeds from "../../utils/embeds";
 export default class EntryCategoryClass extends AdminCommand {
   cmdName = "entrycategory";
   description = "Set the category where new members select their country.";
+  usage = "<category name>";
 
   async run(
     message: Message,

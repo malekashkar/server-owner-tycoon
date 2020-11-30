@@ -8,6 +8,7 @@ import embeds from "../../utils/embeds";
 export default class AutoModWhitelistCommand extends AutoModCommand {
   cmdName = "whitelist";
   description = "Whitelist a channel from links posting.";
+  usage = "<@channel>";
 
   async run(
     message: Message,

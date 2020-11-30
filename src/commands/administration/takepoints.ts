@@ -6,6 +6,7 @@ import embeds from "../../utils/embeds";
 export default class TakePointsCommand extends AdminCommand {
   cmdName = "takepoints";
   description = "Take points from a player.";
+  usage = "<@user> <points amount>"
 
   async run(message: Message, args: string[]) {
     const user = message.mentions.users.first();

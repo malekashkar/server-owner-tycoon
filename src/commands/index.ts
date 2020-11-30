@@ -8,6 +8,7 @@ export default abstract class Command {
   permission: string;
   disabled = false;
   client: Client;
+  usage = "";
 
   constructor(client: Client) {
     this.client = client;
