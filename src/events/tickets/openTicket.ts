@@ -1,4 +1,11 @@
-import { MessageReaction, User } from "discord.js";
+import {
+  BitFieldResolvable,
+  MessageReaction,
+  OverwriteResolvable,
+  PermissionOverwrites,
+  PermissionString,
+  User,
+} from "discord.js";
 import Event, { EventNameType } from "..";
 import { GuildModel } from "../../models/guild";
 import { TicketModel } from "../../models/ticket";
@@ -23,21 +30,32 @@ export default class OpenTicket extends Event {
       );
       const username =
         user.username.length < 15 ? user.username : user.username.slice(0, 15);
+
+      const permissionOverwrites: OverwriteResolvable[] = [
+        {
+          id: user.id,
+          allow: ["SEND_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
+        },
+        {
+          id: message.guild.id,
+          deny: "VIEW_CHANNEL",
+        },
+      ];
+      if (guildData.ticketRoles.length) {
+        for (const roleId of guildData.ticketRoles) {
+          permissionOverwrites.push({
+            id: roleId,
+            allow: ["SEND_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
+          });
+        }
+      }
+
       const channel = await message.guild.channels.create(
         `${ticketType[1]}${ticketType[0]}-${username}`,
         {
           type: "text",
           parent: categories.tickets,
-          permissionOverwrites: [
-            {
-              id: user.id,
-              allow: ["SEND_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
-            },
-            {
-              id: message.guild.id,
-              deny: "VIEW_CHANNEL",
-            },
-          ],
+          permissionOverwrites,
           reason: `${user.username} opened a ${ticketType} ticket.`,
         }
       );

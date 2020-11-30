@@ -28,7 +28,7 @@ export default async function (
 
     if (!message.member.roles.cache.has(muteRole.id))
       await message.member.roles.add(muteRole);
-    return await message.channel.send(
+    return message.channel.send(
       embeds.error(
         `You have been **muted** for **${
           guildData.moderation.muteViolationAmount

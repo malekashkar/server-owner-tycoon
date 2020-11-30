@@ -164,7 +164,7 @@ export default class Giveaways extends Event {
         value: `**${ms(timeLeft)}**`,
         inline: true,
       };
-      return await message.edit(embed);
+      return message.edit(embed);
     }
   }
 }

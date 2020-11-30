@@ -20,7 +20,7 @@ export default class AutoModWhitelistCommand extends AutoModCommand {
 
     if (!channel) {
       if (!guildData.moderation.whitelistedChannelIds.length)
-        return await message.channel.send(
+        return message.channel.send(
           embeds.error(`There are no whitelisted channels currently!`)
         );
 
@@ -31,7 +31,7 @@ export default class AutoModWhitelistCommand extends AutoModCommand {
         })
         .filter((x) => !!x)
         .join("\n");
-      return await message.channel.send(
+      return message.channel.send(
         embeds.normal(`Whitelisted Channels`, description)
       );
     } else {
@@ -41,7 +41,7 @@ export default class AutoModWhitelistCommand extends AutoModCommand {
         );
         await guildData.save();
 
-        return await message.channel.send(
+        return message.channel.send(
           embeds.normal(
             `Whitelist Removed`,
             `${channel} has been removed from the whitelisted channels.`
@@ -51,7 +51,7 @@ export default class AutoModWhitelistCommand extends AutoModCommand {
         guildData.moderation.whitelistedChannelIds.push(channel.id);
         await guildData.save();
 
-        return await message.channel.send(
+        return message.channel.send(
           embeds.normal(
             `Whitelist Added`,
             `${channel} has been whitelisted for all users to post links.`

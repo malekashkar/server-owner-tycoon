@@ -27,7 +27,7 @@ export default class GiveawayPrizeCommand extends AdminCommand {
     guildData.giveawayPrize = prize;
     await guildData.save();
 
-    return await message.channel.send(
+    return message.channel.send(
       embeds.normal(
         `Giveaway Prize Updated`,
         `The giveaway prize increment has been updated to **${prize}** points.`

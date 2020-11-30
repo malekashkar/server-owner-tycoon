@@ -27,7 +27,7 @@ export default class InvitesCommand extends UtilityCommand {
       fake: true,
     });
 
-    return await message.channel.send(
+    return message.channel.send(
       embeds.normal(
         `${user.username} Invites`,
         `${user} currently has \`${invites}\` invites.${

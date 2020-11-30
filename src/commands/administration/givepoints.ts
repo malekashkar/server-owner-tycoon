@@ -31,7 +31,7 @@ export default class GivePointsCommand extends AdminCommand {
       $inc: { points },
     });
 
-    return await message.channel.send(
+    return message.channel.send(
       embeds.normal(
         `Points Given`,
         `${message.author} has given ${user} **${points} points**.`

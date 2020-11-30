@@ -28,8 +28,8 @@ export default class GiveawayCommand extends AdminCommand {
     if (confirm) {
       guildData.giveaways = toggle;
       await guildData.save();
-
-      return await message.channel.send(
+      
+      return message.channel.send(
         embeds.normal(
           `Giveaways ${toggle ? `Enabled` : `Disabled`}`,
           `You have ${toggle ? `enable` : `disable`} giveaways.`

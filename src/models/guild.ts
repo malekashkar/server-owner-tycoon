@@ -96,6 +96,9 @@ export default class DbGuild {
 
   @prop({ default: {} })
   moderation?: Moderation;
+
+  @prop({ type: String, default: [] })
+  ticketRoles?: string[];
 }
 
 export const GuildModel = getModelForClass(DbGuild, {

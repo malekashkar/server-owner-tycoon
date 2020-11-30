@@ -37,7 +37,7 @@ export default class EntryCategoryClass extends AdminCommand {
     guildData.joinCategory = selectedCategory.id;
     await guildData.save();
 
-    return await message.channel.send(
+    return message.channel.send(
       embeds.normal(
         `Category Set`,
         `You have set **${selectedCategory.name}** to be the country selector category!`

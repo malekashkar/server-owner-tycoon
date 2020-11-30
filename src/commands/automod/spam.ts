@@ -39,7 +39,7 @@ export default class SpamCommand extends AutoModCommand {
     guildData.moderation.spamTime = time;
     await guildData.save();
 
-    return await message.channel.send(
+    return message.channel.send(
       embeds.normal(
         `Spam Configuration`,
         `Spam automod will trigger when a user sends **${messageAmount}** in under **${ms(

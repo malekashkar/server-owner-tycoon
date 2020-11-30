@@ -8,7 +8,7 @@ export default class ServerInfoCommand extends UtilityCommand {
 
   async run(message: Message) {
     const guild = message.guild;
-    return await message.channel.send(
+    return message.channel.send(
       embeds
         .normal(
           `${guild.name} | Server Information`,

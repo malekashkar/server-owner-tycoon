@@ -29,7 +29,7 @@ export default class InProgressCommand extends TicketCommand {
         lockPermissions: false,
       });
 
-      return await message.channel.send(
+      return message.channel.send(
         embeds.normal(
           `Moving Channel`,
           `This channel has been moved and been set to an inprogress ticket.`

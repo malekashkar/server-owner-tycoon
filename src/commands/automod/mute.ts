@@ -39,7 +39,7 @@ export default class MuteCommand extends AutoModCommand {
     guildData.moderation.muteViolationInterval = time;
     await guildData.save();
 
-    return await message.channel.send(
+    return message.channel.send(
       embeds.normal(
         `Mute Configuration`,
         `Mute automod will trigger when a user receives **${violationAmount}** violations in under **${ms(

@@ -30,7 +30,7 @@ export default async function (
       reason: "Spamming messages too fast.",
     });
 
-    return await message.channel.send(
+    return message.channel.send(
       embeds.normal(
         `Message Spam`,
         `You have been warned for spamming messages!`
