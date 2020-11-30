@@ -21,9 +21,9 @@ export default class ServerInfoCommand extends UtilityCommand {
           guild.channels.cache.size + ` Channels`,
           true
         )
-        .addField(`Member Count`, guild.members.cache.size + ` Members`, true)
+        .addField(`Member Count`, guild.memberCount + ` Members`, true)
         .addField(`Created At`, guild.createdAt.toLocaleDateString(), true)
-        .addField(`Owner`, guild.owner.user.tag, true)
+        .addField(`Owner`, guild.owner, true)
         .addField(`Region`, guild.region, true)
         .setFooter(`ID: ${guild.id}`)
         .setTimestamp()
