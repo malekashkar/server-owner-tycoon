@@ -94,7 +94,7 @@ export default class DbGuild {
   @prop({ default: 1000 })
   giveawayPrize?: number;
 
-  @prop()
+  @prop({ default: {} })
   moderation?: Moderation;
 }
 
