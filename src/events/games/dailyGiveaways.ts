@@ -72,8 +72,8 @@ export default class Giveaways extends Event {
             })) * guildData.giveawayPrize;
 
           const winners = endedGiveaway.winners?.map((x) => `<@${x}>`);
-          if (!winners.length)
-            channel.send(
+          if (!winners.length) {
+            const endMessage = await channel.send(
               embeds.normal(
                 `Ended Giveaway`,
                 `No one guessed the number **${
@@ -83,7 +83,8 @@ export default class Giveaways extends Event {
                 }** to **${prizePool + guildData.giveawayPrize}**.`
               )
             );
-          else {
+            endMessage.delete({ timeout: 10 * 60 * 1000 });
+          } else {
             const eachPrize = Number((prizePool / winners.length).toString(2));
 
             await GiveawayModel.updateMany(
@@ -102,12 +103,13 @@ export default class Giveaways extends Event {
               );
             }
 
-            channel.send(
+            const endMessage = await channel.send(
               embeds.normal(
                 `Ended Giveaway`,
                 `${winners} won the giveaway and are splitting **${prizePool}** equally. (${eachPrize} each)`
               )
             );
+            endMessage.delete({ timeout: 10 * 60 * 1000 });
           }
 
           endedGiveaway.ended = true;
