@@ -203,7 +203,8 @@ type Games =
   | "reactionRoles"
   | "guildBoost"
   | "poll"
-  | "qotd";
+  | "qotd"
+  | "voiceInteraction";
 
 export const gameInfo: {
   [key in Games]: {
@@ -288,6 +289,11 @@ export const gameInfo: {
   },
   qotd: {
     displayName: "QOTD Correct Answer",
+    minPoints: 50,
+    maxPoints: 200,
+  },
+  voiceInteraction: {
+    displayName: "Voice Interaction",
     minPoints: 50,
     maxPoints: 200,
   },

@@ -236,6 +236,11 @@ exports.gameInfo = {
         minPoints: 10,
         maxPoints: 100,
     },
+    qotd: {
+        displayName: "QOTD Correct Answer",
+        minPoints: 50,
+        maxPoints: 200,
+    },
 };
 async function givePoints(user, game) {
     const gameInformation = exports.gameInfo[game];
