@@ -1,6 +1,6 @@
-import { Message, TextChannel } from "discord.js";
+import { Message } from "discord.js";
 import embeds from "../embeds";
-import User, { UserModel } from "../../models/user";
+import User from "../../models/user";
 import Guild from "../../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
 import { gameInfo, givePoints, getRandomIntBetween } from "../storage";
@@ -8,14 +8,13 @@ import { gameInfo, givePoints, getRandomIntBetween } from "../storage";
 export default async function GuessTheNumber(
   message: Message,
   userData: DocumentType<User>,
-  guildData: DocumentType<Guild>,
+  guildData: DocumentType<Guild>
 ) {
   const numberData = guildData.games.guessTheNumber;
 
   if (
     numberData.lastTime &&
-    numberData.lastTime.getTime() + gameInfo.guessTheNumber.cooldown <
-      Date.now()
+    numberData.lastTime + gameInfo.guessTheNumber.cooldown < Date.now()
   ) {
     const firstNumber = getRandomIntBetween(1, 10);
     const secondNumber = getRandomIntBetween(11, 50);
@@ -28,7 +27,7 @@ export default async function GuessTheNumber(
       )
     );
 
-    numberData.lastTime = new Date();
+    numberData.lastTime = Date.now();
     await guildData.save();
 
     const collector = await message.channel.awaitMessages(

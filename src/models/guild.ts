@@ -1,9 +1,8 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
-import { ModelMapReduceOption } from "mongoose";
 
 class GuessTheNumber {
   @prop()
-  lastTime: Date;
+  lastTime: number;
 }
 
 class ReactionMessage {
@@ -13,7 +12,7 @@ class ReactionMessage {
 
 class WordUnscrambler {
   @prop()
-  lastTime: Date;
+  lastTime: number;
 }
 
 class Games {

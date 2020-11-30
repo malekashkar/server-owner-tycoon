@@ -2,7 +2,7 @@ import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
 import randomWords from "random-words";
 import Guild from "../../models/guild";
-import User, { UserModel } from "../../models/user";
+import User from "../../models/user";
 import embeds from "../embeds";
 import { gameInfo, givePoints } from "../storage";
 
@@ -15,8 +15,7 @@ export default async function wordUnscramble(
 
   if (
     unscrambleData.lastTime &&
-    unscrambleData.lastTime.getTime() + gameInfo.wordUnscramble.cooldown <
-      Date.now()
+    unscrambleData.lastTime + gameInfo.wordUnscramble.cooldown < Date.now()
   ) {
     const word = randomWords();
     const shuffled = shuffle(word);
@@ -24,7 +23,7 @@ export default async function wordUnscramble(
       embeds.normal(`Unscrambler`, `Unscramble the word \`${shuffled}\``)
     );
 
-    unscrambleData.lastTime = new Date();
+    unscrambleData.lastTime = Date.now();
     await guildData.save();
 
     const collector = await message.channel.awaitMessages(
@@ -34,7 +33,7 @@ export default async function wordUnscramble(
 
     if (collector && collector.first()) {
       const user = collector.first().author;
-      
+
       await givePoints(user, "wordUnscramble");
       await unscrambleWordMessage.delete();
       await message.channel.send(
