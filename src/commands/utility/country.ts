@@ -64,6 +64,7 @@ export default class CountryCommand extends UtilityCommand {
         startedAt: new Date(),
         userId: message.author.id,
         channelId: channel.id,
+        entry: false
       });
     } else {
       message.channel.send(

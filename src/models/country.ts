@@ -1,4 +1,5 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { report } from "process";
 
 export default class Country {
   @prop()
@@ -27,6 +28,9 @@ export default class Country {
 
   @prop({ default: false })
   countryComplete?: boolean;
+
+  @prop({ default: true })
+  entry?: boolean;
 }
 
 export const CountryModel = getModelForClass(Country);
