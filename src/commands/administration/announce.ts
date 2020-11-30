@@ -1,7 +1,6 @@
 import { Message } from "discord.js";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
-import { roles } from "../../utils/storage";
 import AdminCommand from ".";
 
 export default class AnnounceCommand extends AdminCommand {

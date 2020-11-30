@@ -11,6 +11,9 @@ export default class DbInvite {
 
   @prop()
   invitedUserId: string;
+
+  @prop({ default: false })
+  fake?: boolean;
 }
 
 export const InviteModel = getModelForClass(DbInvite, {

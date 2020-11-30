@@ -1,9 +1,7 @@
-import { GuildMember, TextChannel } from "discord.js";
+import { GuildMember } from "discord.js";
 import { InviteModel } from "../../models/invite";
 import Event from "..";
-import { UserModel } from "../../models/user";
-import { gameInfo, givePoints } from "../../utils/storage";
-import embeds from "../../utils/embeds";
+import { givePoints } from "../../utils/storage";
 
 export default class addInvites extends Event {
   name = "guildMemberAdd";
@@ -23,6 +21,18 @@ export default class addInvites extends Event {
       userId: invite.inviter.id,
       invitedUserId: member.id,
     });
-    if (!inviteData.length) await givePoints(invite.inviter, "invite");
+    if (!inviteData.length) {
+      await givePoints(invite.inviter, "invite");
+      await InviteModel.create({
+        userId: invite.inviter.id,
+        invitedUserId: member.id,
+      });
+    } else {
+      await InviteModel.create({
+        userId: invite.inviter.id,
+        invitedUserId: member.id,
+        fake: true,
+      });
+    }
   }
 }

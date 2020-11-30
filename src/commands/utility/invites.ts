@@ -2,7 +2,7 @@ import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
 import UtilityCommand from ".";
 import DbGuild from "../../models/guild";
-import DbInvite, { IInvite, InviteModel } from "../../models/invite";
+import { InviteModel } from "../../models/invite";
 import DbUser, { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
 
@@ -17,45 +17,22 @@ export default class InvitesCommand extends UtilityCommand {
     guildData: DocumentType<DbGuild>
   ) {
     const user = message.mentions.users.first() || message.author;
-
-    if (user !== message.author)
-      userData =
-        (await UserModel.findOne({ userId: user.id })) ||
-        (await UserModel.create({ userId: user.id }));
-
-    const invitesData = await InviteModel.find({
+    const invites = await InviteModel.countDocuments({
       userId: user.id,
+      fake: false,
     });
-    const invites = inviteProcessor(invitesData);
+    const fakeInvites = await InviteModel.countDocuments({
+      userId: user.id,
+      fake: true,
+    });
 
-    message.channel.send(
+    return await message.channel.send(
       embeds.normal(
         `${user.username} Invites`,
-        `${user} currently has \`${invitesData.length}\` invites.${
-          invites ? ` | Fake Invites: **${invites}**` : ``
+        `${user} currently has \`${invites}\` invites.${
+          fakeInvites ? ` | Fake Invites: **${fakeInvites}**` : ``
         }`
       )
     );
   }
-}
-
-function inviteProcessor(invites: DocumentType<DbInvite>[]) {
-  let realInvites: IInvite[] = [];
-  let fakeInvites = 0;
-  for (let i = 0; i < invites.length; i++) {
-    if (
-      !realInvites.some(
-        (x) =>
-          x.userId === invites[i].userId &&
-          x.inviteUserId === invites[i].invitedUserId
-      )
-    )
-      realInvites.push({
-        userId: invites[i].userId,
-        inviteUserId: invites[i].invitedUserId,
-      });
-    else fakeInvites++;
-  }
-
-  return fakeInvites;
 }

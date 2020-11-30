@@ -5,13 +5,14 @@ import embeds from "../../utils/embeds";
 import Paginator from "../../utils/pagecord";
 import _ from "lodash";
 import { stripIndents } from "common-tags";
+import { InviteModel } from "../../models/invite";
 
 export default class InvitesTopCommand extends PointsCommand {
   cmdName = "invitestop";
   description = "Leaderboard for the amount of invites.";
 
   async run(message: Message) {
-    const entries = await UserModel.aggregate([
+    const entries = await InviteModel.aggregate([
       {
         $group: {
           _id: "$userId",
@@ -40,7 +41,7 @@ export default class InvitesTopCommand extends PointsCommand {
             userChunks[pageIndex].map(async (x, i) => {
               const user = await this.client.users.fetch(x._id);
               if (user)
-                return `${i + 1}. **${user.username}** ~ \`${
+                return `${pageIndex * 10 + 1 + i}. **${user.username}** ~ \`${
                   x.count
                 }\` Invites`;
             })
@@ -49,7 +50,10 @@ export default class InvitesTopCommand extends PointsCommand {
           .filter((x) => !!x)
           .join("\n");
 
-        return embeds.normal(`Invites Leaderboard`, stripIndents`${description}`);
+        return embeds.normal(
+          `Invites Leaderboard`,
+          stripIndents`${description}`
+        );
       }
     );
 
