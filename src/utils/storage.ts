@@ -204,7 +204,8 @@ type Games =
   | "guildBoost"
   | "poll"
   | "qotd"
-  | "voiceInteraction";
+  | "voiceInteraction"
+  | "textInteraction";
 
 export const gameInfo: {
   [key in Games]: {
@@ -294,6 +295,11 @@ export const gameInfo: {
   },
   voiceInteraction: {
     displayName: "Voice Interaction",
+    minPoints: 50,
+    maxPoints: 200,
+  },
+  textInteraction: {
+    displayName: "Text Interaction",
     minPoints: 50,
     maxPoints: 200,
   },

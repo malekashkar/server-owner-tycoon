@@ -1,8 +1,8 @@
-import { GuildMember, Speaking } from "discord.js";
+import { GuildMember } from "discord.js";
 import Event, { EventNameType } from "..";
 import { VoiceInteractionModel } from "../../models/voiceInteraction";
 
-export default class CreateVoiceInteraction extends Event {
+export default class StartVoiceInteraction extends Event {
   name: EventNameType = "guildMemberSpeaking";
 
   async handle(member: GuildMember) {
