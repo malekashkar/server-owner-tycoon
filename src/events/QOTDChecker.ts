@@ -1,5 +1,5 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { TextChannel, User } from "discord.js";
+import { TextChannel } from "discord.js";
 import Event, { EventNameType } from ".";
 import { QOTD, QOTDModel } from "../models/QOTD";
 import embeds from "../utils/embeds";
@@ -22,13 +22,17 @@ export default class QOTDChecker extends Event {
         const optionEmojis = emojis.slice(0, qotd.options.length);
         const reactions = message.reactions.cache.filter((x) => x.count > 1);
 
-        const correctReactionUsers = reactions.get(
-          optionEmojis[qotd.correctAnswerIndex]
-        ).users.cache;
-        for (const user of correctReactionUsers) {
-          if (!user[1].bot) {
-            await givePoints(user[1], "qotd");
-          } else continue;
+        if (reactions) {
+          const correctReactionUsers = reactions.get(
+            optionEmojis[qotd.correctAnswerIndex]
+          ).users.cache;
+          if (correctReactionUsers) {
+            for (const user of correctReactionUsers) {
+              if (!user[1].bot) {
+                await givePoints(user[1], "qotd");
+              } else continue;
+            }
+          }
         }
 
         if (message?.deletable) await message.delete();
