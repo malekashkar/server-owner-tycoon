@@ -22,11 +22,9 @@ export default class InProgressCommand extends TicketCommand {
         channelId: message.channel.id,
       });
 
-      await ticketData.updateOne({
-        $set: {
-          inProgress: true,
-        },
-      });
+      ticketData.inProgress = true;
+      await ticketData.save();
+
       channel.setParent(categories.inProgressTickets);
       return await message.channel.send(
         embeds.normal(

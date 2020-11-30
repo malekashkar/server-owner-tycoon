@@ -26,11 +26,8 @@ export default class GiveawayCommand extends AdminCommand {
     );
 
     if (confirm) {
-      await guildData.updateOne({
-        $set: {
-          giveaways: toggle,
-        },
-      });
+      guildData.giveaways = toggle;
+      await guildData.save();
 
       return await message.channel.send(
         embeds.normal(
