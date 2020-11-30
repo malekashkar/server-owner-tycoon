@@ -7,6 +7,8 @@ export default class StartTextInteraction extends Event {
   name: EventNameType = "message";
 
   async handle(message: Message) {
+    if (message.author.bot) return;
+
     const interactionData = await TextInteractionModel.findOne({
       userId: message.author.id,
     });
