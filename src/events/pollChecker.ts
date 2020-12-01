@@ -3,7 +3,7 @@ import { TextChannel, User } from "discord.js";
 import Event, { EventNameType } from ".";
 import { Poll, PollModel } from "../models/poll";
 import embeds from "../utils/embeds";
-import { emojis, givePoints, roles } from "../utils/storage";
+import { emojis, formatTime, givePoints, roles } from "../utils/storage";
 
 export default class PollChecker extends Event {
   name: EventNameType = "ready";
@@ -12,10 +12,30 @@ export default class PollChecker extends Event {
     const guild = this.client.guilds.cache.first();
 
     setInterval(async () => {
-      const pollCursor = PollModel.find({
+      // Ongoing polls
+      const ongoingPollCursor = PollModel.find({
+        endsAt: { $gt: new Date() },
+      }).cursor();
+      ongoingPollCursor.on("data", async (poll: DocumentType<Poll>) => {
+        const channel = guild.channels.resolve(poll.channelId) as TextChannel;
+        const message = await channel.messages.fetch(poll.messageId);
+        const timeLeft = poll.endsAt.getTime() - Date.now();
+        const embed = message.embeds[0];
+
+        embed.fields[0] = {
+          name: `⏱️ Time Left`,
+          value: `${formatTime(timeLeft)}`,
+          inline: false,
+        };
+
+        await message.edit(embed);
+      });
+
+      // Ended polls
+      const endedPollCursor = PollModel.find({
         endsAt: { $lte: new Date() },
       }).cursor();
-      pollCursor.on("data", async (poll: DocumentType<Poll>) => {
+      endedPollCursor.on("data", async (poll: DocumentType<Poll>) => {
         const channel = guild.channels.resolve(poll.channelId) as TextChannel;
         const message = await channel.messages.fetch(poll.messageId);
 

@@ -3,7 +3,7 @@ import AdminCommand from ".";
 import { PollModel } from "../../models/poll";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
-import { roles } from "../../utils/storage";
+import { formatTime, roles } from "../../utils/storage";
 import ms from "ms";
 import { emojis } from "../../utils/storage";
 import react from "../../utils/react";
@@ -51,11 +51,13 @@ export default class PollCommand extends AdminCommand {
     }
     if (options.length !== optionAmount) return;
 
-    const embed = embeds.normal(
-      question,
-      description +
-        `\n\n${options.map((x, i) => `${emojis[i]} ${x}`).join("\n")}`
-    );
+    const embed = embeds
+      .normal(
+        question,
+        description +
+          `\n\n${options.map((x, i) => `${emojis[i]} ${x}`).join("\n")}`
+      )
+      .addField(`⏱️ Time Left`, `${formatTime(ms(lastTime))}`);
     const testEmbed = await message.channel.send(embed);
 
     const confirm = await confirmation(

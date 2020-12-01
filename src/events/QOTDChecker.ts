@@ -3,7 +3,7 @@ import { TextChannel } from "discord.js";
 import Event, { EventNameType } from ".";
 import { QOTD, QOTDModel } from "../models/QOTD";
 import embeds from "../utils/embeds";
-import { emojis, givePoints } from "../utils/storage";
+import { emojis, formatTime, givePoints } from "../utils/storage";
 
 export default class QOTDChecker extends Event {
   name: EventNameType = "ready";
@@ -12,10 +12,30 @@ export default class QOTDChecker extends Event {
     const guild = this.client.guilds.cache.first();
 
     setInterval(async () => {
-      const qotdCursor = QOTDModel.find({
+      // Ongoing qotd
+      const ongoingQotdCursor = QOTDModel.find({
+        endsAt: { $gt: new Date() },
+      }).cursor();
+      ongoingQotdCursor.on("data", async (qotd: DocumentType<QOTD>) => {
+        const channel = guild.channels.resolve(qotd.channelId) as TextChannel;
+        const message = await channel.messages.fetch(qotd.messageId);
+        const timeLeft = qotd.endsAt.getTime() - Date.now();
+        const embed = message.embeds[0];
+
+        embed.fields[0] = {
+          name: `⏱️ Time Left`,
+          value: `${formatTime(timeLeft)}`,
+          inline: false,
+        };
+
+        await message.edit(embed);
+      });
+
+      // Ended qotd
+      const endedQotdCursor = QOTDModel.find({
         endsAt: { $lte: new Date() },
       }).cursor();
-      qotdCursor.on("data", async (qotd: DocumentType<QOTD>) => {
+      endedQotdCursor.on("data", async (qotd: DocumentType<QOTD>) => {
         const channel = guild.channels.resolve(qotd.channelId) as TextChannel;
         const message = await channel.messages.fetch(qotd.messageId);
 
@@ -46,6 +66,6 @@ export default class QOTDChecker extends Event {
         );
         await qotd.deleteOne();
       });
-    }, 10 * 60 * 1000);
+    }, 10 * 1000);
   }
 }

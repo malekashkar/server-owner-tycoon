@@ -3,7 +3,7 @@ import AdminCommand from ".";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
 import ms from "ms";
-import { emojis } from "../../utils/storage";
+import { emojis, formatTime } from "../../utils/storage";
 import react from "../../utils/react";
 import { QOTDModel } from "../../models/QOTD";
 
@@ -68,11 +68,13 @@ export default class QOTDCommand extends AdminCommand {
     if (correctAnswerCollector?.first()) {
       if (correctAnswerQuestion.deletable) await correctAnswerQuestion.delete();
 
-      const embed = embeds.normal(
-        question,
-        description +
-          `\n\n${options.map((x, i) => `${emojis[i]} ${x}`).join("\n")}`
-      );
+      const embed = embeds
+        .normal(
+          question,
+          description +
+            `\n\n${options.map((x, i) => `${emojis[i]} ${x}`).join("\n")}`
+        )
+        .addField(`⏱️ Time Left`, `${formatTime(ms(lastTime))}`);
       const testEmbed = await message.channel.send(embed);
 
       const confirm = await confirmation(
