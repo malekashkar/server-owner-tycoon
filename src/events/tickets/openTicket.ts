@@ -1,9 +1,7 @@
 import {
-  BitFieldResolvable,
   MessageReaction,
   OverwriteResolvable,
-  PermissionOverwrites,
-  PermissionString,
+  TextChannel,
   User,
 } from "discord.js";
 import Event, { EventNameType } from "..";
@@ -20,6 +18,8 @@ export default class OpenTicket extends Event {
   name: EventNameType = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    if (!(reaction.message.channel instanceof TextChannel)) return;
+
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
 

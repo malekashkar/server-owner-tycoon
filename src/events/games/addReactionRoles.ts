@@ -1,4 +1,4 @@
-import { MessageReaction, User } from "discord.js";
+import { MessageReaction, TextChannel, User } from "discord.js";
 import Event from "..";
 import { GuildModel } from "../../models/guild";
 import { UserModel, ReactionRolesUsed } from "../../models/user";
@@ -8,6 +8,8 @@ export default class ReactionRoles extends Event {
   name = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    if (!(reaction.message.channel instanceof TextChannel)) return;
+
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
 

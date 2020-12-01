@@ -25,7 +25,8 @@ export default class GiveawayAnswers extends Event {
         } else {
           const confirm = await confirmation(
             `Number Choice Confirmation`,
-            `Are you sure you would like to choose the number ${guessedNumber}?`
+            `Are you sure you would like to choose the number ${guessedNumber}?`,
+            message
           );
           if (!confirm) return;
 
@@ -34,6 +35,10 @@ export default class GiveawayAnswers extends Event {
             currentGiveaway.winners.push(message.author.id);
           await currentGiveaway.save();
         }
+      } else {
+        message.channel.send(
+          embeds.error(`You already entered this giveaway!`)
+        );
       }
     }
   }

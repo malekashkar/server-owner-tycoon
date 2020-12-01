@@ -1,4 +1,4 @@
-import { Collection, MessageReaction, User } from "discord.js";
+import { Collection, MessageReaction, TextChannel, User } from "discord.js";
 import Event from ".";
 import { GuildModel } from "../models/guild";
 import embeds from "../utils/embeds";
@@ -11,6 +11,8 @@ export default class HelpCmdBack extends Event {
   name = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    if (!(reaction.message.channel instanceof TextChannel)) return;
+
     if (user.bot) return;
     if (reaction.message.partial) reaction.message.fetch();
 

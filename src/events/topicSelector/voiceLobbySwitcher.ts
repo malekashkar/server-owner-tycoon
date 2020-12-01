@@ -1,4 +1,4 @@
-import { MessageReaction, User, VoiceChannel } from "discord.js";
+import { MessageReaction, TextChannel, User, VoiceChannel } from "discord.js";
 import { upperFirst } from "lodash";
 import Event, { EventNameType } from "..";
 import { GuildModel } from "../../models/guild";
@@ -8,6 +8,8 @@ export default class VoiceLobbySwitcher extends Event {
   name: EventNameType = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    if (!(reaction.message.channel instanceof TextChannel)) return;
+
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
 

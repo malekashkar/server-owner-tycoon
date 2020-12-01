@@ -1,6 +1,5 @@
 import Event from "..";
 import { MessageReaction, TextChannel, User } from "discord.js";
-import embeds from "../../utils/embeds";
 import { UserModel } from "../../models/user";
 import { givePoints, gameInfo } from "../../utils/storage";
 
@@ -8,6 +7,8 @@ export default class randomMessageReaction extends Event {
   name = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    if (!(reaction.message.channel instanceof TextChannel)) return;
+
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
 

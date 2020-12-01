@@ -20,7 +20,7 @@ export default class PollChecker extends Event {
         const message = await channel.messages.fetch(poll.messageId);
 
         const optionEmojis = emojis.slice(0, poll.options.length);
-        const reactions = message.reactions.cache;
+        const reactions = message.reactions.cache.filter((x) => x.count > 1);
 
         let users: User[] = [];
         for (const reaction of reactions) {

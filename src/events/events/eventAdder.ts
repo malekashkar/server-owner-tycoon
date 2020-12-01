@@ -6,6 +6,8 @@ export default class EventAdder extends EEvent {
   name: EventNameType = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    if (!(reaction.message.channel instanceof TextChannel)) return;
+    
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
 

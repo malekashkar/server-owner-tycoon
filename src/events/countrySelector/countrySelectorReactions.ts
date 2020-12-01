@@ -18,6 +18,8 @@ export default class CountrySelectorReactions extends Event {
   name = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    if (!(reaction.message.channel instanceof TextChannel)) return;
+
     if (user.bot) return;
     if (reaction.message.partial) await reaction.message.fetch();
 
