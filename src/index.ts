@@ -37,6 +37,7 @@ export default class Client extends BaseManager {
           "GUILD_VOICE_STATES",
           "GUILD_MESSAGES",
           "GUILD_MESSAGE_REACTIONS",
+          "DIRECT_MESSAGES",
         ],
       },
     });

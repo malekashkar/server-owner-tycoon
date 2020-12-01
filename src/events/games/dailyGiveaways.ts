@@ -7,11 +7,12 @@ import {
 } from "../../utils/storage";
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 import { GuildModel } from "../../models/guild";
-import { GiveawayModel } from "../../models/giveaway";
+import { Giveaway, GiveawayModel } from "../../models/giveaway";
 import embeds from "../../utils/embeds";
 import Logger from "../../utils/logger";
 import { UserModel } from "../../models/user";
 import ms from "ms";
+import { DocumentType } from "@typegoose/typegoose";
 
 export default class Giveaways extends Event {
   name: EventNameType = "ready";
@@ -62,8 +63,7 @@ export default class Giveaways extends Event {
           const message = await channel.messages.fetch(
             ongoingGiveaway.giveawayMessageId
           );
-          if (message && ongoingGiveaway.endsAt)
-            this.updateEmbed(message, ongoingGiveaway.endsAt);
+          this.updateEmbed(message, ongoingGiveaway);
         }
         // Ended Giveaways
         else if (endedGiveaway) {
@@ -80,8 +80,10 @@ export default class Giveaways extends Event {
           if (!winners.length) {
             const endMessage = await channel.send(
               embeds.normal(
-                `Ended Giveaway`,
-                `No one guessed the number **${
+                `Giveaway Ended`,
+                `All **${
+                  endedGiveaway.participants.length
+                } participants** failed to guess the number **${
                   endedGiveaway.randomNumber
                 }**!\nThe giveaway prize pool has **increased by ${
                   guildData.giveawayPrize
@@ -111,7 +113,7 @@ export default class Giveaways extends Event {
             const endMessage = await channel.send(
               embeds.normal(
                 `Ended Giveaway`,
-                `${winners} won the giveaway and are splitting **${prizePool}** equally. (${eachPrize} each)`
+                `${winners} won the giveaway for **${prizePool} points** out of the **${endedGiveaway.participants.length} participants**.`
               )
             );
             endMessage.delete({ timeout: 10 * 60 * 1000 });
@@ -156,19 +158,25 @@ export default class Giveaways extends Event {
         `To join, please private message me (the bot) with a number between 1-100. You may only enter one response per day and may not edit your message. All other entries and edited messages will be ignored.\n\nIf any people guessed the correct number, it will be announced here in this channel. Multiple winners = prize pool split. Otherwise, if no one guesses the correct number, the prize pool will increase by $1 each day.`
       )
       .addField(`⏱️ Time Left`, `**${formatTime(24 * 60 * 60 * 1000)}**`, true)
-      .addField(`💵 Current Prize Pool`, `**${prize} points**`, true);
+      .addField(`💵 Current Prize Pool`, `**${prize} points**`, true)
+      .addField(`👥 Participants`, `**0 participants**`, true);
     return await channel.send(`<@&${roles.giveaways}>`, embed);
   }
 
-  async updateEmbed(message: Message, endsAt: Date) {
+  async updateEmbed(message: Message, giveaway: DocumentType<Giveaway>) {
     if (message.author === this.client.user) {
-      const timeLeft = endsAt.getTime() - Date.now();
+      const timeLeft = giveaway.endsAt.getTime() - Date.now();
       const embed = message.embeds[0];
       if (!embed) return;
 
       embed.fields[1] = {
         name: "⏱️ Time Left",
         value: `**${formatTime(timeLeft)}**`,
+        inline: true,
+      };
+      embed.fields[2] = {
+        name: `👥 Participants`,
+        value: `**${giveaway.participants.length} participants**`,
         inline: true,
       };
       return message.edit(embed);

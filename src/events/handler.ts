@@ -130,7 +130,7 @@ export default class CommandHandler extends Event {
   }
 }
 
-function resolvePermissions(message: Message, permissions: string[]) {
+export function resolvePermissions(message: Message, permissions: string[]) {
   let weight = 0;
 
   for (const perm of permissions) {

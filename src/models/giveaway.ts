@@ -13,6 +13,9 @@ export class Giveaway {
   @prop()
   endsAt: Date;
 
+  @prop({ type: String })
+  participants?: string[];
+
   @prop({ default: [], type: String })
   winners?: string[];
 

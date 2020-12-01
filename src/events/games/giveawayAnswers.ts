@@ -6,6 +6,10 @@ export default class GiveawayAnswers extends Event {
   name: EventNameType = "message";
 
   async handle(message: Message) {
+    console.log(
+      !isNaN(parseInt(message.content)),
+      message.channel instanceof DMChannel
+    );
     if (
       message.channel instanceof DMChannel &&
       !isNaN(parseInt(message.content))
@@ -15,11 +19,11 @@ export default class GiveawayAnswers extends Event {
         ended: false,
       });
       if (currentGiveaway.winners?.includes(message.author.id)) return;
-      if (parseInt(message.content) === currentGiveaway.randomNumber) {
-        await currentGiveaway.updateOne({
-          $push: { winners: message.author.id },
-        });
-      }
+      if (!currentGiveaway.participants?.includes(message.author.id))
+        currentGiveaway.participants.push(message.author.id);
+      if (parseInt(message.content) === currentGiveaway.randomNumber)
+        currentGiveaway.winners.push(message.author.id);
+      await currentGiveaway.save();
     }
   }
 }

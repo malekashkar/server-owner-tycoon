@@ -7,6 +7,7 @@ import { DocumentType } from "@typegoose/typegoose";
 import { emojis } from "../../utils/storage";
 import react from "../../utils/react";
 import { stripIndents } from "common-tags";
+import { resolvePermissions } from "../../events/handler";
 
 export interface IGroup {
   commands: string[];
@@ -28,8 +29,8 @@ export default class HelpCommand extends UtilityCommand {
     for (const commandObj of this.client.commands.array()) {
       if (!commandObj.group) continue;
       if (
-        commandObj.permission &&
-        !resolvePermissions(message, commandObj.permission)
+        commandObj.permissions &&
+        !resolvePermissions(message, commandObj.permissions)
       )
         continue;
 
@@ -107,13 +108,4 @@ export default class HelpCommand extends UtilityCommand {
 
 function toTitleCase(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
-function resolvePermissions(message: Message, permission: string) {
-  if (
-    permission.toLowerCase().includes("admin") &&
-    !message.member.hasPermission("ADMINISTRATOR")
-  )
-    return false;
-  return true;
 }
