@@ -34,10 +34,7 @@ export default class CountrySelectorReactions extends Event {
     const continentEmojis = emojis.slice(0, continents.length);
 
     if (!countryData.continent && !countryData.continentComplete) {
-      console.log(`Through the first.`);
-      console.log(continentEmojis, reaction.emoji.name);
       if (!continentEmojis.includes(reaction.emoji.name)) return;
-      console.log(`Through the second`);
 
       const selectedContinent =
         continents[continentEmojis.indexOf(reaction.emoji.name)];
@@ -46,7 +43,6 @@ export default class CountrySelectorReactions extends Event {
           (x) => letterEmojis[x[0].charAt(0).toUpperCase()]
         )
       );
-      console.log(selectedContinent, countryFirstLettersEmojis);
 
       const confirm = await confirmation(
         `Continent Confirmation`,

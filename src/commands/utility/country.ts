@@ -62,7 +62,6 @@ export default class CountryCommand extends UtilityCommand {
           ${continents.map((x, i) => `${continentEmojis[i]} ${x}`).join("\n")}`
       );
       const continentMessage = await channel.send(continentEmbed);
-      await react(continentMessage, continentEmojis);
 
       await CountryModel.create({
         startedAt: new Date(),
@@ -70,6 +69,8 @@ export default class CountryCommand extends UtilityCommand {
         channelId: channel.id,
         entry: false,
       });
+
+      await react(continentMessage, continentEmojis);
     } else {
       message.channel.send(
         embeds.error(
