@@ -87,7 +87,9 @@ export default class Giveaways extends Event {
                   endedGiveaway.randomNumber
                 }**!\nThe giveaway prize pool has **increased by ${
                   guildData.giveawayPrize
-                }** to **${prizePool + guildData.giveawayPrize}**.`
+                } points** to **${
+                  prizePool + guildData.giveawayPrize
+                } points**.`
               )
             );
             endMessage.delete({ timeout: 10 * 60 * 1000 });
@@ -174,7 +176,7 @@ export default class Giveaways extends Event {
         value: `**${formatTime(timeLeft)}**`,
         inline: true,
       };
-      embed.fields[2] = {
+      embed.fields[3] = {
         name: `👥 Participants`,
         value: `**${giveaway.participants.length} participants**`,
         inline: true,
