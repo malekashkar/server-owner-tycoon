@@ -79,6 +79,15 @@ export const ticketEmojis: { [key in TicketTypes]: string } = {
   media: "🎵",
 };
 
+export const ticketPermissions: { [key in TicketTypes]: string[] } = {
+  support: ["leadership", "human", "moderation", "support"],
+  billing: ["leadership", "human", "moderation", "support", "sales"],
+  bug: ["leadership", "human", "moderation", "support"],
+  suggestion: ["leadership", "human", "moderation", "support"],
+  involvement: ["leadership", "human", "moderation", "support"],
+  media: ["leadership", "human", "moderation", "support", "public"],
+};
+
 export const roles = {
   supporter: "565007854483013632",
   giveaways: "691833524117831710",
@@ -88,7 +97,7 @@ export const roles = {
   events: "779852796437594152",
   humanResources: "723967547140997268",
   moderator: "731463891565150249",
-  supportTeam: "731464293761024010"
+  supportTeam: "731464293761024010",
 };
 
 export const channels = {

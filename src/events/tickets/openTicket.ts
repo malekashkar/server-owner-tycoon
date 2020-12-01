@@ -10,7 +10,11 @@ import Event, { EventNameType } from "..";
 import { GuildModel } from "../../models/guild";
 import { TicketModel } from "../../models/ticket";
 import embeds from "../../utils/embeds";
-import { categories, ticketEmojis } from "../../utils/storage";
+import {
+  categories,
+  ticketEmojis,
+  ticketPermissions,
+} from "../../utils/storage";
 
 export default class OpenTicket extends Event {
   name: EventNameType = "messageReactionAdd";
@@ -41,13 +45,15 @@ export default class OpenTicket extends Event {
           deny: "VIEW_CHANNEL",
         },
       ];
-      if (guildData.ticketRoles.length) {
-        for (const roleId of guildData.ticketRoles) {
-          permissionOverwrites.push({
-            id: roleId,
-            allow: ["SEND_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
-          });
-        }
+      for (const permission of Object.values(ticketPermissions)) {
+        const roleName = permission[1];
+        const role = message.guild.roles.cache.find((x) =>
+          x.name.toLowerCase().includes(roleName)
+        );
+        permissionOverwrites.push({
+          id: role.id,
+          allow: ["SEND_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
+        });
       }
 
       const channel = await message.guild.channels.create(
