@@ -150,7 +150,7 @@ export default class CountrySelectorReactions extends Event {
       }
       if (message.deletable) await message.delete();
 
-      await givePoints(user, "invite");
+      await givePoints(user, "countrySelector");
       await member.setNickname(
         `${member.user.username.slice(0, 15)} ${reaction.emoji.name}`
       );

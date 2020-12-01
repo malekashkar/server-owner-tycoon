@@ -256,7 +256,8 @@ type Games =
   | "poll"
   | "qotd"
   | "voiceInteraction"
-  | "textInteraction";
+  | "textInteraction"
+  | "countrySelector";
 
 export const gameInfo: {
   [key in Games]: {
@@ -351,6 +352,11 @@ export const gameInfo: {
   },
   textInteraction: {
     displayName: "Text Interaction",
+    minPoints: 50,
+    maxPoints: 200,
+  },
+  countrySelector: {
+    displayName: "Country Selector",
     minPoints: 50,
     maxPoints: 200,
   },
