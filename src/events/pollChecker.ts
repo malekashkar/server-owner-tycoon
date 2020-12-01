@@ -22,7 +22,7 @@ export default class PollChecker extends Event {
         const optionEmojis = emojis.slice(0, poll.options.length);
         const reactions = message.reactions.cache.filter((x) => x.count > 1);
 
-        let users: User[];
+        let users: User[] = [];
         for (const reaction of reactions) {
           for (const user of reaction[1].users.cache) {
             if (!users.includes(user[1]) && !user[1].bot) {
@@ -32,8 +32,8 @@ export default class PollChecker extends Event {
           }
         }
 
-        if (!reactions.size)
-          return channel.send(
+        if (!reactions.size) {
+          channel.send(
             `<@&${roles.polls}>`,
             embeds
               .normal(
@@ -42,28 +42,30 @@ export default class PollChecker extends Event {
               )
               .setFooter(`Question: ${poll.question}`)
           );
-        const arrangedReaction = reactions
-          .sort((a, b) => b.count - a.count)
-          .array();
-        const topOption =
-          poll.options[
-            optionEmojis.indexOf(
-              arrangedReaction[arrangedReaction.length - 1].emoji.name
-            )
-          ];
+        } else {
+          const arrangedReaction = reactions
+            .sort((a, b) => b.count - a.count)
+            .array();
+          const topOption =
+            poll.options[
+              optionEmojis.indexOf(
+                arrangedReaction[arrangedReaction.length - 1].emoji.name
+              )
+            ];
+          await channel.send(
+            `<@&${roles.polls}>`,
+            embeds
+              .normal(
+                `Poll Ended`,
+                `The poll has ended and **${topOption}** was the most voted option!`
+              )
+              .setFooter(`Question: ${poll.question}`)
+          );
+        }
 
         if (message?.deletable) await message.delete();
-        await channel.send(
-          `<@&${roles.polls}>`,
-          embeds
-            .normal(
-              `Poll Ended`,
-              `The poll has ended and \`${topOption}\` was the most voted option!`
-            )
-            .setFooter(`Question: ${poll.question}`)
-        );
         await poll.deleteOne();
       });
-    }, 10 * 60 * 1000);
+    }, 10 * 1000);
   }
 }

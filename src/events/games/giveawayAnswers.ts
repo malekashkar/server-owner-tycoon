@@ -6,10 +6,6 @@ export default class GiveawayAnswers extends Event {
   name: EventNameType = "message";
 
   async handle(message: Message) {
-    console.log(
-      !isNaN(parseInt(message.content)),
-      message.channel instanceof DMChannel
-    );
     if (
       message.channel instanceof DMChannel &&
       !isNaN(parseInt(message.content))
