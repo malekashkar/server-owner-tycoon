@@ -151,7 +151,7 @@ export default class Giveaways extends Event {
         `To join, please private message me (the bot) with a number between 1-100. You may only enter one response per day and may not edit your message. All other entries and edited messages will be ignored.\n\nIf any people guessed the correct number, it will be announced here in this channel. Multiple winners = prize pool split. Otherwise, if no one guesses the correct number, the prize pool will increase by $1 each day.`
       )
       .addField(`⏱️ Time Left`, `**${ms(24 * 60 * 60 * 1000)}**`, true)
-      .addField(`💵 Current Prize Pool`, `**${prize}**`, true);
+      .addField(`💵 Current Prize Pool`, `**${prize} points**`, true);
     return await channel.send(`<@&${roles.giveaways}>`, embed);
   }
 
