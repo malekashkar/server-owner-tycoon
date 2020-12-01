@@ -7,6 +7,7 @@ export default class TakePointsCommand extends AdminCommand {
   cmdName = "takepoints";
   description = "Take points from a player.";
   usage = "<@user> <points amount>"
+  permissions = ["admin"];
 
   async run(message: Message, args: string[]) {
     const user = message.mentions.users.first();

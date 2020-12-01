@@ -9,6 +9,7 @@ export default class GiveawayPrizeCommand extends AdminCommand {
   cmdName = "giveawayprize";
   description = "Change the increment of the giveaway prize.";
   usage = "<points amount>"
+  permissions = ["admin"];
 
   async run(
     message: Message,

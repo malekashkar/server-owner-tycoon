@@ -9,6 +9,7 @@ import ms from "ms";
 export default class EventCommand extends AdminCommand {
   cmdName = "event";
   description = "Create an event which has a countdown to the start.";
+  permissions = ["admin", "human", "mod"];
 
   async run(message: Message) {
     const channel = await getChannel(

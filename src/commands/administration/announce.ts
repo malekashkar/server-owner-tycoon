@@ -6,6 +6,7 @@ import AdminCommand from ".";
 export default class AnnounceCommand extends AdminCommand {
   cmdName = "announce";
   description = "Start the announcement wizard to post an announcement.";
+  permissions = ["admin", "human", "mod"];
 
   async run(message: Message) {
     const channel = await getChannel(message);

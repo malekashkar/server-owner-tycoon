@@ -11,6 +11,7 @@ import { emojis, voiceTopics } from "../../utils/storage";
 export default class VoiceTopicsCommand extends AdminCommand {
   cmdName = "voicetopics";
   description = "Send the lobby voice message with all topics.";
+  permissions = ["admin"];
 
   async run(
     message: Message,

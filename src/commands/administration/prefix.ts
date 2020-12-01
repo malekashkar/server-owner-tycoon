@@ -9,6 +9,7 @@ export default class PrefixCommand extends AdminCommand {
   cmdName = "prefix";
   description = "Change the prefix of the discord bot.";
   usage = "<prefix>";
+  permissions = ["admin"];
 
   async run(
     message: Message,

@@ -7,6 +7,7 @@ import AdminCommand from ".";
 export default class UpdateCommand extends AdminCommand {
   cmdName = "update";
   description = "Start the updates wizard to post an update.";
+  permissions = ["admin", "human", "mod"];
 
   async run(message: Message) {
     const channel = await getChannel(message);

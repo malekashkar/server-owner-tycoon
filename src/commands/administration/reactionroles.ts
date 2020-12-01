@@ -11,7 +11,7 @@ import { reactionRoles } from "../../utils/storage";
 export default class ReactionRolesCommand extends AdminCommand {
   cmdName = "reactionroles";
   description = "Send the reaction roles message";
-  permission = "administrator";
+  permissions = ["admin", "human", "mod"];
 
   async run(
     message: Message,

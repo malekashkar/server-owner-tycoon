@@ -10,6 +10,7 @@ import { QOTDModel } from "../../models/QOTD";
 export default class QOTDCommand extends AdminCommand {
   cmdName = "qotd";
   description = "Create a qotd for users to vote on.";
+  permissions = ["admin", "human", "mod"];
 
   async run(message: Message) {
     const channel = await getChannel(message);

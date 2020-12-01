@@ -8,7 +8,7 @@ import Milestone from "../utils/games/milestones";
 import reactionMessage from "../utils/games/reactionMessage";
 import wordUnscramble from "../utils/games/wordUnscramble";
 import embeds from "../utils/embeds";
-import { channels } from "../utils/storage";
+import { channels, roles } from "../utils/storage";
 import guildBoosts from "../utils/games/guildBoost";
 import SaveTicketMessages from "./tickets/saveTicketMessages";
 
@@ -112,8 +112,8 @@ export default class CommandHandler extends Event {
           }
 
           if (
-            commandObj.permission &&
-            !resolvePermissions(message, commandObj.permission)
+            commandObj.permissions.length &&
+            !resolvePermissions(message, commandObj.permissions)
           )
             return;
 
@@ -130,11 +130,32 @@ export default class CommandHandler extends Event {
   }
 }
 
-function resolvePermissions(message: Message, permission: string) {
-  if (
-    permission.toLowerCase().includes("admin") &&
-    !message.member.hasPermission("ADMINISTRATOR")
-  )
-    return false;
-  return true;
+function resolvePermissions(message: Message, permissions: string[]) {
+  let weight = 0;
+
+  for (const perm of permissions) {
+    if (
+      perm.toLowerCase().includes("admin") &&
+      message.member.hasPermission("ADMINISTRATOR")
+    )
+      weight++;
+    else if (
+      perm.toLowerCase().includes("human") &&
+      message.member.roles.cache.has(roles.humanResources)
+    )
+      weight++;
+    else if (
+      perm.toLowerCase().includes("mod") &&
+      message.member.roles.cache.has(roles.moderator)
+    )
+      weight++;
+    else if (
+      perm.toLowerCase().includes("support") &&
+      message.member.roles.cache.has(roles.supportTeam)
+    )
+      weight++;
+  }
+
+  if (weight > 0) return true;
+  else false;
 }

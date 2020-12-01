@@ -11,6 +11,7 @@ import react from "../../utils/react";
 export default class PollCommand extends AdminCommand {
   cmdName = "poll";
   description = "Create a poll for users opinions on a question.";
+  permissions = ["admin", "human", "mod"];
 
   async run(message: Message) {
     const channel = await getChannel(message);

@@ -5,7 +5,7 @@ import DbGuild from "../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
 export default abstract class Command {
   isSubCommand = false;
-  permission: string;
+  permissions: string[] = [];
   disabled = false;
   client: Client;
   usage = "";

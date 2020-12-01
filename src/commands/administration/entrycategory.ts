@@ -9,6 +9,7 @@ export default class EntryCategoryClass extends AdminCommand {
   cmdName = "entrycategory";
   description = "Set the category where new members select their country.";
   usage = "<category name>";
+  permissions = ["admin"];
 
   async run(
     message: Message,

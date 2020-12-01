@@ -86,6 +86,9 @@ export const roles = {
   updates: "691827439306801172",
   polls: "691827338001907762",
   events: "779852796437594152",
+  humanResources: "723967547140997268",
+  moderator: "731463891565150249",
+  supportTeam: "731464293761024010"
 };
 
 export const channels = {

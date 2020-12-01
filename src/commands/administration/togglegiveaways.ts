@@ -9,6 +9,7 @@ import embeds from "../../utils/embeds";
 export default class GiveawayCommand extends AdminCommand {
   cmdName = "togglegiveaways";
   description = "Toggle the giveaways from repeating every 24 hours.";
+  permissions = ["admin"];
 
   async run(
     message: Message,

@@ -8,6 +8,7 @@ import react from "../../utils/react";
 export default class NewCommand extends AdminCommand {
   cmdName = "new";
   description = "Create a new ticket panel menu for users to create tickets.";
+  permissions = ["admin", "human", "mod"];
 
   async run(
     message: Message,
