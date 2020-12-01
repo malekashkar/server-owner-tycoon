@@ -133,28 +133,30 @@ export default class CommandHandler extends Event {
 export function resolvePermissions(message: Message, permissions: string[]) {
   let weight = 0;
 
-  for (const perm of permissions) {
-    if (
-      perm.toLowerCase().includes("admin") &&
-      message.member.hasPermission("ADMINISTRATOR")
-    )
-      weight++;
-    else if (
-      perm.toLowerCase().includes("human") &&
-      message.member.roles.cache.has(roles.humanResources)
-    )
-      weight++;
-    else if (
-      perm.toLowerCase().includes("mod") &&
-      message.member.roles.cache.has(roles.moderator)
-    )
-      weight++;
-    else if (
-      perm.toLowerCase().includes("support") &&
-      message.member.roles.cache.has(roles.supportTeam)
-    )
-      weight++;
-  }
+  if (permissions.length) {
+    for (const perm of permissions) {
+      if (
+        perm.toLowerCase().includes("admin") &&
+        message.member.hasPermission("ADMINISTRATOR")
+      )
+        weight++;
+      else if (
+        perm.toLowerCase().includes("human") &&
+        message.member.roles.cache.has(roles.humanResources)
+      )
+        weight++;
+      else if (
+        perm.toLowerCase().includes("mod") &&
+        message.member.roles.cache.has(roles.moderator)
+      )
+        weight++;
+      else if (
+        perm.toLowerCase().includes("support") &&
+        message.member.roles.cache.has(roles.supportTeam)
+      )
+        weight++;
+    }
+  } else weight++;
 
   if (weight > 0) return true;
   else false;
