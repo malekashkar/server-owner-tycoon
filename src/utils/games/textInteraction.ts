@@ -8,7 +8,7 @@ export default async function (message: Message) {
   });
 
   if (interactionData) {
-    if (interactionData.speakingTimes < 3) {
+    if (interactionData.speakingTimes > 5) {
       await givePoints(message.author, "textInteraction");
       await interactionData.deleteOne();
     } else if (
