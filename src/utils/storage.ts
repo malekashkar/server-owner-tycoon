@@ -334,6 +334,35 @@ export function getRandomIntBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+export function formatTime(time: number) {
+  if (time < 1000) return `1 second`;
+  time = time / 1000;
+  let seconds = 0;
+  let minutes = 0;
+  let hours = 0;
+
+  const hourTime = 60 * 60;
+  const minuteTime = 60;
+  const secondTime = 1;
+
+  while (time > secondTime) {
+    if (time > hourTime) {
+      time -= hourTime;
+      hours++;
+    } else if (time > minuteTime) {
+      time -= minuteTime;
+      minutes++;
+    } else if (time > secondTime) {
+      time -= secondTime;
+      seconds++;
+    }
+  }
+
+  return `${hours ? `${hours} hours ` : ``}${
+    minutes ? `${minutes} minutes ` : ``
+  }${seconds ? `${seconds} seconds ` : ``}`;
+}
+
 export const countries: { [x: string]: string[][] } = {
   Africa: [
     ["Algeria", "dz", "🇩🇿"],
