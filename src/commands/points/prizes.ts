@@ -6,6 +6,7 @@ import { TicketModel } from "../../models/ticket";
 import DbUser, { UserModel } from "../../models/user";
 import confirmation from "../../utils/confirmation";
 import embeds from "../../utils/embeds";
+import react from "../../utils/react";
 import { categories, emojis, prizes } from "../../utils/storage";
 
 export default class PrizesCommand extends PointsCommand {
@@ -30,6 +31,8 @@ export default class PrizesCommand extends PointsCommand {
 
     const categoryEmojis = emojis.slice(0, prizeTitles.length);
     const categoryMessage = await message.channel.send(categoryEmbed);
+    await react(categoryMessage, categoryEmojis);
+
     const categoryCollector = await categoryMessage.awaitReactions(
       (r, u) =>
         u.id === message.author.id && categoryEmojis.includes(r.emoji.name),
@@ -48,12 +51,14 @@ export default class PrizesCommand extends PointsCommand {
           categoryEmojis.indexOf(categoryCollector.first().emoji.name)
         ];
       const selectedPrizes = Object.entries(categoryPrizes);
-      const prizeEmojis = emojis.slice(selectedPrizes.length);
+      const prizeEmojis = emojis.slice(0, selectedPrizes.length);
       const prizeDescription = selectedPrizes
         .map((x, i) => `${prizeEmojis[i]} ${x[0]} ~ **${x[1]}** points`)
         .join("\n");
       const prizeEmbed = embeds.normal(`Prizes`, prizeDescription);
       const prizeMessage = await message.channel.send(prizeEmbed);
+      await react(prizeMessage, prizeEmojis);
+
       const prizeCollector = await prizeMessage.awaitReactions(
         (r, u) =>
           u.id === message.author.id && prizeEmojis.includes(r.emoji.name),
