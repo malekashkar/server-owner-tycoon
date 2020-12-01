@@ -18,6 +18,7 @@ import mentionsMod from "../utils/automod/mentions";
 import mentionsBan from "../utils/automod/mentionsBan";
 import spamMod from "../utils/automod/spam";
 import muteCheck from "../utils/automod/mute";
+import textInteraction from "../utils/games/textInteraction";
 
 export default class CommandHandler extends Event {
   name = "message";
@@ -71,7 +72,10 @@ export default class CommandHandler extends Event {
       }
 
       const prefix = guildData.prefix;
-      if (!prefix || message.content.indexOf(prefix) !== 0) return;
+      if (!prefix || message.content.indexOf(prefix) !== 0) {
+        await textInteraction(message);
+        return;
+      }
       if (message.deletable) await message.delete();
 
       if (
