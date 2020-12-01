@@ -1,4 +1,5 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
+import { StringMappingType } from "typescript";
 
 class GuessTheNumber {
   @prop()
@@ -32,6 +33,9 @@ class Messages {
 
   @prop()
   ticketPanel?: string;
+
+  @prop()
+  voiceTopics?: string;
 }
 
 class Moderation {

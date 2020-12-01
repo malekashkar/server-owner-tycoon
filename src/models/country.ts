@@ -1,5 +1,4 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
-import { report } from "process";
 
 export default class Country {
   @prop()

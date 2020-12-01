@@ -163,6 +163,37 @@ export const reactionRoles: ReactionRoles[] = [
   },
 ];
 
+export const voiceTopics = [
+  {
+    displayName: "Lobby Voice Channel",
+    channelId: "776916233521463297",
+  },
+  {
+    displayName: "Chill Voice Channel",
+    channelId: "666021084289564702",
+  },
+  {
+    displayName: "Jokes Voice Channel",
+    channelId: "776914363977039932",
+  },
+  {
+    displayName: "Stories Voice Channel",
+    channelId: "776914544273653790",
+  },
+  {
+    displayName: "Gaming Voice Channel",
+    channelId: "666026837838921739",
+  },
+  {
+    displayName: "Movie Voice Channel",
+    channelId: "776914176836108308",
+  },
+  {
+    displayName: "Music Voice Channel",
+    channelId: "776913554195480596",
+  },
+];
+
 export const prizes = {
   PayPal: {
     "$10 PayPal": 50000,
