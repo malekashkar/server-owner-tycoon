@@ -11,7 +11,6 @@ import { Giveaway, GiveawayModel } from "../../models/giveaway";
 import embeds from "../../utils/embeds";
 import Logger from "../../utils/logger";
 import { UserModel } from "../../models/user";
-import ms from "ms";
 import { DocumentType } from "@typegoose/typegoose";
 
 export default class Giveaways extends Event {
