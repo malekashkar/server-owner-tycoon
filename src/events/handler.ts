@@ -1,5 +1,5 @@
 import logger from "../utils/logger";
-import { Message, TextChannel } from "discord.js";
+import { GuildMember, Message, TextChannel } from "discord.js";
 import { GuildModel } from "../models/guild";
 import { UserModel } from "../models/user";
 import Event from ".";
@@ -113,7 +113,7 @@ export default class CommandHandler extends Event {
 
           if (
             commandObj.permissions.length &&
-            !resolvePermissions(message, commandObj.permissions)
+            !resolvePermissions(message.member, commandObj.permissions)
           )
             return;
 
@@ -130,29 +130,29 @@ export default class CommandHandler extends Event {
   }
 }
 
-export function resolvePermissions(message: Message, permissions: string[]) {
+export function resolvePermissions(member: GuildMember, permissions: string[]) {
   let weight = 0;
 
   if (permissions.length) {
     for (const perm of permissions) {
       if (
         perm.toLowerCase().includes("admin") &&
-        message.member.hasPermission("ADMINISTRATOR")
+        member.hasPermission("ADMINISTRATOR")
       )
         weight++;
       else if (
         perm.toLowerCase().includes("human") &&
-        message.member.roles.cache.has(roles.humanResources)
+        member.roles.cache.has(roles.humanResources)
       )
         weight++;
       else if (
         perm.toLowerCase().includes("mod") &&
-        message.member.roles.cache.has(roles.moderator)
+        member.roles.cache.has(roles.moderator)
       )
         weight++;
       else if (
         perm.toLowerCase().includes("support") &&
-        message.member.roles.cache.has(roles.supportTeam)
+        member.roles.cache.has(roles.supportTeam)
       )
         weight++;
     }

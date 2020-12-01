@@ -5,6 +5,7 @@ import embeds from "../utils/embeds";
 import react from "../utils/react";
 import { IGroup } from "../commands/utility/help";
 import { emojis } from "../utils/storage";
+import { resolvePermissions } from "./handler";
 
 export default class HelpCmdBack extends Event {
   name = "messageReactionAdd";
@@ -15,6 +16,7 @@ export default class HelpCmdBack extends Event {
 
     const message = reaction.message;
     const embed = message.embeds[0];
+    const member = message.guild.members.resolve(user);
 
     const guildData =
       (await GuildModel.findOne({
@@ -28,6 +30,11 @@ export default class HelpCmdBack extends Event {
 
     for (const commandObj of this.client.commands.array()) {
       if (!commandObj.group) continue;
+      if (
+        commandObj.permissions &&
+        !resolvePermissions(member, commandObj.permissions)
+      )
+        continue;
 
       const command = commandObj.isSubCommand
         ? commandObj.group + ` ${commandObj.cmdName}`

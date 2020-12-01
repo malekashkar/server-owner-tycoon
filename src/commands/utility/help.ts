@@ -30,7 +30,7 @@ export default class HelpCommand extends UtilityCommand {
       if (!commandObj.group) continue;
       if (
         commandObj.permissions &&
-        !resolvePermissions(message, commandObj.permissions)
+        !resolvePermissions(message.member, commandObj.permissions)
       )
         continue;
 
