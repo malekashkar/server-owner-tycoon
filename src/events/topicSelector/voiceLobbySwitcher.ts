@@ -1,8 +1,8 @@
 import { MessageReaction, User, VoiceChannel } from "discord.js";
 import { upperFirst } from "lodash";
-import Event, { EventNameType } from ".";
-import { GuildModel } from "../models/guild";
-import { emojis, voiceTopics } from "../utils/storage";
+import Event, { EventNameType } from "..";
+import { GuildModel } from "../../models/guild";
+import { emojis, voiceTopics } from "../../utils/storage";
 
 export default class VoiceLobbySwitcher extends Event {
   name: EventNameType = "messageReactionAdd";

@@ -94,6 +94,7 @@ export const channels = {
   giveaways: "776245431570399264",
   transcripts: "779798882682929203",
   bugreports: "779798969583927347",
+  topicSelection: "776918119112638516",
 };
 
 export const categories = {
