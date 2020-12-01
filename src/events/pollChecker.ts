@@ -20,7 +20,7 @@ export default class PollChecker extends Event {
         const message = await channel.messages.fetch(poll.messageId);
 
         const optionEmojis = emojis.slice(0, poll.options.length);
-        const reactions = message.reactions.cache.filter((x) => x.count > 1);
+        const reactions = message.reactions.cache;
 
         let users: User[] = [];
         for (const reaction of reactions) {
@@ -43,24 +43,94 @@ export default class PollChecker extends Event {
               .setFooter(`Question: ${poll.question}`)
           );
         } else {
-          const arrangedReaction = reactions
-            .sort((a, b) => b.count - a.count)
-            .array();
-          const topOption =
-            poll.options[
-              optionEmojis.indexOf(
-                arrangedReaction[arrangedReaction.length - 1].emoji.name
-              )
-            ];
-          await channel.send(
-            `<@&${roles.polls}>`,
-            embeds
-              .normal(
-                `Poll Ended`,
-                `The poll has ended and **${topOption}** was the most voted option!`
-              )
-              .setFooter(`Question: ${poll.question}`)
-          );
+          const topEmojis = reactions.sort((a, b) => b.count - a.count);
+          if (topEmojis.size > 1 && topEmojis.size < 3) {
+            if (topEmojis.array()[0].count !== topEmojis.array()[1].count) {
+              const topOption =
+                poll.options[
+                  optionEmojis.indexOf(topEmojis.first().emoji.name)
+                ];
+              channel.send(
+                `<@&${roles.polls}>`,
+                embeds
+                  .normal(
+                    `Poll Ended`,
+                    `The poll has ended and **${topOption}** was the most voted option!`
+                  )
+                  .setFooter(`Question: ${poll.question}`)
+              );
+            } else if (
+              topEmojis.array()[0].count === topEmojis.array()[1].count
+            ) {
+              const firstOption =
+                poll.options[
+                  optionEmojis.indexOf(topEmojis.array()[0].emoji.name)
+                ];
+              const secondOption =
+                poll.options[
+                  optionEmojis.indexOf(topEmojis.array()[1].emoji.name)
+                ];
+              channel.send(
+                `<@&${roles.polls}>`,
+                embeds
+                  .normal(
+                    `Poll Ended`,
+                    `The poll has ended in a tie.\n- **${firstOption}**\n- **${secondOption}**`
+                  )
+                  .setFooter(`Question: ${poll.question}`)
+              );
+            }
+          } else if (topEmojis.size >= 3) {
+            if (topEmojis.array()[0].count !== topEmojis.array()[1].count) {
+              const topOption =
+                poll.options[
+                  optionEmojis.indexOf(topEmojis.first().emoji.name)
+                ];
+              channel.send(
+                `<@&${roles.polls}>`,
+                embeds
+                  .normal(
+                    `Poll Ended`,
+                    `The poll has ended and **${topOption}** was the most voted option!`
+                  )
+                  .setFooter(`Question: ${poll.question}`)
+              );
+            } else if (
+              topEmojis.array()[0].count === topEmojis.array()[1].count &&
+              topEmojis.array()[1].count !== topEmojis.array()[2].count
+            ) {
+              const firstOption =
+                poll.options[
+                  optionEmojis.indexOf(topEmojis.array()[0].emoji.name)
+                ];
+              const secondOption =
+                poll.options[
+                  optionEmojis.indexOf(topEmojis.array()[1].emoji.name)
+                ];
+              channel.send(
+                `<@&${roles.polls}>`,
+                embeds
+                  .normal(
+                    `Poll Ended`,
+                    `The poll has ended in a tie.\n- **${firstOption}**\n- **${secondOption}**`
+                  )
+                  .setFooter(`Question: ${poll.question}`)
+              );
+            } else if (
+              topEmojis.array()[0].count === topEmojis.array()[1].count &&
+              topEmojis.array()[1].count === topEmojis.array()[2].count
+            ) {
+              channel.send(
+                `<@&${roles.polls}>`,
+                embeds
+                  .normal(
+                    `Poll Ended`,
+                    `The poll has ended in a three or more way tie!`
+                  )
+                  .setFooter(`Question: ${poll.question}`)
+              );
+            }
+          }
         }
 
         if (message?.deletable) await message.delete();
