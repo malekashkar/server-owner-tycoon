@@ -22,14 +22,18 @@ export default class CountryCommand extends UtilityCommand {
     const countryData = await CountryModel.findOne({
       userId: message.author.id,
     });
-    if (countryData)
-      return message.channel.send(
-        embeds.error(
-          `You already have a country selector channel open! ${message.guild.channels.resolve(
-            countryData.channelId
-          )}`
-        )
-      );
+    if (countryData) {
+      const channel = message.guild.channels.resolve(countryData.channelId);
+      if (!channel) {
+        await countryData.deleteOne();
+      } else {
+        return message.channel.send(
+          embeds.error(
+            `You already have a country selector channel open! ${channel}`
+          )
+        );
+      }
+    }
     if (guildData.joinCategory) {
       const formattedUsername =
         message.author.username.length > 15
@@ -64,7 +68,7 @@ export default class CountryCommand extends UtilityCommand {
         startedAt: new Date(),
         userId: message.author.id,
         channelId: channel.id,
-        entry: false
+        entry: false,
       });
     } else {
       message.channel.send(
