@@ -22,31 +22,38 @@ export default class EventChecker extends EEvent {
 
       ongoingEventCursor.on("data", async (event: DocumentType<Event>) => {
         const channel = guild.channels.resolve(event.channelId) as TextChannel;
-        const message = await channel.messages.fetch(event.messageId);
-
-        const embed = message.embeds[0];
-        embed.fields[0] = {
-          name: `⏱️ Starts In`,
-          value: `**${formatTime(event.startsAt.getTime() - Date.now())}**`,
-          inline: false,
-        };
+        if (channel) {
+          const message = await channel.messages.fetch(event.messageId);
+          if (message) {
+            const embed = message.embeds[0];
+            embed.fields[0] = {
+              name: `⏱️ Starts In`,
+              value: `**${formatTime(event.startsAt.getTime() - Date.now())}**`,
+              inline: false,
+            };
+            await message.edit(embed);
+          }
+        }
       });
       startedEvents.on("data", async (event: DocumentType<Event>) => {
         const eventChannel = guild.channels.resolve(
           event.eventChannelId
         ) as TextChannel;
         const channel = guild.channels.resolve(event.channelId) as TextChannel;
-        const message = await channel.messages.fetch(event.messageId);
-
-        if (message.deletable) await message.delete();
-        await eventChannel?.send(
-          `<@&${roles.events}>`,
-          embeds.normal(
-            `Event Started`,
-            `The event \`${event.name}\` has started!`
-          )
-        );
-        await event.deleteOne();
+        if (channel) {
+          const message = await channel.messages.fetch(event.messageId);
+          if (message) {
+            if (message.deletable) await message.delete();
+            await eventChannel?.send(
+              `<@&${roles.events}>`,
+              embeds.normal(
+                `Event Started`,
+                `The event \`${event.name}\` has started!`
+              )
+            );
+            await event.deleteOne();
+          }
+        }
       });
     }, 10 * 1000);
   }

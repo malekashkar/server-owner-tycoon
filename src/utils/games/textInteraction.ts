@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { TextInteractionModel } from "../../models/textInteraction";
-import { givePoints } from "../storage";
+import { givePoints, textInteractionsConfig } from "../storage";
 
 export default async function (message: Message) {
   const interactionData = await TextInteractionModel.findOne({
@@ -8,13 +8,14 @@ export default async function (message: Message) {
   });
 
   if (interactionData) {
-    if (interactionData.speakingTimes > 5) {
+    if (interactionData.speakingTimes > textInteractionsConfig.textStreak) {
       await givePoints(message.author, "textInteraction");
       await interactionData.deleteOne();
     } else if (
       !message.channel.lastMessage.author.bot &&
       message.channel.lastMessage.author !== message.author &&
-      interactionData.lastSpeakingTime - Date.now() > 30 * 1000
+      interactionData.lastSpeakingTime - Date.now() >
+        textInteractionsConfig.resetInterval
     ) {
       await TextInteractionModel.updateOne(
         {

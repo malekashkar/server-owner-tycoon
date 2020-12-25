@@ -12,12 +12,18 @@ import {
   categories,
   ticketEmojis,
   ticketPermissions,
+  TicketTypes,
 } from "../../utils/storage";
 
 export default class OpenTicket extends Event {
   name: EventNameType = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
+    console.log(
+      reaction.message.channel instanceof TextChannel,
+      user.bot,
+      reaction.message.partial
+    );
     if (!(reaction.message.channel instanceof TextChannel)) return;
 
     if (user.bot) return;
@@ -29,9 +35,11 @@ export default class OpenTicket extends Event {
       (await GuildModel.create({ guildId: message.guild.id }));
 
     if (guildData.messages?.ticketPanel === message.id) {
+      await reaction.users.remove(user);
+
       const ticketType = Object.entries(ticketEmojis).find(
         (x) => x[1] === reaction.emoji.name
-      );
+      )[0] as TicketTypes;
       const username =
         user.username.length < 15 ? user.username : user.username.slice(0, 15);
 
@@ -45,19 +53,20 @@ export default class OpenTicket extends Event {
           deny: "VIEW_CHANNEL",
         },
       ];
-      for (const permission of Object.values(ticketPermissions)) {
-        const roleName = permission[1];
-        const role = message.guild.roles.cache.find((x) =>
-          x.name.toLowerCase().includes(roleName)
+      for (const roleName of ticketPermissions[ticketType]) {
+        const role = message.guild.roles.cache.find(
+          (x) => x.name.toLowerCase() === roleName.toLowerCase()
         );
-        permissionOverwrites.push({
-          id: role.id,
-          allow: ["SEND_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
-        });
+        if (role) {
+          permissionOverwrites.push({
+            id: role.id,
+            allow: ["SEND_MESSAGES", "READ_MESSAGE_HISTORY", "VIEW_CHANNEL"],
+          });
+        }
       }
 
       const channel = await message.guild.channels.create(
-        `${ticketType[1]}${ticketType[0]}-${username}`,
+        `${ticketEmojis[ticketType]}${ticketType}-${username}`,
         {
           type: "text",
           parent: categories.tickets,

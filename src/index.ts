@@ -27,7 +27,7 @@ export default class Client extends BaseManager {
   constructor(options?: ClientOptions) {
     super({
       ...options,
-      partials: ["USER", "GUILD_MEMBER", "MESSAGE", "REACTION"],
+      partials: ["MESSAGE", "CHANNEL", "REACTION"],
       ws: {
         intents: [
           "GUILDS",
@@ -139,6 +139,7 @@ export default class Client extends BaseManager {
       try {
         const eventObj: Event = new event(this);
         if (eventObj && eventObj.name) {
+          console.log(eventFile, eventObj.name);
           this.addListener(eventObj.name, (...args) =>
             eventObj.handle.bind(eventObj)(...args)
           );

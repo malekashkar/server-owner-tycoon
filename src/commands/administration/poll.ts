@@ -31,7 +31,7 @@ export default class PollCommand extends AdminCommand {
 
     const lastTime = await getText(
       message,
-      `How long would you like this giveaway to last for? (ex. 2h, 3d, 1w)`
+      `How long would you like this poll to last for? (ex. 2h, 3d, 1w)`
     );
     if (!lastTime) return;
     const endsAt = new Date(Date.now() + ms(lastTime));
@@ -89,7 +89,7 @@ export default class PollCommand extends AdminCommand {
 async function getChannel(message: Message) {
   const question = await message.channel.send(
     embeds.question(
-      `Please tag the channel you would like to send the announcement in.`
+      `Please tag the channel you would like to send the poll in.`
     )
   );
   const collector = await message.channel.awaitMessages(

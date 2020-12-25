@@ -21,6 +21,7 @@ export default class Giveaways extends Event {
 
     setInterval(async () => {
       try {
+        const giveawayAmount = await GiveawayModel.countDocuments();
         const guildData =
           (await GuildModel.findOne({
             guildId: guild.id,
@@ -41,18 +42,14 @@ export default class Giveaways extends Event {
         });
 
         // First Giveaway
-        if (!(await GiveawayModel.countDocuments()) && guildData.giveaways) {
+        if (!giveawayAmount && guildData.giveaways) {
           const randomNumber = getRandomIntBetween(1, 100);
-          const prizePool = await GiveawayModel.countDocuments({
-            continueCount: true,
-          });
-
           const newGiveawayMessage = await this.sendEmbed(
-            prizePool + guildData.giveawayPrize
+            guildData.giveawayPrize
           );
           await GiveawayModel.create({
             giveawayMessageId: newGiveawayMessage.id,
-            prize: prizePool + guildData.giveawayPrize,
+            prize: guildData.giveawayPrize,
             randomNumber,
             endsAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
           });
@@ -69,55 +66,59 @@ export default class Giveaways extends Event {
           const message = channel.messages.resolve(
             endedGiveaway.giveawayMessageId
           );
-          if (message?.deletable) await message.delete();
-          const prizePool =
-            (await GiveawayModel.countDocuments({
-              continueCount: true,
-            })) * guildData.giveawayPrize;
+          if (message) {
+            if (message.deletable) await message.delete();
+            const prizePool =
+              (await GiveawayModel.countDocuments({
+                continueCount: true,
+              })) * guildData.giveawayPrize;
 
-          const winners = endedGiveaway.winners?.map((x) => `<@${x}>`);
-          if (!winners.length) {
-            const endMessage = await channel.send(
-              embeds.normal(
-                `Giveaway Ended`,
-                `All **${
-                  endedGiveaway.participants.length
-                } participants** failed to guess the number **${
-                  endedGiveaway.randomNumber
-                }**!\nThe giveaway prize pool has **increased by ${
-                  guildData.giveawayPrize
-                } points** to **${
-                  prizePool + guildData.giveawayPrize
-                } points**.`
-              )
-            );
-            endMessage.delete({ timeout: 10 * 60 * 1000 });
-          } else {
-            const eachPrize = Number((prizePool / winners.length).toString(2));
-
-            await GiveawayModel.updateMany(
-              {},
-              { $set: { continueCount: false } }
-            );
-
-            for (let i = 0; i < endedGiveaway.winners.length; i++) {
-              await UserModel.updateOne(
-                {
-                  userId: endedGiveaway.winners[i],
-                },
-                {
-                  $inc: { points: eachPrize },
-                }
+            const winners = endedGiveaway.winners?.map((x) => `<@${x}>`);
+            if (!winners.length) {
+              const endMessage = await channel.send(
+                embeds.normal(
+                  `Giveaway Ended`,
+                  `All **${
+                    endedGiveaway.participants.length
+                  } participants** failed to guess the number **${
+                    endedGiveaway.randomNumber
+                  }**!\nThe giveaway prize pool has **increased by ${
+                    guildData.giveawayPrize
+                  } points** to **${
+                    prizePool + guildData.giveawayPrize
+                  } points**.`
+                )
               );
-            }
+              endMessage.delete({ timeout: 10 * 60 * 1000 });
+            } else {
+              const eachPrize = Number(
+                (prizePool / winners.length).toString(2)
+              );
 
-            const endMessage = await channel.send(
-              embeds.normal(
-                `Ended Giveaway`,
-                `${winners} won the giveaway for **${prizePool} points** out of the **${endedGiveaway.participants.length} participants**.`
-              )
-            );
-            endMessage.delete({ timeout: 10 * 60 * 1000 });
+              await GiveawayModel.updateMany(
+                {},
+                { $set: { continueCount: false } }
+              );
+
+              for (let i = 0; i < endedGiveaway.winners.length; i++) {
+                await UserModel.updateOne(
+                  {
+                    userId: endedGiveaway.winners[i],
+                  },
+                  {
+                    $inc: { points: eachPrize },
+                  }
+                );
+              }
+
+              const endMessage = await channel.send(
+                embeds.normal(
+                  `Ended Giveaway`,
+                  `${winners} won the giveaway for **${prizePool} points** out of the **${endedGiveaway.participants.length} participants**.`
+                )
+              );
+              endMessage.delete({ timeout: 10 * 60 * 1000 });
+            }
           }
 
           endedGiveaway.ended = true;

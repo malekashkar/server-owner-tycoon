@@ -1,4 +1,4 @@
-import { Message, TextChannel, User } from "discord.js";
+import { TextChannel, User } from "discord.js";
 import { UserModel } from "../models/user";
 import embeds from "./embeds";
 
@@ -79,13 +79,23 @@ export const ticketEmojis: { [key in TicketTypes]: string } = {
   media: "🎵",
 };
 
+export const textInteractionsConfig = {
+  textStreak: 5,
+  resetInterval: 30 * 1000,
+};
+
 export const ticketPermissions: { [key in TicketTypes]: string[] } = {
-  support: ["leadership", "human", "moderation", "support"],
-  billing: ["leadership", "human", "moderation", "support", "sales"],
-  bug: ["leadership", "human", "moderation", "support"],
-  suggestion: ["leadership", "human", "moderation", "support"],
-  involvement: ["leadership", "human", "moderation", "support"],
-  media: ["leadership", "human", "moderation", "support", "public"],
+  support: ["leadership team", "human resources", "moderation"],
+  billing: [
+    "leadership team",
+    "human resources",
+    "moderation",
+    "marketing team",
+  ],
+  bug: ["leadership team", "human resources", "moderation"],
+  suggestion: ["leadership team", "human resources", "moderation"],
+  involvement: ["leadership team", "human resources", "moderation"],
+  media: ["leadership team", "human resources", "moderation"],
 };
 
 export const roles = {
@@ -107,6 +117,7 @@ export const channels = {
   transcripts: "779798882682929203",
   bugreports: "779798969583927347",
   topicSelection: "776918119112638516",
+  welcome: "632609651766198292",
 };
 
 export const categories = {
@@ -580,6 +591,9 @@ export const countries: { [x: string]: string[][] } = {
     ["Turkey", "tr", "🇹🇷"],
     ["Ukraine", "ua", "🇺🇦"],
     ["United Kingdom", "gb", "🇬🇧"],
+    ["Britain", "gb", "🇬🇧"],
+    ["Great Britain", "gb", "🇬🇧"],
+    ["England", "gb", "🇬🇧"],
     ["Vatican City", "va", "🇻🇦"],
   ],
   "North America": [
