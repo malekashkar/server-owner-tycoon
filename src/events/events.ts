@@ -1,10 +1,10 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { TextChannel } from "discord.js";
-import EEvent, { EventNameType } from "..";
-import { EventModel } from "../../models/event";
-import embeds from "../../utils/embeds";
-import { formatTime, roles } from "../../utils/storage";
-import { Event } from "../../models/event";
+import EEvent, { EventNameType } from ".";
+import { EventModel } from "../models/event";
+import embeds from "../utils/embeds";
+import { formatTime, roles } from "../utils/storage";
+import { Event } from "../models/event";
 
 export default class EventChecker extends EEvent {
   name: EventNameType = "ready";
@@ -43,6 +43,25 @@ export default class EventChecker extends EEvent {
         if (channel) {
           const message = await channel.messages.fetch(event.messageId);
           if (message) {
+            const reaction = message.reactions.cache.find(
+              (x) => x.emoji.name === "✅"
+            );
+            if (reaction) {
+              const members = reaction.users.cache
+                .map((x) => channel.guild.members.resolve(x))
+                .filter((x) => !!x);
+              for (const member of members) {
+                if (
+                  !member.permissionsIn(eventChannel).has("VIEW_CHANNEL") ||
+                  !member.permissionsIn(eventChannel).has("SEND_MESSAGES")
+                ) {
+                  eventChannel.updateOverwrite(member, {
+                    VIEW_CHANNEL: true,
+                    SEND_MESSAGES: false,
+                  });
+                }
+              }
+            }
             if (message.deletable) await message.delete();
             await eventChannel?.send(
               `<@&${roles.events}>`,
