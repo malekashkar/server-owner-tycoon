@@ -23,7 +23,7 @@ export default class NewCommand extends AdminCommand {
       .setTitle(`Open a Support Ticket`)
       .addField(
         `General Support`,
-        `React with ❓ to speark to a member of the support team regarding a general question.`
+        `React with ❓ to speak to a member of the support team regarding a general question.`
       )
       .addField(
         `Billing & Donations`,

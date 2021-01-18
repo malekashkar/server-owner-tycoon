@@ -115,7 +115,6 @@ export const channels = {
   points: "774513961017802762",
   giveaways: "776245431570399264",
   transcripts: "779798882682929203",
-  bugreports: "779798969583927347",
   topicSelection: "776918119112638516",
   welcome: "632609651766198292",
 };
