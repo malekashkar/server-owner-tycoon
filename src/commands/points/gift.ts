@@ -8,14 +8,9 @@ import embeds from "../../utils/embeds";
 export default class GiftCommand extends PointsCommand {
   cmdName = "gift";
   description = "Gift your credits to others.";
-  usage = "<@user> <points amount>"
+  usage = "<@user> <points amount>";
 
-  async run(
-    message: Message,
-    args: string[],
-    userData: DocumentType<DbUser>,
-    guildData: DocumentType<DbGuild>
-  ) {
+  async run(message: Message, args: string[], userData: DocumentType<DbUser>) {
     const giftTo = message.mentions.users.first();
     if (!giftTo)
       return message.channel.send(
