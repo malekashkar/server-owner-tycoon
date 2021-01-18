@@ -47,19 +47,13 @@ export default class EventChecker extends EEvent {
               (x) => x.emoji.name === "✅"
             );
             if (reaction) {
-              const members = reaction.users.cache
-                .map((x) => channel.guild.members.resolve(x))
-                .filter((x) => !!x);
-              for (const member of members) {
-                if (
-                  !member.permissionsIn(eventChannel).has("VIEW_CHANNEL") ||
-                  !member.permissionsIn(eventChannel).has("SEND_MESSAGES")
-                ) {
-                  eventChannel.updateOverwrite(member, {
-                    VIEW_CHANNEL: true,
-                    SEND_MESSAGES: false,
-                  });
-                }
+              const users = reaction.users.cache.array().filter((x) => !x.bot);
+              for (const user of users) {
+                eventChannel.updateOverwrite(user, {
+                  VIEW_CHANNEL: true,
+                  SEND_MESSAGES: true,
+                  READ_MESSAGE_HISTORY: true,
+                });
               }
             }
             if (message.deletable) await message.delete();
