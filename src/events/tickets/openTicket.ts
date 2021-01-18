@@ -19,11 +19,6 @@ export default class OpenTicket extends Event {
   name: EventNameType = "messageReactionAdd";
 
   async handle(reaction: MessageReaction, user: User) {
-    console.log(
-      reaction.message.channel instanceof TextChannel,
-      user.bot,
-      reaction.message.partial
-    );
     if (!(reaction.message.channel instanceof TextChannel)) return;
 
     if (user.bot) return;
