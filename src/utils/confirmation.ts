@@ -1,4 +1,4 @@
-import { Message, TextChannel } from "discord.js";
+import { DMChannel, Message, TextChannel } from "discord.js";
 import embeds from "./embeds";
 import react from "./react";
 
@@ -6,7 +6,7 @@ export default async function confirmation(
   title: string,
   text: string,
   message?: Message,
-  channel?: TextChannel,
+  channel?: TextChannel | DMChannel,
   userId?: string
 ) {
   const emojis = {
