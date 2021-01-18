@@ -55,7 +55,7 @@ export default class QOTDCommand extends AdminCommand {
       embeds.question(
         `Please select the correct answer.\n\n${options
           .map((x, i) => `${optionEmojis[i]} ${x}`)
-          .join("/n")}`
+          .join("\n")}`
       )
     );
     await react(correctAnswerQuestion, optionEmojis);
