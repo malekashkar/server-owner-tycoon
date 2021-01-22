@@ -1,6 +1,6 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
 
-class Message {
+export class DbMessage {
   @prop()
   userTag: string;
 
@@ -27,8 +27,8 @@ export class Ticket {
   @prop()
   closedById?: string;
 
-  @prop({ type: Message })
-  messages?: Message[];
+  @prop({ type: DbMessage })
+  messages?: DbMessage[];
 }
 
 export const TicketModel = getModelForClass(Ticket);

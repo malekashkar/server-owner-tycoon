@@ -1,6 +1,6 @@
 import { Message, TextChannel } from "discord.js";
 import TicketCommand from ".";
-import { TicketModel } from "../../models/ticket";
+import { TicketModel, DbMessage } from "../../models/ticket";
 import confirmation from "../../utils/confirmation";
 import { categories, channels } from "../../utils/storage";
 import fs from "fs";
@@ -34,7 +34,7 @@ export default class CloseCommand extends TicketCommand {
 
       const messages = ticketData.messages;
       const text = messages
-        .map((x) => {
+        .map((x: DbMessage) => {
           const date = x.sentAt;
           const dateString = `${date.getDate()}/${date.getMonth()}/${date.getFullYear()} @ ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
           return `${x.userTag} ~ ${dateString}\n${x.content}`;

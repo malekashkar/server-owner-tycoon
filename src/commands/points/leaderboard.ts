@@ -1,17 +1,21 @@
 import { Message } from "discord.js";
 import PointsCommand from ".";
-import { UserModel } from "../../models/user";
+import DbUser, { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
 import Paginator from "../../utils/pagecord";
 import _ from "lodash";
 import { stripIndents } from "common-tags";
+import { DocumentType } from "@typegoose/typegoose";
 
 export default class LeaderboardCommand extends PointsCommand {
   cmdName = "leaderboard";
   description = "Leaderboard for the most amount of points.";
 
   async run(message: Message) {
-    const entries = await UserModel.aggregate([
+    const entries: {
+      userId: string;
+      points: number;
+    }[] = await UserModel.aggregate([
       {
         $match: {
           points: { $gte: 1 },

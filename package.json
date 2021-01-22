@@ -8,7 +8,7 @@
     "url": "git@github.com:BuildBots/BuildBots-Mother.git"
   },
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "start": "yarn && tsc && node dist/index.js"
   },
   "keywords": [
     "buildbots",

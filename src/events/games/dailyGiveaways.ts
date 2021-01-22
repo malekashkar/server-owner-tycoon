@@ -73,7 +73,7 @@ export default class Giveaways extends Event {
                 continueCount: true,
               })) * guildData.giveawayPrize;
 
-            const winners = endedGiveaway.winners?.map((x) => `<@${x}>`);
+            const winners = endedGiveaway.winners?.map((x: string) => `<@${x}>`);
             if (!winners.length) {
               const endMessage = await channel.send(
                 embeds.normal(

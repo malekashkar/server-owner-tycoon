@@ -4,14 +4,18 @@ import embeds from "../../utils/embeds";
 import Paginator from "../../utils/pagecord";
 import _ from "lodash";
 import { stripIndents } from "common-tags";
-import { InviteModel } from "../../models/invite";
+import DbInvite, { InviteModel } from "../../models/invite";
+import { DocumentType } from "@typegoose/typegoose";
 
 export default class InvitesTopCommand extends PointsCommand {
   cmdName = "invitestop";
   description = "Leaderboard for the amount of invites.";
 
   async run(message: Message) {
-    const entries = await InviteModel.aggregate([
+    const entries: {
+      _id: string;
+      count: number;
+    }[] = await InviteModel.aggregate([
       {
         $group: {
           _id: "$userId",
