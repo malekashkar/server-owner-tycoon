@@ -109,4 +109,5 @@ async function finalProcess(member: GuildMember, country: string) {
   );
   await member.setNickname(member.user.username + ` ${countryInfo[2]}`);
   await member.roles.add(roles.supporter);
+  await givePoints(member.user, "joinMilestone");
 }
