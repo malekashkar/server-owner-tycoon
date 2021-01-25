@@ -100,5 +100,13 @@ async function confirmationProcess(
     member.id
   );
   if (!confirm) questionProcess(channel, member);
-  return country;
+  return finalProcess(member, country);
+}
+
+async function finalProcess(member: GuildMember, country: string) {
+  const countryInfo = countries.find(
+    (x) => x[0].toLowerCase() === country.toLowerCase()
+  );
+  await member.setNickname(member.user.username + ` ${countryInfo[2]}`);
+  await member.roles.add(roles.supporter);
 }
