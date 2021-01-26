@@ -1,7 +1,7 @@
-import { DMChannel, GuildMember } from "discord.js";
+import { DMChannel, GuildMember, TextChannel } from "discord.js";
 import Event from ".";
 import embeds from "../utils/embeds";
-import { countries, roles } from "../utils/storage";
+import { channels, countries, roles } from "../utils/storage";
 import givePoints from "../utils/points";
 import stringSimilarity from "string-similarity";
 import confirmation from "../utils/confirmation";
@@ -115,4 +115,9 @@ async function finalProcess(
       `Welcome to the **Server Owner Tycoon** discord **${member.user.username}**!`
     )
   );
+
+  const welcomeChannel = member.guild.channels.resolve(
+    channels.welcome
+  ) as TextChannel;
+  welcomeChannel.send(`**HELLO** there, ${member}!`);
 }
