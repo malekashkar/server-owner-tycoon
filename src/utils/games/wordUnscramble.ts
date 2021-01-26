@@ -14,8 +14,10 @@ export default async function wordUnscramble(
   const unscrambleData = guildData.games.wordUnscrambler;
 
   if (
-    unscrambleData.lastTime &&
-    unscrambleData.lastTime + gameInfo.wordUnscramble.cooldown < Date.now()
+    (unscrambleData.lastTime &&
+      unscrambleData.lastTime + gameInfo.wordUnscramble.cooldown <
+        Date.now()) ||
+    !unscrambleData.lastTime
   ) {
     const word = randomWords();
     const shuffled = shuffle(word);

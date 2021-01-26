@@ -12,9 +12,10 @@ export default async function reactionMessage(
   const reactionData = guildData.games.reactionMessage;
 
   if (
-    reactionData.lastTime &&
-    reactionData.lastTime.getTime() + gameInfo.reactionMessage.cooldown <
-      Date.now()
+    (reactionData.lastTime &&
+      reactionData.lastTime.getTime() + gameInfo.reactionMessage.cooldown <
+        Date.now()) ||
+    !reactionData.lastTime
   ) {
     const reactionMessage = await message.channel.send(
       embeds.normal(
@@ -27,25 +28,27 @@ export default async function reactionMessage(
     reactionData.lastTime = new Date();
     await guildData.save();
 
-    const collector = await reactionMessage.awaitReactions(
+    const collector = reactionMessage.createReactionCollector(
       (r, u) => r.emoji.name === "✅",
-      { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
+      { max: 1, time: 15 * 60 * 1000 }
     );
 
-    if (collector && collector.first()) {
-      const user = collector
-        .first()
-        .users.cache.filter((x) => !x.bot)
-        .first();
+    collector.on("end", async (collected) => {
+      if (reactionMessage.deletable) await reactionMessage.delete();
+      if (collected.size) {
+        const user = collected
+          .first()
+          .users.cache.filter((x) => !x.bot)
+          .first();
 
-      await reactionMessage.delete();
-      await givePoints(user, "reactionMessage");
-      await message.channel.send(
-        embeds.normal(
-          `You Reacted First!`,
-          `${user} reacted to the message the fastest!`
-        )
-      );
-    }
+        await givePoints(user, "reactionMessage");
+        await message.channel.send(
+          embeds.normal(
+            `You Reacted First!`,
+            `${user} reacted to the message the fastest!`
+          )
+        );
+      }
+    });
   }
 }

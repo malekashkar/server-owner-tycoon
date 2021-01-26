@@ -14,8 +14,9 @@ export default async function GuessTheNumber(
   const numberData = guildData.games.guessTheNumber;
 
   if (
-    numberData.lastTime &&
-    numberData.lastTime + gameInfo.guessTheNumber.cooldown < Date.now()
+    (numberData.lastTime &&
+      numberData.lastTime + gameInfo.guessTheNumber.cooldown < Date.now()) ||
+    !numberData.lastTime
   ) {
     const firstNumber = getRandomIntBetween(1, 10);
     const secondNumber = getRandomIntBetween(11, 50);
