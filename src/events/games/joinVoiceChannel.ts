@@ -1,8 +1,7 @@
-import { TextChannel, VoiceState } from "discord.js";
+import { VoiceState } from "discord.js";
 import Event from "..";
 import { UserModel } from "../../models/user";
-import embeds from "../../utils/embeds";
-import { gameInfo, givePoints } from "../../utils/storage";
+import givePoints, { gameInfo } from "../../utils/points"
 
 export default class JoinVoiceChannel extends Event {
   name = "voiceStateUpdate";

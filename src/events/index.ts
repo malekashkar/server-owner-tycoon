@@ -3,9 +3,9 @@ import Client from "..";
 export type EventNameType = keyof ClientEvents;
 
 export default abstract class Event {
-  client: Client;
   disabled = false;
-
+  
+  client: Client;
   constructor(client: Client) {
     this.client = client;
   }

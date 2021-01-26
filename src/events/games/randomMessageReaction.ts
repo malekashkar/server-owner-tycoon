@@ -1,7 +1,7 @@
 import Event from "..";
 import { MessageReaction, TextChannel, User } from "discord.js";
 import { UserModel } from "../../models/user";
-import { givePoints, gameInfo } from "../../utils/storage";
+import givePoints, { gameInfo } from "../../utils/points";
 
 export default class randomMessageReaction extends Event {
   name = "messageReactionAdd";

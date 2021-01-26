@@ -1,5 +1,4 @@
 import { getModelForClass, prop } from "@typegoose/typegoose";
-import { StringMappingType } from "typescript";
 
 class GuessTheNumber {
   @prop()

@@ -3,7 +3,8 @@ import embeds from "../embeds";
 import User from "../../models/user";
 import Guild from "../../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
-import { gameInfo, givePoints, getRandomIntBetween } from "../storage";
+import {getRandomIntBetween } from "../storage";
+import givePoints, { gameInfo } from "../points";
 
 export default async function GuessTheNumber(
   message: Message,

@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { givePoints } from "../storage";
+import givePoints from "../points";
 
 function isServerBoostMessage(message: Message) {
   return (

@@ -3,7 +3,8 @@ import { TextChannel } from "discord.js";
 import Event, { EventNameType } from ".";
 import { QOTD, QOTDModel } from "../models/QOTD";
 import embeds from "../utils/embeds";
-import { emojis, formatTime, givePoints } from "../utils/storage";
+import { emojis, formatTime } from "../utils/storage";
+import givePoints from "../utils/points"
 
 export default class QOTDChecker extends Event {
   name: EventNameType = "ready";

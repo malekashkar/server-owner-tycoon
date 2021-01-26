@@ -1,7 +1,7 @@
 import { GuildMember } from "discord.js";
 import Event, { EventNameType } from "..";
 import { VoiceInteractionModel } from "../../models/voiceInteraction";
-import { givePoints } from "../../utils/storage";
+import givePoints from "../../utils/points";
 
 export default class CreateVoiceInteraction extends Event {
   name: EventNameType = "guildMemberUpdate";
@@ -15,7 +15,6 @@ export default class CreateVoiceInteraction extends Event {
 
       if (voiceInteraction) {
         if (voiceInteraction.speakingTimes > 10) {
-          // Average amount of minutes user was in the channel and speaking
           await givePoints(newMember.user, "voiceInteraction");
         }
         await voiceInteraction.deleteOne();

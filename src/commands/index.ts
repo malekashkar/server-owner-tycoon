@@ -3,13 +3,14 @@ import { Message } from "discord.js";
 import DbUser from "../models/user";
 import DbGuild from "../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
+
 export default abstract class Command {
   isSubCommand = false;
   permissions: string[] = [];
   disabled = false;
-  client: Client;
   usage = "";
-
+  
+  client: Client;
   constructor(client: Client) {
     this.client = client;
   }

@@ -4,7 +4,7 @@ import randomWords from "random-words";
 import Guild from "../../models/guild";
 import User from "../../models/user";
 import embeds from "../embeds";
-import { gameInfo, givePoints } from "../storage";
+import givePoints, { gameInfo } from "../../utils/points";
 
 export default async function wordUnscramble(
   message: Message,

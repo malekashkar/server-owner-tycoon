@@ -3,7 +3,8 @@ import { TextChannel, User } from "discord.js";
 import Event, { EventNameType } from ".";
 import { Poll, PollModel } from "../models/poll";
 import embeds from "../utils/embeds";
-import { emojis, formatTime, givePoints, roles } from "../utils/storage";
+import { emojis, formatTime, roles } from "../utils/storage";
+import givePoints from "../utils/points"
 
 export default class PollChecker extends Event {
   name: EventNameType = "ready";

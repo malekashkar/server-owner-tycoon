@@ -1,7 +1,7 @@
 import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
 import User from "../../models/user";
-import { gameInfo, givePoints } from "../storage";
+import givePoints, { gameInfo } from "../points";
 
 export default async function Milestone(
   message: Message,

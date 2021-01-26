@@ -2,7 +2,8 @@ import { MessageReaction, TextChannel, User } from "discord.js";
 import Event from "..";
 import { GuildModel } from "../../models/guild";
 import { UserModel, ReactionRolesUsed } from "../../models/user";
-import { givePoints, reactionRoles } from "../../utils/storage";
+import { reactionRoles } from "../../utils/storage";
+import givePoints from "../../utils/points"
 
 export default class ReactionRoles extends Event {
   name = "messageReactionAdd";

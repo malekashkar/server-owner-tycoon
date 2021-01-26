@@ -1,4 +1,5 @@
 import { TextChannel, User } from "discord.js";
+import Client from "..";
 import { UserModel } from "../models/user";
 import embeds from "./embeds";
 
@@ -126,6 +127,8 @@ export const categories = {
   inProgressTickets: "779797701889228800",
 };
 
+export const mainGuild = "565005586060804136";
+
 export const badWords: string[] = [
   "fuck",
   "cunt",
@@ -249,146 +252,6 @@ export const prizes = {
     "Discord Nitro (1Y)": 500000,
   },
 };
-
-type Games =
-  | "joinMilestone"
-  | "weekMilestone"
-  | "monthMilestone"
-  | "yearMilestone"
-  | "guessTheNumber"
-  | "randomMessageReaction"
-  | "reactionMessage"
-  | "joinVoiceChannel"
-  | "wordUnscramble"
-  | "invite"
-  | "reactionRoles"
-  | "guildBoost"
-  | "poll"
-  | "qotd"
-  | "voiceInteraction"
-  | "textInteraction"
-  | "countrySelector";
-
-export const gameInfo: {
-  [key in Games]: {
-    displayName: string;
-    minPoints: number;
-    maxPoints: number;
-    cooldown?: number;
-  };
-} = {
-  joinMilestone: {
-    displayName: "Join Milestone",
-    minPoints: 10,
-    maxPoints: 25,
-  },
-  weekMilestone: {
-    displayName: "Week Milestone",
-    minPoints: 50,
-    maxPoints: 100,
-    cooldown: 7 * 24 * 60 * 60 * 1000,
-  },
-  monthMilestone: {
-    displayName: "Month Milestone",
-    minPoints: 200,
-    maxPoints: 500,
-    cooldown: 30 * 24 * 60 * 60 * 1000,
-  },
-  yearMilestone: {
-    displayName: "Year Milestone",
-    minPoints: 1000,
-    maxPoints: 2500,
-    cooldown: 12 * 30 * 24 * 60 * 60 * 1000,
-  },
-  guessTheNumber: {
-    displayName: "Guess The Number",
-    minPoints: 10,
-    maxPoints: 25,
-    cooldown: 4 * 60 * 60 * 1000,
-  },
-  randomMessageReaction: {
-    displayName: "Random Message Reaction",
-    minPoints: 10,
-    maxPoints: 25,
-    cooldown: 6 * 60 * 60 * 1000,
-  },
-  reactionMessage: {
-    displayName: "Reaction Game",
-    minPoints: 10,
-    maxPoints: 25,
-    cooldown: 2 * 60 * 60 * 1000,
-  },
-  joinVoiceChannel: {
-    displayName: "Voice Channel Join",
-    minPoints: 10,
-    maxPoints: 25,
-    cooldown: 4 * 60 * 60 * 1000,
-  },
-  wordUnscramble: {
-    displayName: "Word Unscramble",
-    minPoints: 10,
-    maxPoints: 25,
-    cooldown: 3 * 60 * 60 * 1000,
-  },
-  invite: {
-    displayName: "Invite",
-    minPoints: 20,
-    maxPoints: 50,
-  },
-  reactionRoles: {
-    displayName: "Reaction Role",
-    minPoints: 10,
-    maxPoints: 25,
-  },
-  guildBoost: {
-    displayName: "Guild Boost",
-    minPoints: 500,
-    maxPoints: 1000,
-  },
-  poll: {
-    displayName: "Poll Reaction",
-    minPoints: 10,
-    maxPoints: 100,
-  },
-  qotd: {
-    displayName: "QOTD Correct Answer",
-    minPoints: 50,
-    maxPoints: 200,
-  },
-  voiceInteraction: {
-    displayName: "Voice Interaction",
-    minPoints: 50,
-    maxPoints: 200,
-  },
-  textInteraction: {
-    displayName: "Text Interaction",
-    minPoints: 50,
-    maxPoints: 200,
-  },
-  countrySelector: {
-    displayName: "Country Selector",
-    minPoints: 50,
-    maxPoints: 200,
-  },
-};
-
-export async function givePoints(user: User, game: Games) {
-  const gameInformation = gameInfo[game];
-  const channel = user.client.channels.resolve(channels.points) as TextChannel;
-  const points = getRandomIntBetween(
-    gameInformation.minPoints,
-    gameInformation.maxPoints
-  );
-
-  await UserModel.updateOne({ userId: user.id }, { $inc: { points } });
-
-  return await channel.send(
-    embeds.normal(
-      `Points Given`,
-      `${user} has received **${points}** points from a **${gameInformation.displayName.toLowerCase()}**.`
-    )
-  );
-}
 
 export function getRandomIntBetween(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -588,6 +451,10 @@ export const countries: [string, string, string][] = [
   ["Britain", "gb", "🇬🇧"],
   ["Great Britain", "gb", "🇬🇧"],
   ["England", "gb", "🇬🇧"],
+  ["United Kingdom", "uk", "🇬🇧"],
+  ["Britain", "uk", "🇬🇧"],
+  ["Great Britain", "uk", "🇬🇧"],
+  ["England", "uk", "🇬🇧"],
   ["Vatican City", "va", "🇻🇦"],
   ["Anguilla", "ai", "🇦🇮"],
   ["Antigua and Barbuda", "ag", "🇦🇬"],
@@ -628,6 +495,7 @@ export const countries: [string, string, string][] = [
   ["St. Martin", "mf", "🇲🇫"],
   ["Turks and Caicos Islands", "tc", "🇹🇨"],
   ["United States", "us", "🇺🇸"],
+  ["United States", "usa", "🇺🇸"],
   ["U.S. Outlying Islands", "um", "🇺🇲"],
   ["U.S. Virgin Islands", "vi", "🇻🇮"],
   ["American Samoa", "as", "🇦🇸"],

@@ -1,7 +1,8 @@
-import { DMChannel, GuildMember, TextChannel } from "discord.js";
+import { DMChannel, GuildMember, Message } from "discord.js";
 import Event from ".";
 import embeds from "../utils/embeds";
-import { countries, givePoints, roles } from "../utils/storage";
+import { countries, roles } from "../utils/storage";
+import givePoints from "../utils/points";
 import stringSimilarity from "string-similarity";
 import confirmation from "../utils/confirmation";
 
@@ -10,40 +11,11 @@ export default class CountrySelector extends Event {
 
   async handle(member: GuildMember) {
     const dmChannel = await member.user.createDM();
-    const country = await questionProcess(dmChannel, member);
-    if (country) {
-      const countryEmoji = countries.find((x) => x[0] === country)[2];
-      await givePoints(member.user, "countrySelector");
-      await member.setNickname(
-        `${member.user.username.slice(0, 15)} ${countryEmoji}`
-      );
-
-      if (!member.roles.cache.has(roles.supporter))
-        await member.roles.add(roles.supporter);
-
-      await dmChannel.send(
-        embeds.normal(
-          `Verification Complete`,
-          `Welcome to the **Server Owner Tycoon** discord **${member.user.username}**!`
-        )
-      );
-    } else {
-      const invite = await member.guild.channels.cache.first().createInvite();
-      await dmChannel.send(
-        embeds.normal(
-          `Verification Failed`,
-          `Please [rejoin](${invite.url}) the **Server Owner Tycoon** discord and complete the verification process.`
-        )
-      );
-      await member.kick("Didn't complete country selector.");
-    }
+    await questionProcess(dmChannel, member);
   }
 }
 
-async function questionProcess(
-  channel: DMChannel | TextChannel,
-  member: GuildMember
-) {
+async function questionProcess(channel: DMChannel, member: GuildMember) {
   const countriesList = countries.map((x) => x[0]);
   const countriesAbbList = countries.map((x) => x[1]);
 
@@ -52,62 +24,95 @@ async function questionProcess(
       `What country are you joining **Server Owner Tycoon** from?`
     )
   );
-  const collector = await channel.awaitMessages(
+
+  const collector = channel.createMessageCollector(
     (m) => m.author.id === member.id,
     {
       max: 1,
       time: 15 * 60 * 1000,
-      errors: ["time"],
     }
   );
 
-  if (collector) {
-    if (question.deletable) await question.delete();
+  collector.on("end", async (collected) => {
+    if (collected.size) {
+      if (question.deletable) await question.delete();
 
-    const collectorCountry = collector.first().content;
-    const contryMatch = stringSimilarity.findBestMatch(
-      collectorCountry,
-      countriesList
-    );
-    const countryAbbMatch = stringSimilarity.findBestMatch(
-      collectorCountry,
-      countriesAbbList
-    );
+      const selectedCountry = collected.first().content;
+      const countryMatch = stringSimilarity.findBestMatch(
+        selectedCountry,
+        countriesList
+      );
+      const countryAbbMatch = stringSimilarity.findBestMatch(
+        selectedCountry,
+        countriesAbbList
+      );
 
-    if (contryMatch.bestMatch.rating >= countryAbbMatch.bestMatch.rating) {
-      return confirmationProcess(channel, member, contryMatch.bestMatch.target);
+      if (countryMatch.bestMatch.rating >= countryAbbMatch.bestMatch.rating) {
+        await confirmationProcess(
+          channel,
+          member,
+          countryMatch.bestMatch.target
+        );
+      } else {
+        const country = countries.find(
+          (x) => x[1] === countryAbbMatch.bestMatch.target
+        )[0];
+        await confirmationProcess(channel, member, country);
+      }
     } else {
-      const country = countries.find(
-        (x) => x[1] === countryAbbMatch.bestMatch.target
-      )[0];
-      return confirmationProcess(channel, member, country);
+      await failedProcess(member, channel);
     }
-  } else {
-    return false;
-  }
+  });
 }
 
 async function confirmationProcess(
-  channel: DMChannel | TextChannel,
+  channel: DMChannel,
   member: GuildMember,
   country: string
 ) {
   const confirm = await confirmation(
     `Country Selector Confirmation`,
-    `Please confirm the country you are selecting is ${country}`,
+    `Please confirm the country you are selecting is **${country}**.`,
     null,
     channel,
     member.id
   );
-  if (!confirm) questionProcess(channel, member);
-  return finalProcess(member, country);
+  if (confirm) {
+    await finalProcess(country, member, channel);
+  } else {
+    await questionProcess(channel, member);
+  }
 }
 
-async function finalProcess(member: GuildMember, country: string) {
-  const countryInfo = countries.find(
-    (x) => x[0].toLowerCase() === country.toLowerCase()
+async function failedProcess(member: GuildMember, channel: DMChannel) {
+  const invite = await member.guild.channels.cache.first().createInvite();
+  await channel.send(
+    embeds.normal(
+      `Verification Failed`,
+      `Please [rejoin](${invite.url}) the **Server Owner Tycoon** discord and complete the verification process.`
+    )
   );
-  await member.setNickname(member.user.username + ` ${countryInfo[2]}`);
-  await member.roles.add(roles.supporter);
-  await givePoints(member.user, "joinMilestone");
+  await member.kick("Didn't complete country selector.");
+}
+
+async function finalProcess(
+  country: string,
+  member: GuildMember,
+  channel: DMChannel
+) {
+  const countryEmoji = countries.find((x) => x[0] === country)[2];
+  await givePoints(member.user, "countrySelector");
+  await member.setNickname(
+    `${member.user.username.slice(0, 15)} ${countryEmoji}`
+  );
+
+  if (!member.roles.cache.has(roles.supporter))
+    await member.roles.add(roles.supporter);
+
+  await channel.send(
+    embeds.normal(
+      `Verification Complete`,
+      `Welcome to the **Server Owner Tycoon** discord **${member.user.username}**!`
+    )
+  );
 }

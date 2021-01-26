@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { TextInteractionModel } from "../../models/textInteraction";
-import { givePoints, textInteractionsConfig } from "../storage";
+import { textInteractionsConfig } from "../storage";
+import givePoints from "../points";
 
 export default async function (message: Message) {
   const interactionData = await TextInteractionModel.findOne({

@@ -1,7 +1,7 @@
 import { GuildMember } from "discord.js";
 import { InviteModel } from "../../models/invite";
 import Event from "..";
-import { givePoints } from "../../utils/storage";
+import givePoints from "../../utils/points";
 
 export default class addInvites extends Event {
   name = "guildMemberAdd";

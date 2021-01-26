@@ -1,10 +1,9 @@
-import { Message, TextChannel } from "discord.js";
+import { Message } from "discord.js";
 import embeds from "../../utils/embeds";
-import { UserModel } from "../../models/user";
 import Guild from "../../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
 import react from "../react";
-import { gameInfo, givePoints } from "../storage";
+import givePoints, { gameInfo } from "../../utils/points";
 
 export default async function reactionMessage(
   message: Message,
