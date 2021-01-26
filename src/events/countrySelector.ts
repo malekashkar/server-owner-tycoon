@@ -1,4 +1,4 @@
-import { DMChannel, GuildMember, Message } from "discord.js";
+import { DMChannel, GuildMember } from "discord.js";
 import Event from ".";
 import embeds from "../utils/embeds";
 import { countries, roles } from "../utils/storage";

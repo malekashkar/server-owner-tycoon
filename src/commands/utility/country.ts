@@ -1,82 +1,105 @@
-import { DocumentType } from "@typegoose/typegoose";
-import { stripIndents } from "common-tags";
 import { Message } from "discord.js";
 import UtilityCommand from ".";
-import { CountryModel } from "../../models/country";
-import DbGuild from "../../models/guild";
-import DbUser from "../../models/user";
+import { DMChannel, GuildMember } from "discord.js";
 import embeds from "../../utils/embeds";
-import react from "../../utils/react";
-import { countries, emojis } from "../../utils/storage";
+import { countries, roles } from "../../utils/storage";
+import stringSimilarity from "string-similarity";
+import confirmation from "../../utils/confirmation";
 
 export default class CountryCommand extends UtilityCommand {
   cmdName = "country";
   description = "Restart the process to selecting your country.";
 
-  async run(
-    message: Message,
-    args: string[],
-    userData: DocumentType<DbUser>,
-    guildData: DocumentType<DbGuild>
-  ) {
-    const countryData = await CountryModel.findOne({
-      userId: message.author.id,
-    });
-    if (countryData) {
-      const channel = message.guild.channels.resolve(countryData.channelId);
-      if (!channel) {
-        await countryData.deleteOne();
-      } else {
-        return message.channel.send(
-          embeds.error(
-            `You already have a country selector channel open! ${channel}`
-          )
+  async run(message: Message) {
+    const dmChannel = await message.author.createDM();
+    await questionProcess(dmChannel, message.member);
+  }
+}
+
+async function questionProcess(channel: DMChannel, member: GuildMember) {
+  const countriesList = countries.map((x) => x[0]);
+  const countriesAbbList = countries.map((x) => x[1]);
+
+  const question = await channel.send(
+    embeds.question(
+      `What country are you joining **Server Owner Tycoon** from?`
+    )
+  );
+
+  const collector = channel.createMessageCollector(
+    (m) => m.author.id === member.id,
+    {
+      max: 1,
+      time: 15 * 60 * 1000,
+    }
+  );
+
+  collector.on("end", async (collected) => {
+    if (collected.size) {
+      if (question.deletable) await question.delete();
+
+      const selectedCountry = collected.first().content;
+      const countryMatch = stringSimilarity.findBestMatch(
+        selectedCountry,
+        countriesList
+      );
+      const countryAbbMatch = stringSimilarity.findBestMatch(
+        selectedCountry,
+        countriesAbbList
+      );
+
+      if (countryMatch.bestMatch.rating >= countryAbbMatch.bestMatch.rating) {
+        await confirmationProcess(
+          channel,
+          member,
+          countryMatch.bestMatch.target
         );
+      } else {
+        const country = countries.find(
+          (x) => x[1] === countryAbbMatch.bestMatch.target
+        )[0];
+        await confirmationProcess(channel, member, country);
       }
     }
-    if (guildData.joinCategory) {
-      const formattedUsername =
-        message.author.username.length > 15
-          ? message.author.username.slice(0, 15)
-          : message.author.username;
-      const channel = await message.guild.channels.create(formattedUsername, {
-        type: "text",
-        parent: guildData.joinCategory,
-        permissionOverwrites: [
-          {
-            id: message.author.id,
-            allow: ["VIEW_CHANNEL", "READ_MESSAGE_HISTORY", "SEND_MESSAGES"],
-          },
-          {
-            id: message.guild.id,
-            deny: "VIEW_CHANNEL",
-          },
-        ],
-      });
-      const continents = Object.keys(countries);
-      const continentEmojis = emojis.slice(0, continents.length);
-      const continentEmbed = embeds.normal(
-        null,
-        stripIndents`**HELLO** there, ${message.author.username}!
-          What continent are you from? Click one of the reactions below!
-          ${continents.map((x, i) => `${continentEmojis[i]} ${x}`).join("\n")}`
-      );
-      const continentMessage = await channel.send(continentEmbed);
+  });
+}
 
-      await CountryModel.create({
-        startedAt: new Date(),
-        userId: message.author.id,
-        channelId: channel.id,
-        entry: false,
-      });
-
-      await react(continentMessage, continentEmojis);
-    } else {
-      message.channel.send(
-        embeds.error(
-          `Please ask administrators to set an entry category for country channels!`
-        )
-      );
-    }
+async function confirmationProcess(
+  channel: DMChannel,
+  member: GuildMember,
+  country: string
+) {
+  const confirm = await confirmation(
+    `Country Selector Confirmation`,
+    `Please confirm the country you are selecting is **${country}**.`,
+    null,
+    channel,
+    member.id
+  );
+  if (confirm) {
+    await finalProcess(country, member, channel);
+  } else {
+    await questionProcess(channel, member);
   }
+}
+
+async function finalProcess(
+  country: string,
+  member: GuildMember,
+  channel: DMChannel
+) {
+  const countryEmoji = countries.find((x) => x[0] === country)[2];
+  await member.setNickname(
+    `${member.user.username.slice(0, 15)} ${countryEmoji}`
+  );
+
+  if (!member.roles.cache.has(roles.supporter))
+    await member.roles.add(roles.supporter);
+
+  await channel.send(
+    embeds.normal(
+      `Country Selector Complete`,
+      `Welcome back to the **Server Owner Tycoon** discord I guess?!`
+    )
+  );
 }
