@@ -26,23 +26,25 @@ export default async function wordUnscramble(
     unscrambleData.lastTime = Date.now();
     await guildData.save();
 
-    const collector = await message.channel.awaitMessages(
+    const collector = message.channel.createMessageCollector(
       (m) => m.content.toLowerCase() === word.toLowerCase(),
-      { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
+      { max: 1, time: 15 * 60 * 1000 }
     );
 
-    if (collector && collector.first()) {
-      const user = collector.first().author;
+    collector.on("end", async (collected) => {
+      if (unscrambleWordMessage.deletable) await unscrambleWordMessage.delete();
+      if (collected.size) {
+        const user = collected.first().author;
 
-      await givePoints(user, "wordUnscramble");
-      await unscrambleWordMessage.delete();
-      await message.channel.send(
-        embeds.normal(
-          `You Guessed It!`,
-          `${user} unscrambled the word **${shuffled}** to \`${word}\`!`
-        )
-      );
-    }
+        await givePoints(user, "wordUnscramble");
+        await message.channel.send(
+          embeds.normal(
+            `You Guessed It!`,
+            `${user} unscrambled the word **${shuffled}** to \`${word}\`!`
+          )
+        );
+      }
+    });
   }
 }
 

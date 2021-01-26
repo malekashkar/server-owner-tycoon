@@ -3,7 +3,7 @@ import embeds from "../embeds";
 import User from "../../models/user";
 import Guild from "../../models/guild";
 import { DocumentType } from "@typegoose/typegoose";
-import {getRandomIntBetween } from "../storage";
+import { getRandomIntBetween } from "../storage";
 import givePoints, { gameInfo } from "../points";
 
 export default async function GuessTheNumber(
@@ -31,22 +31,25 @@ export default async function GuessTheNumber(
     numberData.lastTime = Date.now();
     await guildData.save();
 
-    const collector = await message.channel.awaitMessages(
+    const collector = message.channel.createMessageCollector(
       (m) => m.content === correctNumber.toString(),
-      { max: 1, time: 15 * 60 * 1000, errors: ["time"] }
+      { max: 1, time: 15 * 60 * 1000 }
     );
 
-    if (collector && collector.first()) {
-      const user = collector.first().author;
+    collector.on("end", async (collected) => {
+      if (randomNumberMessage.deletable) await randomNumberMessage.delete();
+      if (collected.size) {
+        const user = collected.first().author;
 
-      await givePoints(user, "guessTheNumber");
-      await randomNumberMessage.delete();
-      await message.channel.send(
-        embeds.normal(
-          `You Guessed It!`,
-          `${user} guess the number \`${correctNumber}\`!`
-        )
-      );
-    }
+        await givePoints(user, "guessTheNumber");
+        await message.channel.send(
+          embeds.normal(
+            `You Guessed It!`,
+            `${user} guess the number \`${correctNumber}\`!`
+          )
+        );
+      } else {
+      }
+    });
   }
 }
