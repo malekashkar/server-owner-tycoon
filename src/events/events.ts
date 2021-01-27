@@ -35,37 +35,26 @@ export default class EventChecker extends EEvent {
           }
         }
       });
+
       startedEvents.on("data", async (event: DocumentType<Event>) => {
-        const eventChannel = guild.channels.resolve(
-          event.eventChannelId
-        ) as TextChannel;
         const channel = guild.channels.resolve(event.channelId) as TextChannel;
         if (channel) {
           const message = await channel.messages.fetch(event.messageId);
-          if (message) {
-            const reaction = message.reactions.cache.find(
-              (x) => x.emoji.name === "✅"
-            );
-            if (reaction) {
-              const users = reaction.users.cache.array().filter((x) => !x.bot);
-              for (const user of users) {
-                eventChannel.updateOverwrite(user, {
-                  VIEW_CHANNEL: true,
-                  SEND_MESSAGES: true,
-                  READ_MESSAGE_HISTORY: true,
-                });
-              }
-            }
-            if (message.deletable) await message.delete();
-            await eventChannel?.send(
-              `<@&${roles.events}>`,
-              embeds.normal(
-                `Event Started`,
-                `The event \`${event.name}\` has started!`
-              )
-            );
-            await event.deleteOne();
-          }
+          if (message?.deletable) await message.delete();
+        }
+
+        const eventChannel = guild.channels.resolve(
+          event.eventChannelId
+        ) as TextChannel;
+        if (eventChannel) {
+          await eventChannel?.send(
+            `<@&${roles.events}>`,
+            embeds.normal(
+              `Event Started`,
+              `The event \`${event.name}\` has started!`
+            )
+          );
+          await event.deleteOne();
         }
       });
     }, 10 * 1000);
