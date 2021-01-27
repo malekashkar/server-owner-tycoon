@@ -5,6 +5,7 @@ import AdminCommand from ".";
 export default class SayCommand extends AdminCommand {
   cmdName = "say";
   description = "Send a simple message in a specific channel.";
+  permissions = ["admin", "human"];
 
   async run(message: Message) {
     const channel = await getChannel(message);
