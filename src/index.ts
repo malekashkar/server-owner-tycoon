@@ -22,7 +22,7 @@ export default class Client extends BaseManager {
   constructor(options?: ClientOptions) {
     super({
       ...options,
-      partials: ["MESSAGE", "CHANNEL", "REACTION"],
+      partials: ["MESSAGE", "CHANNEL", "REACTION", "USER"],
       ws: {
         intents: [
           "GUILDS",

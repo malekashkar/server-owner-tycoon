@@ -1,9 +1,6 @@
-import { DocumentType } from "@typegoose/typegoose";
 import { Message } from "discord.js";
 import UtilityCommand from ".";
-import DbGuild from "../../models/guild";
 import { InviteModel } from "../../models/invite";
-import DbUser, { UserModel } from "../../models/user";
 import embeds from "../../utils/embeds";
 
 export default class InvitesCommand extends UtilityCommand {
@@ -11,12 +8,7 @@ export default class InvitesCommand extends UtilityCommand {
   description = "Check how much invites you have.";
   usage = "[@user]";
 
-  async run(
-    message: Message,
-    args: string[],
-    userData: DocumentType<DbUser>,
-    guildData: DocumentType<DbGuild>
-  ) {
+  async run(message: Message) {
     const user = message.mentions.users.first() || message.author;
     const invites = await InviteModel.countDocuments({
       userId: user.id,

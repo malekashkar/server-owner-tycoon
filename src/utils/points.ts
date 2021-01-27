@@ -131,4 +131,5 @@ export default async function(user: User, game: Games) {
     gameInformation.maxPoints
   );
   await UserModel.updateOne({ userId: user.id }, { $inc: { points } });
+  return points;
 }

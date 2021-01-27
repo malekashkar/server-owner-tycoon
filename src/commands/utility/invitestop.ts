@@ -4,9 +4,7 @@ import embeds from "../../utils/embeds";
 import Paginator from "../../utils/pagecord";
 import _ from "lodash";
 import { stripIndents } from "common-tags";
-import DbInvite, { InviteModel } from "../../models/invite";
-import { DocumentType } from "@typegoose/typegoose";
-
+import { InviteModel } from "../../models/invite";
 export default class InvitesTopCommand extends PointsCommand {
   cmdName = "invitestop";
   description = "Leaderboard for the amount of invites.";
