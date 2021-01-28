@@ -129,6 +129,7 @@ export default class Client extends BaseManager {
               try {
                 const eventObj: Event = new event(this);
                 if (eventObj && eventObj.name) {
+                  console.log(eventObj.name, eventFile);
                   this.addListener(eventObj.name, async (...args) => {
                     eventObj.handle.bind(eventObj)(...args, eventObj.name);
                   });
@@ -136,6 +137,8 @@ export default class Client extends BaseManager {
               } catch (ignored) {}
             }
           }
+        } else {
+          this.loadEvents(eventPath);
         }
       }
     }
