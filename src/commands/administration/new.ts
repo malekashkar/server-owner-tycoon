@@ -51,6 +51,7 @@ export default class NewCommand extends AdminCommand {
     await react(panelMessage, emojis);
 
     guildData.messages.ticketPanel = panelMessage.id;
+    guildData.channels.ticketPanel = panelMessage.channel.id;
     await guildData.save();
   }
 }

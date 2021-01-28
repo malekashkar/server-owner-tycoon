@@ -37,6 +37,11 @@ class Messages {
   voiceTopics?: string;
 }
 
+class Channels {
+  @prop()
+  ticketPanel?: string;
+}
+
 class Moderation {
   @prop()
   enabled: boolean;
@@ -90,6 +95,9 @@ export default class DbGuild {
 
   @prop({ default: {} })
   messages?: Messages;
+
+  @prop({ default: {} })
+  channels?: Channels;
 
   @prop({ default: true })
   giveaways?: boolean;

@@ -25,11 +25,10 @@ export default class Client extends BaseManager {
       partials: ["USER", "REACTION", "MESSAGE"],
       ws: {
         intents: [
-          "GUILDS",
           "GUILD_MEMBERS",
+          "GUILDS",
           "GUILD_VOICE_STATES",
           "GUILD_INVITES",
-          "GUILD_VOICE_STATES",
           "GUILD_MESSAGES",
           "GUILD_MESSAGE_REACTIONS",
           "DIRECT_MESSAGES",
