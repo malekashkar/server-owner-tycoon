@@ -116,7 +116,7 @@ export const channels = {
   points: "774513961017802762",
   giveaways: "776245431570399264",
   transcripts: "779798882682929203",
-  topicSelection: "776918119112638516",
+  topicSelection: "806907463877918782",
   welcome: "632609651766198292",
 };
 
@@ -191,32 +191,20 @@ export const reactionRoles: ReactionRoles[] = [
 
 export const voiceTopics = [
   {
-    displayName: "Lobby Voice Channel",
+    displayName: "Lobby",
+    channelId: "806286516942012477",
+  },
+  {
+    displayName: "Chill VC",
     channelId: "776916233521463297",
   },
   {
-    displayName: "Chill Voice Channel",
-    channelId: "666021084289564702",
+    displayName: "Gaming VC",
+    channelId: "806906352126525461",
   },
   {
-    displayName: "Jokes Voice Channel",
-    channelId: "776914363977039932",
-  },
-  {
-    displayName: "Stories Voice Channel",
-    channelId: "776914544273653790",
-  },
-  {
-    displayName: "Gaming Voice Channel",
-    channelId: "666026837838921739",
-  },
-  {
-    displayName: "Movie Voice Channel",
-    channelId: "776914176836108308",
-  },
-  {
-    displayName: "Music Voice Channel",
-    channelId: "776913554195480596",
+    displayName: "Media VC",
+    channelId: "806906924414533764",
   },
 ];
 
