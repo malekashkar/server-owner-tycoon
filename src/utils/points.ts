@@ -56,19 +56,19 @@ export const gameInfo: {
     displayName: "Guess The Number",
     minPoints: 10,
     maxPoints: 25,
-    cooldown: 4 * 60 * 60 * 1000,
+    cooldown: 12 * 60 * 60 * 1000,
   },
   randomMessageReaction: {
     displayName: "Random Message Reaction",
     minPoints: 10,
     maxPoints: 25,
-    cooldown: 6 * 60 * 60 * 1000,
+    cooldown: 12 * 60 * 60 * 1000,
   },
   reactionMessage: {
     displayName: "Reaction Game",
     minPoints: 10,
     maxPoints: 25,
-    cooldown: 2 * 60 * 60 * 1000,
+    cooldown: 12 * 60 * 60 * 1000,
   },
   joinVoiceChannel: {
     displayName: "Voice Channel Join",
@@ -80,7 +80,7 @@ export const gameInfo: {
     displayName: "Word Unscramble",
     minPoints: 10,
     maxPoints: 25,
-    cooldown: 3 * 60 * 60 * 1000,
+    cooldown: 12 * 60 * 60 * 1000,
   },
   invite: {
     displayName: "Invite",
