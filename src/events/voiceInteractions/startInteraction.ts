@@ -7,20 +7,17 @@ export default class StartVoiceInteraction extends Event {
 
   async handle(member: GuildMember) {
     if (member.user.bot) return;
-
-    const channel = member.voice?.channel;
-    if (!channel) return;
-
-    const membersInChannel = channel.members;
-    if (!membersInChannel.size) return;
+    if (!member.voice?.channel?.members?.size) return;
 
     const voiceInteraction = await VoiceInteractionModel.findOne({
       userId: member.id,
     });
 
     if (voiceInteraction) {
-      if (voiceInteraction.lastSpeakingTime - Date.now() > 60 * 1000) {
-        await voiceInteraction.updateOne({ $inc: { speakingTimes: 1 } });
+      if (Date.now() - voiceInteraction.lastSpeakingTime > 60 * 1000) {
+        voiceInteraction.lastSpeakingTime = Date.now();
+        voiceInteraction.speakingTimes += 1;
+        await voiceInteraction.save();
       }
     } else {
       await VoiceInteractionModel.create({
