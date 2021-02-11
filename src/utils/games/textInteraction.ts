@@ -9,7 +9,9 @@ export default async function (message: Message) {
   });
 
   if (interactionData) {
+    console.log(`Interation Step 1`);
     if (interactionData.speakingTimes > textInteractionsConfig.textStreak) {
+      console.log(`Interation Completed`);
       await givePoints(message.author, "textInteraction");
       await interactionData.deleteOne();
     } else if (
@@ -18,6 +20,7 @@ export default async function (message: Message) {
       interactionData.lastSpeakingTime - Date.now() >
         textInteractionsConfig.resetInterval
     ) {
+      console.log(`Interation Step 3`);
       await TextInteractionModel.updateOne(
         {
           userId: message.author.id,
@@ -28,6 +31,7 @@ export default async function (message: Message) {
       );
     }
   } else {
+    console.log(`Interation Step 2`);
     await TextInteractionModel.create({
       userId: message.author.id,
       speakingTimes: 0,

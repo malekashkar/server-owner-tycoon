@@ -1,6 +1,7 @@
 import {
   MessageReaction,
   OverwriteResolvable,
+  TextChannel,
   User,
 } from "discord.js";
 import Event, { EventNameType } from "..";
@@ -22,6 +23,8 @@ export default class OpenTicket extends Event {
     if (reaction.message.partial) await reaction.message.fetch();
 
     const message = reaction.message;
+    if (!(message.channel instanceof TextChannel)) return;
+
     const guildData =
       (await GuildModel.findOne({ guildId: message.guild.id })) ||
       (await GuildModel.create({ guildId: message.guild.id }));
